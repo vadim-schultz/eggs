@@ -15,3 +15,20 @@ jobs:
           node-version: 22
           cache: npm
       - run: ./ci.sh
+
+  rls-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: npm ci --no-audit --no-fund
+      - run: supabase start
+      - run: supabase db reset
+      - run: npx tsx scripts/rls-smoke.ts
+      - run: supabase stop
