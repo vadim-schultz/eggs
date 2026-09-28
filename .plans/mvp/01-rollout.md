@@ -54,17 +54,20 @@ auth (chapter 3) — only chapter 4 (posting, which requires a signed-in seller)
 
 | # | Chapter | Layer | Gate | Plan | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Project scaffold + i18n dictionary | frontend | vitest + `./ci.sh` | [01-project-scaffold.md](chapters/01-project-scaffold.md) | not written |
-| 2 | Database schema and RLS | schema | `supabase db` smoke script | [02-schema-and-rls.md](chapters/02-schema-and-rls.md) | not written |
-| 3 | Auth (Google sign-in) | frontend + schema | vitest + `./ci.sh` | [03-auth.md](chapters/03-auth.md) | not written |
-| 4 | Post a listing | frontend + schema | vitest + `./ci.sh` | [04-post-a-listing.md](chapters/04-post-a-listing.md) | not written |
-| 5 | Browse and map | frontend | vitest + `./ci.sh` | [05-browse-and-map.md](chapters/05-browse-and-map.md) | not written |
-| 6 | Reserve a listing | frontend + schema | vitest + `./ci.sh` | [06-reserve-a-listing.md](chapters/06-reserve-a-listing.md) | not written |
-| 7 | Lifecycle and expiry | schema + frontend | `pg_cron` smoke script + `./ci.sh` | [07-lifecycle-and-expiry.md](chapters/07-lifecycle-and-expiry.md) | not written |
-| 8 | Deploy and docs sync | ops + docs | production smoke test | [08-deploy-and-docs-sync.md](chapters/08-deploy-and-docs-sync.md) | not written |
+| 1 | Project scaffold + i18n dictionary | frontend | vitest + `./ci.sh` | [01-project-scaffold.md](chapters/01-project-scaffold.md) | planned |
+| 2 | Database schema and RLS | schema | `supabase db` smoke script | [02-schema-and-rls.md](chapters/02-schema-and-rls.md) | planned |
+| 3 | Auth (Google sign-in) | frontend + schema | vitest + `./ci.sh` | [03-auth.md](chapters/03-auth.md) | planned |
+| 4 | Post a listing | frontend + schema | vitest + `./ci.sh` | [04-post-a-listing.md](chapters/04-post-a-listing.md) | planned |
+| 5 | Browse and map | frontend | vitest + `./ci.sh` | [05-browse-and-map.md](chapters/05-browse-and-map.md) | planned |
+| 6 | Reserve a listing | frontend + schema | vitest + `./ci.sh` | [06-reserve-a-listing.md](chapters/06-reserve-a-listing.md) | planned |
+| 7 | Lifecycle and expiry | schema + frontend | `pg_cron` smoke script + `./ci.sh` | [07-lifecycle-and-expiry.md](chapters/07-lifecycle-and-expiry.md) | planned |
+| 8 | Deploy and docs sync | ops + docs | production smoke test | [08-deploy-and-docs-sync.md](chapters/08-deploy-and-docs-sync.md) | planned |
 
-"Not written" means the chapter doc itself (Goal, design decisions, files, tests, gate) hasn't been
-authored yet — that's the next step, one chapter at a time, not part of this planning pass.
+"Planned" means the chapter doc itself (Goal, design decisions, files, manual configuration, tests, gate)
+is written but no code exists yet — implementation is the next step, one chapter at a time. Chapters 1, 3
+and 8 each carry a **Manual configuration** section for the Supabase dashboard, Google Cloud Console and
+Cloudflare Pages steps that have no code equivalent; every other chapter's section explicitly says none
+is needed, so the split is visible even where it's empty.
 
 ## Per-chapter gate
 

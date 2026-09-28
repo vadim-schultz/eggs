@@ -4,17 +4,22 @@ One executable plan per chapter. Order, dependencies and gates: [../01-rollout.m
 
 | # | File | Layer | Status |
 | --- | --- | --- | --- |
-| 1 | [01-project-scaffold.md](01-project-scaffold.md) | frontend | not written |
-| 2 | [02-schema-and-rls.md](02-schema-and-rls.md) | schema | not written |
-| 3 | [03-auth.md](03-auth.md) | frontend + schema | not written |
-| 4 | [04-post-a-listing.md](04-post-a-listing.md) | frontend + schema | not written |
-| 5 | [05-browse-and-map.md](05-browse-and-map.md) | frontend | not written |
-| 6 | [06-reserve-a-listing.md](06-reserve-a-listing.md) | frontend + schema | not written |
-| 7 | [07-lifecycle-and-expiry.md](07-lifecycle-and-expiry.md) | schema + frontend | not written |
-| 8 | [08-deploy-and-docs-sync.md](08-deploy-and-docs-sync.md) | ops + docs | not written |
+| 1 | [01-project-scaffold.md](01-project-scaffold.md) | frontend | planned |
+| 2 | [02-schema-and-rls.md](02-schema-and-rls.md) | schema | planned |
+| 3 | [03-auth.md](03-auth.md) | frontend + schema | planned |
+| 4 | [04-post-a-listing.md](04-post-a-listing.md) | frontend + schema | planned |
+| 5 | [05-browse-and-map.md](05-browse-and-map.md) | frontend | planned |
+| 6 | [06-reserve-a-listing.md](06-reserve-a-listing.md) | frontend + schema | planned |
+| 7 | [07-lifecycle-and-expiry.md](07-lifecycle-and-expiry.md) | schema + frontend | planned |
+| 8 | [08-deploy-and-docs-sync.md](08-deploy-and-docs-sync.md) | ops + docs | planned |
 
-Each chapter, once written, will have: Goal, Design decisions, Files, Red tests (paired), Green,
-Refactor gate, Verification, Out of scope, Git workflow — same template as
-[redtape](../../../redtape/.plans/floating-nav/chapters/05-floating-shell.md) uses.
+Each chapter has: Goal, Design decisions, Files, **Manual configuration** (Supabase dashboard / Google
+Cloud Console / Cloudflare Pages steps that are not code — empty where a chapter needs none), Red tests
+(paired), Green, Refactor gate, Verification, Out of scope, Git workflow — same template as
+[redtape](../../../redtape/.plans/floating-nav/chapters/05-floating-shell.md) uses, with the Manual
+configuration section added since this app has no backend server and leans on Supabase project settings
+that only exist as dashboard state, not as versioned code (chapters 1, 3 and 8 carry the real content;
+the rest note explicitly that none is needed).
 
-None of these files exist yet. Writing chapter 1's detailed plan is the natural next step.
+All eight chapters are written. Implementation starts at chapter 1; chapters 1 and 2 have no dependency
+on each other and can proceed in parallel (see [../01-rollout.md](../01-rollout.md)).
