@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useSession } from "./useSession";
 
-const { getSessionMock, onAuthStateChangeMock, unsubscribeMock } = vi.hoisted(() => ({
-  getSessionMock: vi.fn(),
-  onAuthStateChangeMock: vi.fn(),
-  unsubscribeMock: vi.fn(),
-}));
+const { getSessionMock, onAuthStateChangeMock, unsubscribeMock } = vi.hoisted(
+  () => ({
+    getSessionMock: vi.fn(),
+    onAuthStateChangeMock: vi.fn(),
+    unsubscribeMock: vi.fn(),
+  }),
+);
 
 vi.mock("../lib/supabaseClient", () => ({
   supabase: {

@@ -9,11 +9,15 @@ export default function AuthButton() {
 
   if (!session) {
     return (
-      <Button onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}>
+      <Button
+        onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
+      >
         {t("auth.signIn")}
       </Button>
     );
   }
 
-  return <Button onClick={() => supabase.auth.signOut()}>{t("auth.signOut")}</Button>;
+  return (
+    <Button onClick={() => supabase.auth.signOut()}>{t("auth.signOut")}</Button>
+  );
 }

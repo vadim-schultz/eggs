@@ -12,7 +12,10 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (signedOut) {
-      toaster.create({ description: t("auth.signInRequired"), type: "warning" });
+      toaster.create({
+        description: t("auth.signInRequired"),
+        type: "warning",
+      });
     }
   }, [signedOut]);
 
