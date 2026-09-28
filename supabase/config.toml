@@ -333,6 +333,22 @@ skip_nonce_check = false
 # If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
 email_optional = false
 
+# Sign in with Google (the only provider this app uses — see chapter 3's "Manual configuration"
+# for the Google Cloud Console OAuth client this reads client_id/secret from).
+[auth.external.google]
+enabled = true
+client_id = "env(GOOGLE_CLIENT_ID)"
+# DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
+secret = "env(GOOGLE_CLIENT_SECRET)"
+# Overrides the default auth callback URL derived from auth.external_url. Left as the default
+# (http://127.0.0.1:54321/auth/v1/callback), which is the redirect URI registered in the Google
+# Cloud Console client.
+redirect_uri = ""
+url = ""
+# Required for local sign in with Google auth.
+skip_nonce_check = true
+email_optional = false
+
 # Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.
 # You can configure "web3" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.
 [auth.web3.solana]
