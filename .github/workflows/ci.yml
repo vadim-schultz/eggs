@@ -27,6 +27,8 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm ci --no-audit --no-fund
       - run: supabase start
       - run: supabase db reset
