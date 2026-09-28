@@ -18,10 +18,10 @@ direct from the browser, RLS as the authorization layer. Eight chapters.
 | [00-architecture.md](mvp/00-architecture.md) | Stack, data model, RLS sketch, auth scope, lifecycle |
 | [01-rollout.md](mvp/01-rollout.md) | Eight chapters, dependency graph, invariants, per-chapter gate |
 | [gaps-and-decisions.md](mvp/gaps-and-decisions.md) | Settled decisions and deferred features |
-| [chapters/](mvp/chapters/) | One executable plan per chapter (not yet written) |
+| [chapters/](mvp/chapters/) | One executable plan per chapter |
 
-Status: planned — architecture and rollout written; no chapter doc or code yet. First step: write
-[chapters/01-project-scaffold.md](mvp/chapters/01-project-scaffold.md).
+Status: planned — architecture, rollout and all eight chapter plans written; no code yet. First step:
+implement [chapters/01-project-scaffold.md](mvp/chapters/01-project-scaffold.md).
 
 ## Conventions
 
