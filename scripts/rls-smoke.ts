@@ -269,6 +269,52 @@ async function main() {
     },
   );
 
+  await check(
+    "create_listing as signed-in user A creates one listing row owned by A and one matching listing_contact row",
+    async () => {
+      const { data, error } = await userA.rpc("create_listing", {
+        p_egg_count: 6,
+        p_unit: "dozen",
+        p_price_cents: 250,
+        p_lat: point.lat,
+        p_lng: point.lng,
+        p_location_label: "create_listing smoke test",
+        p_note: null,
+        p_contact_note: "Ring the bell",
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+      assert(
+        data.seller_id === sellerAId,
+        "expected the created listing's seller_id to be user A",
+      );
+
+      const { data: contact, error: contactError } = await admin
+        .from("listing_contact")
+        .select("contact_note")
+        .eq("listing_id", data.id)
+        .single();
+      assert(!contactError, `unexpected error: ${contactError?.message}`);
+      assert(
+        contact!.contact_note === "Ring the bell",
+        "expected a matching listing_contact row",
+      );
+    },
+  );
+
+  await check("create_listing with p_egg_count = 0 is rejected", async () => {
+    const { error } = await userA.rpc("create_listing", {
+      p_egg_count: 0,
+      p_unit: "dozen",
+      p_price_cents: 250,
+      p_lat: point.lat,
+      p_lng: point.lng,
+      p_location_label: "create_listing smoke test",
+      p_note: null,
+      p_contact_note: "Ring the bell",
+    });
+    assert(!!error, "expected the check constraint to reject egg_count = 0");
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }
