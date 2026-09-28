@@ -7,8 +7,17 @@ export interface ListingInput {
   contactNote: string;
 }
 
+export type ListingErrorKey =
+  | "post.errors.eggCount"
+  | "post.errors.priceCents"
+  | "post.errors.locationLabel"
+  | "post.errors.contactNote";
+
 export type ListingInputErrors = Partial<
-  Record<"eggCount" | "priceCents" | "locationLabel" | "contactNote", string>
+  Record<
+    "eggCount" | "priceCents" | "locationLabel" | "contactNote",
+    ListingErrorKey
+  >
 >;
 
 export function validateListingInput(input: ListingInput): ListingInputErrors {

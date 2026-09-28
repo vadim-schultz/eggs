@@ -64,7 +64,7 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the PostListing placeholder at "/post" when signed in', async () => {
+  it('renders the PostListing form at "/post" when signed in', async () => {
     getSessionMock.mockResolvedValue({
       data: { session: { user: { id: "user-1" } } },
     });
@@ -72,9 +72,7 @@ describe("App", () => {
     renderAt("/post");
 
     expect(
-      await screen.findByRole("heading", {
-        name: "Kommt in einem späteren Kapitel",
-      }),
+      await screen.findByRole("heading", { name: "Neues Angebot" }),
     ).toBeInTheDocument();
   });
 });
