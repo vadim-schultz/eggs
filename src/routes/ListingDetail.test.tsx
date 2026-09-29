@@ -18,6 +18,16 @@ vi.mock("../lib/supabaseClient", () => ({
   supabase: { from: fromMock },
 }));
 
+vi.mock("../components/ReserveButton", () => ({
+  default: () => <div data-testid="reserve-button" />,
+}));
+
+vi.mock("../components/ContactReveal", () => ({
+  default: ({ listingId }: { listingId: string }) => (
+    <div data-testid="contact-reveal">{listingId}</div>
+  ),
+}));
+
 function activeListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "listing-1",
@@ -69,13 +79,26 @@ describe("ListingDetail", () => {
     expect(eqMock).toHaveBeenCalledWith("id", "listing-1");
   });
 
-  it("does not render a Reserve button (yet)", async () => {
+  it("mounts ReserveButton and the contact reveal for the loaded listing", async () => {
     singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
     await screen.findByText("Downtown, near the market");
 
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
+    expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
+  });
+
+  it("seller sees the contact reveal for their own listing regardless of reservation", async () => {
+    singleMock.mockResolvedValue({
+      data: activeListing({ seller_id: "seller-1", status: "reserved" }),
+      error: null,
+    });
+
+    renderAt("listing-1");
+    await screen.findByText("Downtown, near the market");
+
+    expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
   });
 
   it("renders with no session at all", async () => {
