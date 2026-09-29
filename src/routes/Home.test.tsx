@@ -76,9 +76,7 @@ describe("Home", () => {
 
     renderHome();
 
-    expect(screen.getAllByRole("button", { name: /Downtown/ })).toHaveLength(
-      2,
-    );
+    expect(screen.getAllByRole("button", { name: /Downtown/ })).toHaveLength(2);
   });
 
   it("selecting a card highlights the matching marker", () => {

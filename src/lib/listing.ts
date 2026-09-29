@@ -1,10 +1,6 @@
 export type ListingUnit = "dozen" | "each";
 export type ListingStatus =
-  | "active"
-  | "reserved"
-  | "sold"
-  | "expired"
-  | "cancelled";
+  "active" | "reserved" | "sold" | "expired" | "cancelled";
 
 export interface Listing {
   id: string;
@@ -28,7 +24,9 @@ export function formatPrice(priceCents: number, currency: string): string {
   }).format(priceCents / 100);
 }
 
-export function unitLabelKey(unit: ListingUnit): "post.unit.dozen" | "post.unit.each" {
+export function unitLabelKey(
+  unit: ListingUnit,
+): "post.unit.dozen" | "post.unit.each" {
   return unit === "dozen" ? "post.unit.dozen" : "post.unit.each";
 }
 

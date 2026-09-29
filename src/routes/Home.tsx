@@ -14,7 +14,10 @@ import { t } from "../i18n/t";
 
 const FALLBACK_CENTER: GeoPoint = { lat: 52.52, lng: 13.405 };
 const DEFAULT_RADIUS_M = 15000;
-const RADIUS_OPTIONS: { meters: number; labelKey: "home.radius.5km" | "home.radius.15km" | "home.radius.30km" }[] = [
+const RADIUS_OPTIONS: {
+  meters: number;
+  labelKey: "home.radius.5km" | "home.radius.15km" | "home.radius.30km";
+}[] = [
   { meters: 5000, labelKey: "home.radius.5km" },
   { meters: 15000, labelKey: "home.radius.15km" },
   { meters: 30000, labelKey: "home.radius.30km" },
