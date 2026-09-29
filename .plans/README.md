@@ -20,8 +20,10 @@ direct from the browser, RLS as the authorization layer. Eight chapters.
 | [gaps-and-decisions.md](mvp/gaps-and-decisions.md) | Settled decisions and deferred features |
 | [chapters/](mvp/chapters/) | One executable plan per chapter |
 
-Status: planned — architecture, rollout and all eight chapter plans written; no code yet. First step:
-implement [chapters/01-project-scaffold.md](mvp/chapters/01-project-scaffold.md).
+Status: in progress — chapters 1–7 shipped; chapter 8 (deploy and docs sync) has its runbook merged
+(see [docs/operations/deploy.md](../docs/operations/deploy.md)) but the hosted Supabase/Google/Cloudflare
+configuration and production smoke test are still manual steps for the maintainer to run. Flips to
+shipped once those are done.
 
 ## Conventions
 

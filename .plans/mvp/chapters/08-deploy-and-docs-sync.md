@@ -13,7 +13,7 @@ todos:
     status: pending
   - id: runbook
     content: "docs/operations/deploy.md"
-    status: pending
+    status: done
   - id: docs-sync
     content: "Flip rollout/chapter statuses and README to shipped"
     status: pending
@@ -22,7 +22,11 @@ isProject: false
 
 # Chapter 8 — Deploy and docs sync
 
-**Repo:** `eggs` (docs, `.env.example`) · **Branch:** `docs/eggs-deploy-runbook` · **Status:** planned
+**Repo:** `eggs` (docs, `.env.example`) · **Branch:** `docs/eggs-deploy-runbook` · **Status:** in progress —
+runbook written and merged; `db-push`, `hosted-auth`, `pages` and the production smoke test are manual
+dashboard/CLI steps that remain for the maintainer (see [docs/operations/deploy.md](../../../docs/operations/deploy.md)).
+Full docs-sync (this chapter and the MVP as a whole flipping to shipped, the live URL landing in
+`README.md`) happens once those are done.
 
 **Depends on:** [6](06-reserve-a-listing.md), [7](07-lifecycle-and-expiry.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
