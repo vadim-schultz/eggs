@@ -106,6 +106,12 @@ async function main() {
     anonKey,
     `smoke-c-${runId}@example.test`,
   );
+  const userD = await createSignedInClient(
+    admin,
+    url,
+    anonKey,
+    `smoke-d-${runId}@example.test`,
+  );
 
   const { data: userAData } = await userA.auth.getUser();
   const { data: userBData } = await userB.auth.getUser();
@@ -314,6 +320,92 @@ async function main() {
     });
     assert(!!error, "expected the check constraint to reject egg_count = 0");
   });
+
+  let rpcListingId = "";
+  await check(
+    "seller A can create a second listing for the reservation RPC checks",
+    async () => {
+      const { data, error } = await userA
+        .from("listing")
+        .insert(newListing())
+        .select("id")
+        .single();
+      assert(!error, `unexpected error: ${error?.message}`);
+      rpcListingId = data!.id as string;
+    },
+  );
+
+  await check(
+    "reserve_listing by user B on A's active listing succeeds and the listing's status becomes 'reserved'",
+    async () => {
+      const { error } = await userB.rpc("reserve_listing", {
+        p_listing_id: rpcListingId,
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+
+      const { data, error: statusError } = await admin
+        .from("listing")
+        .select("status")
+        .eq("id", rpcListingId)
+        .single();
+      assert(!statusError, `unexpected error: ${statusError?.message}`);
+      assert(
+        data!.status === "reserved",
+        `expected status 'reserved', got '${data!.status}'`,
+      );
+    },
+  );
+
+  await check(
+    "reserve_listing by user C on the same (now reserved) listing fails with a friendly error",
+    async () => {
+      const { error } = await userC.rpc("reserve_listing", {
+        p_listing_id: rpcListingId,
+      });
+      assert(!!error, "expected reserve_listing to be rejected");
+    },
+  );
+
+  let rpcReservationId = "";
+  await check(
+    "cancel_reservation by user D (neither buyer nor seller) on B's reservation is rejected",
+    async () => {
+      const { data: reservationRow, error: findError } = await admin
+        .from("reservation")
+        .select("id")
+        .eq("listing_id", rpcListingId)
+        .eq("status", "active")
+        .single();
+      assert(!findError, `unexpected error: ${findError?.message}`);
+      rpcReservationId = reservationRow!.id as string;
+
+      const { error } = await userD.rpc("cancel_reservation", {
+        p_reservation_id: rpcReservationId,
+      });
+      assert(!!error, "expected user D's cancel to be rejected");
+    },
+  );
+
+  await check(
+    "cancel_reservation by user B reopens the listing to 'active'",
+    async () => {
+      const { error } = await userB.rpc("cancel_reservation", {
+        p_reservation_id: rpcReservationId,
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+
+      const { data, error: statusError } = await admin
+        .from("listing")
+        .select("status")
+        .eq("id", rpcListingId)
+        .single();
+      assert(!statusError, `unexpected error: ${statusError?.message}`);
+      assert(
+        data!.status === "active",
+        `expected status 'active', got '${data!.status}'`,
+      );
+    },
+  );
 
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
