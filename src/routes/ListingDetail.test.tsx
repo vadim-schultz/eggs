@@ -28,6 +28,10 @@ vi.mock("../components/ContactReveal", () => ({
   ),
 }));
 
+vi.mock("../components/SellerActions", () => ({
+  default: () => <div data-testid="seller-actions" />,
+}));
+
 function activeListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "listing-1",
@@ -87,6 +91,7 @@ describe("ListingDetail", () => {
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
+    expect(screen.getByTestId("seller-actions")).toBeInTheDocument();
   });
 
   it("seller sees the contact reveal for their own listing regardless of reservation", async () => {
