@@ -53,7 +53,7 @@ listed last only because it's the smallest, most isolated chapter.
 
 | # | Chapter | Layer | Gate | Plan | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Floating panel shell | frontend | vitest + `./ci.sh` | [01-floating-panel-shell.md](chapters/01-floating-panel-shell.md) | planned |
+| 1 | Floating panel shell | frontend | vitest + `./ci.sh` | [01-floating-panel-shell.md](chapters/01-floating-panel-shell.md) | in review |
 | 2 | Component hygiene | frontend | vitest + `./ci.sh` | [02-component-hygiene.md](chapters/02-component-hygiene.md) | planned |
 | 3 | Farmer/buyer tabs | frontend | vitest + `./ci.sh` | [03-farmer-buyer-tabs.md](chapters/03-farmer-buyer-tabs.md) | planned |
 | 4 | Buyer tab: search and grid | frontend | vitest + `./ci.sh` | [04-buyer-tab-search-and-grid.md](chapters/04-buyer-tab-search-and-grid.md) | planned |
