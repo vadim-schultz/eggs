@@ -46,4 +46,10 @@ export const strings = {
   "listing.status.expired": "Abgelaufen",
   "listing.status.cancelled": "Storniert",
   "listing.notFound": "Angebot nicht gefunden.",
+  "reserve.signInRequired": "Zum Reservieren anmelden",
+  "reserve.reserve": "Reservieren",
+  "reserve.reserved": "Reserviert",
+  "reserve.cancel": "Reservierung stornieren",
+  "reserve.error": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
+  "reserve.contactNote.label": "Kontakthinweis",
 } as const;

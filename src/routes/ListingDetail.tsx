@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
+import ContactReveal from "../components/ContactReveal";
+import ReserveButton from "../components/ReserveButton";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
 import {
@@ -14,6 +16,7 @@ import {
 function useListing(id: string | undefined) {
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -33,14 +36,16 @@ function useListing(id: string | undefined) {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, reloadToken]);
 
-  return { listing, loading };
+  const refetch = () => setReloadToken((token) => token + 1);
+
+  return { listing, loading, refetch };
 }
 
 export default function ListingDetail() {
   const { id } = useParams();
-  const { listing, loading } = useListing(id);
+  const { listing, loading, refetch } = useListing(id);
 
   if (loading) return null;
   if (!listing) return <Text>{t("listing.notFound")}</Text>;
@@ -59,6 +64,12 @@ export default function ListingDetail() {
       <Text>
         {t("listing.status.label")}: {t(statusLabelKey(listing.status))}
       </Text>
+      <ReserveButton listing={listing} onChange={refetch} />
+      {/* key={listing.status}: a successful reserve/cancel changes who RLS
+          reveals the contact note to, but listing.id never changes — remount
+          on status change to re-run the query instead of caching a stale
+          "not visible yet" result. */}
+      <ContactReveal key={listing.status} listingId={listing.id} />
     </Stack>
   );
 }
