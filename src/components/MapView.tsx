@@ -64,7 +64,7 @@ export default function MapView({
   onSelect,
 }: MapViewProps) {
   return (
-    <Box position="fixed" inset="0" zIndex="0">
+    <Box w="full" h="full">
       <MapContainer
         center={[center.lat, center.lng]}
         zoom={12}

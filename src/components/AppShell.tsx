@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FloatingPanel } from "@chakra-ui/react";
+import { Box, FloatingPanel } from "@chakra-ui/react";
 
 import MapView from "./MapView";
 import type { GeoPoint } from "../hooks/useGeolocation";
@@ -13,18 +13,21 @@ interface AppShellProps {
 export default function AppShell({ children }: AppShellProps) {
   return (
     <>
-      <MapView
-        center={BACKGROUND_CENTER}
-        listings={[]}
-        selectedId={null}
-        onSelect={() => {}}
-      />
+      <Box position="fixed" inset="0" zIndex="0">
+        <MapView
+          center={BACKGROUND_CENTER}
+          listings={[]}
+          selectedId={null}
+          onSelect={() => {}}
+        />
+      </Box>
       <FloatingPanel.Root defaultOpen draggable={false} resizable={false}>
         <FloatingPanel.Positioner
           style={{ top: "1.5rem", right: "1.5rem", left: "auto" }}
         >
           <FloatingPanel.Content
             maxW="sm"
+            maxH="calc(100vh - 3rem)"
             style={{ width: "auto", height: "auto" }}
           >
             <FloatingPanel.Header>
