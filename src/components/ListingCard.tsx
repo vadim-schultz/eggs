@@ -1,12 +1,8 @@
-import { Badge, Card, Text } from "@chakra-ui/react";
+import { Card, Text } from "@chakra-ui/react";
 
+import StatusBadge from "./StatusBadge";
 import { t } from "../i18n/t";
-import {
-  formatPrice,
-  statusLabelKey,
-  unitLabelKey,
-  type Listing,
-} from "../lib/listing";
+import { formatPrice, unitLabelKey, type Listing } from "../lib/listing";
 
 interface ListingCardProps {
   listing: Listing;
@@ -33,7 +29,7 @@ export default function ListingCard({
             {listing.egg_count} {t(unitLabelKey(listing.unit))} ·{" "}
             {formatPrice(listing.price_cents, listing.currency)}
           </Text>
-          <Badge>{t(statusLabelKey(listing.status))}</Badge>
+          <StatusBadge status={listing.status} />
         </Card.Body>
       </button>
     </Card.Root>

@@ -52,4 +52,11 @@ export const strings = {
   "reserve.cancel": "Reservierung stornieren",
   "reserve.error": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
   "reserve.contactNote.label": "Kontakthinweis",
+  "seller.markSold": "Als verkauft markieren",
+  "seller.markCancelled": "Angebot zurückziehen",
+  "seller.error": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
+  "seller.expiresAt.label": "Ablaufdatum",
+  "seller.expiresAt.save": "Speichern",
+  "seller.expiresAt.error":
+    "Das Datum darf höchstens 14 Tage in der Zukunft liegen.",
 } as const;

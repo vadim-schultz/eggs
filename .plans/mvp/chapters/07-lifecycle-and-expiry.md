@@ -4,19 +4,19 @@ overview: "The expire_listings() SECURITY DEFINER function and its daily pg_cron
 todos:
   - id: cron
     content: "pg_cron extension, expire_listings() function, daily schedule"
-    status: pending
+    status: done
   - id: seller-actions
     content: "Mark sold / mark cancelled, edit expires_at (seller only)"
-    status: pending
+    status: done
   - id: status-ui
     content: "Status badges reflect expired/sold/cancelled everywhere a listing renders"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 7 — Lifecycle and expiry
 
-**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-lifecycle-and-expiry` · **Status:** planned
+**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-lifecycle-and-expiry` · **Status:** shipped
 
 **Depends on:** [2](02-schema-and-rls.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §9 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -116,6 +116,13 @@ fire.
 
 `SellerActions` stays three small pieces (mark sold, mark cancelled, edit expiry) composed in one
 component, not one function branching on an action string. Report the outcome.
+
+**Outcome:** held as designed — `SellerActions.tsx` is one file with three small pieces
+(`MarkStatusActions`, `ExpiryEditor`, and the owner-check wrapper that composes them), each with its own
+`busy`/`error` state, no shared branching function. `StatusBadge` turned out smaller than expected: chapter
+5's `statusLabelKey` already covered the label strings, so the new component only had to add a
+status-to-`colorPalette` mapping, exported separately so `StatusBadge.test.tsx` could assert label and
+color independently instead of parsing rendered DOM styles.
 
 ## Verification
 
