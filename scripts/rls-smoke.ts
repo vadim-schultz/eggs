@@ -246,9 +246,9 @@ async function main() {
     "listings_near returns a listing within radius_m and omits one outside it",
     async () => {
       const near = await anon.rpc("listings_near", {
-        lat: point.lat,
-        lng: point.lng,
-        radius_m: 1000,
+        p_lat: point.lat,
+        p_lng: point.lng,
+        p_radius_m: 1000,
       });
       assert(!near.error, `unexpected error: ${near.error?.message}`);
       assert(
@@ -257,9 +257,9 @@ async function main() {
       );
 
       const far = await anon.rpc("listings_near", {
-        lat: point.lat + 5,
-        lng: point.lng + 5,
-        radius_m: 1000,
+        p_lat: point.lat + 5,
+        p_lng: point.lng + 5,
+        p_radius_m: 1000,
       });
       assert(!far.error, `unexpected error: ${far.error?.message}`);
       assert(

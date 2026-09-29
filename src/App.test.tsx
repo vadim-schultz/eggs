@@ -5,9 +5,10 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import App from "./App";
 
-const { getSessionMock, onAuthStateChangeMock } = vi.hoisted(() => ({
+const { getSessionMock, onAuthStateChangeMock, rpcMock } = vi.hoisted(() => ({
   getSessionMock: vi.fn(),
   onAuthStateChangeMock: vi.fn(),
+  rpcMock: vi.fn(),
 }));
 
 vi.mock("./lib/supabaseClient", () => ({
@@ -18,7 +19,12 @@ vi.mock("./lib/supabaseClient", () => ({
       signInWithOAuth: vi.fn(),
       signOut: vi.fn(),
     },
+    rpc: rpcMock,
   },
+}));
+
+vi.mock("./components/MapView", () => ({
+  default: () => null,
 }));
 
 function renderAt(path: string) {
@@ -38,6 +44,17 @@ describe("App", () => {
     onAuthStateChangeMock.mockReturnValue({
       data: { subscription: { unsubscribe: vi.fn() } },
     });
+    rpcMock.mockReset();
+    rpcMock.mockResolvedValue({ data: [], error: null });
+    Object.defineProperty(globalThis.navigator, "geolocation", {
+      value: {
+        getCurrentPosition: (
+          _success: PositionCallback,
+          error?: PositionErrorCallback,
+        ) => error?.({ code: 1 } as GeolocationPositionError),
+      },
+      configurable: true,
+    });
   });
 
   it('renders Home at "/"', async () => {
@@ -46,9 +63,7 @@ describe("App", () => {
     renderAt("/");
 
     expect(
-      await screen.findByRole("heading", {
-        name: "Kommt in einem späteren Kapitel",
-      }),
+      await screen.findByRole("heading", { name: "Eier in deiner Nähe" }),
     ).toBeInTheDocument();
   });
 
@@ -58,9 +73,7 @@ describe("App", () => {
     renderAt("/post");
 
     expect(
-      await screen.findByRole("heading", {
-        name: "Kommt in einem späteren Kapitel",
-      }),
+      await screen.findByRole("heading", { name: "Eier in deiner Nähe" }),
     ).toBeInTheDocument();
   });
 
