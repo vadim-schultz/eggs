@@ -25,6 +25,23 @@ Status: in progress — chapters 1–7 shipped; chapter 8 (deploy and docs sync)
 configuration and production smoke test are still manual steps for the maintainer to run. Flips to
 shipped once those are done.
 
+### [ui-overhaul/](ui-overhaul/) — Eierbauer UI/UX redesign
+
+A frontend-only redesign of the deployed app: a full-page map background with a small floating
+panel (top-right) holding farmer/buyer tabs, a compact results grid, in-panel dialogs for posting
+and listing detail instead of page navigation, a Chakra-only component pass, and a fix for the
+Google OAuth redirect landing on `localhost` instead of the production domain. No schema or backend
+changes. Seven chapters.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](ui-overhaul/00-architecture.md) | Why, non-goals, stack, screen/component map, shell/tabs/dialog design |
+| [01-rollout.md](ui-overhaul/01-rollout.md) | Seven chapters, dependency graph, invariants, per-chapter gate |
+| [gaps-and-decisions.md](ui-overhaul/gaps-and-decisions.md) | Settled decisions and deferred features |
+| [chapters/](ui-overhaul/chapters/) | One executable plan per chapter |
+
+Status: planned — all seven chapter docs are written; no code has shipped yet.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
