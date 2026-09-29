@@ -4,19 +4,19 @@ overview: "The Home route: a Leaflet map and a synced list of active listings, c
 todos:
   - id: near
     content: "useListingsNear hook wrapping the listings_near RPC"
-    status: pending
+    status: done
   - id: map
     content: "Leaflet map + markers, react-leaflet"
-    status: pending
+    status: done
   - id: list
     content: "Synced list view + ListingDetail read side"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 5 — Browse and map
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-browse-and-map` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-browse-and-map` · **Status:** shipped
 
 **Depends on:** [1](01-project-scaffold.md), [2](02-schema-and-rls.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §6, §7 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -104,6 +104,12 @@ dependency.
 
 `Home.tsx` composes `useGeolocation`, `useListingsNear`, `MapView` and the list; it holds `selectedId`
 state and passes it down, nothing else. Report the outcome.
+
+**Outcome:** held as designed (109 lines, `selectedId` is the only local state). Two follow-ups landed
+during this chapter: `listings_near` was changed to return plain `double precision` lat/lng (see chapter
+2's outcome note) since the JS client couldn't consume the nested geography value directly, and the form
+components across `PostListing`/`Home` were switched to Chakra's `Card`/`Field`/`NativeSelect` for
+consistency.
 
 ## Verification
 

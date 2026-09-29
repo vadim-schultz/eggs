@@ -4,22 +4,22 @@ overview: "supabase/ CLI project, the postgis extension, the listing/reservation
 todos:
   - id: init
     content: "supabase init, local stack via supabase start"
-    status: pending
+    status: done
   - id: schema
     content: "listing/reservation/listing_contact tables, checks, trigger, RLS"
-    status: pending
+    status: done
   - id: geo
     content: "listings_near(lat, lng, radius_m) RPC using ST_DWithin"
-    status: pending
+    status: done
   - id: smoke
     content: "scripts/rls-smoke.ts"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 2 — Database schema and RLS
 
-**Repo:** `eggs` (`supabase/`) · **Branch:** `feat/eggs-schema-and-rls` · **Status:** planned
+**Repo:** `eggs` (`supabase/`) · **Branch:** `feat/eggs-schema-and-rls` · **Status:** shipped
 
 **Depends on:** none · **Architecture:** [../00-architecture.md](../00-architecture.md) §5, §6, §9 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -115,6 +115,11 @@ committed).
 
 One migration file per concern (schema, geo RPC) rather than one giant file; policy names follow
 `<table>_<action>_<role-or-condition>` so `supabase db diff` output stays readable. Report the outcome.
+
+**Outcome:** held as designed — `initial_schema.sql` and `listings_near.sql` shipped as separate
+migrations. One follow-up migration (`listings_near_lat_lng.sql`, chapter 5) reshapes the RPC's return
+type to plain `double precision` columns instead of a nested geography value, once the frontend needed to
+consume lat/lng directly; still one concern per file.
 
 ## Verification
 
