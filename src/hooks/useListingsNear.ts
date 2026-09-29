@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { supabase } from "../lib/supabaseClient";
-import type { Listing } from "../lib/listing";
+import type { ListingNear } from "../lib/listing";
 import type { GeoPoint } from "./useGeolocation";
 
 export interface UseListingsNearResult {
-  listings: Listing[];
+  listings: ListingNear[];
   loading: boolean;
   error: boolean;
 }
@@ -14,7 +14,7 @@ export function useListingsNear(
   center: GeoPoint,
   radiusM: number,
 ): UseListingsNearResult {
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<ListingNear[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -25,16 +25,16 @@ export function useListingsNear(
 
     supabase
       .rpc("listings_near", {
-        lat: center.lat,
-        lng: center.lng,
-        radius_m: radiusM,
+        p_lat: center.lat,
+        p_lng: center.lng,
+        p_radius_m: radiusM,
       })
       .then(({ data, error: rpcError }) => {
         if (cancelled) return;
         if (rpcError || !data) {
           setError(true);
         } else {
-          setListings(data as Listing[]);
+          setListings(data as ListingNear[]);
         }
         setLoading(false);
       });

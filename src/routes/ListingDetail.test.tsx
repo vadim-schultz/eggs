@@ -26,7 +26,6 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
     unit: "dozen",
     price_cents: 400,
     currency: "EUR",
-    location: { type: "Point", coordinates: [13.405, 52.52] },
     location_label: "Downtown, near the market",
     note: null,
     status: "active",

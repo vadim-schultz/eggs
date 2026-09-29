@@ -19,9 +19,9 @@ describe("useListingsNear", () => {
     renderHook(() => useListingsNear({ lat: 52.52, lng: 13.405 }, 15000));
 
     expect(rpcMock).toHaveBeenCalledWith("listings_near", {
-      lat: 52.52,
-      lng: 13.405,
-      radius_m: 15000,
+      p_lat: 52.52,
+      p_lng: 13.405,
+      p_radius_m: 15000,
     });
   });
 

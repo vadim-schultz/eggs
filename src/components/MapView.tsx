@@ -7,7 +7,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import type { GeoPoint } from "../hooks/useGeolocation";
-import type { Listing } from "../lib/listing";
+import type { ListingNear } from "../lib/listing";
 
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
   ._getIconUrl;
@@ -19,7 +19,7 @@ L.Icon.Default.mergeOptions({
 
 interface MapViewProps {
   center: GeoPoint;
-  listings: Listing[];
+  listings: ListingNear[];
   selectedId: string | null;
   onSelect: (id: string) => void;
 }
@@ -51,17 +51,14 @@ export default function MapView({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       />
-      {listings.map((listing) => {
-        const [lng, lat] = listing.location.coordinates;
-        return (
-          <Marker
-            key={listing.id}
-            position={[lat, lng]}
-            opacity={listing.id === selectedId ? 1 : 0.7}
-            eventHandlers={{ click: () => onSelect(listing.id) }}
-          />
-        );
-      })}
+      {listings.map((listing) => (
+        <Marker
+          key={listing.id}
+          position={[listing.lat, listing.lng]}
+          opacity={listing.id === selectedId ? 1 : 0.7}
+          eventHandlers={{ click: () => onSelect(listing.id) }}
+        />
+      ))}
     </MapContainer>
   );
 }

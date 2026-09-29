@@ -4,7 +4,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { MemoryRouter } from "react-router-dom";
 
 import Home from "./Home";
-import type { Listing } from "../lib/listing";
+import type { ListingNear } from "../lib/listing";
 
 const { useSessionMock, useGeolocationMock, useListingsNearMock } = vi.hoisted(
   () => ({
@@ -27,7 +27,7 @@ vi.mock("../components/MapView", () => ({
   ),
 }));
 
-function listing(overrides: Partial<Listing> = {}): Listing {
+function listing(overrides: Partial<ListingNear> = {}): ListingNear {
   return {
     id: "listing-1",
     seller_id: "seller-1",
@@ -35,7 +35,8 @@ function listing(overrides: Partial<Listing> = {}): Listing {
     unit: "dozen",
     price_cents: 400,
     currency: "EUR",
-    location: { type: "Point", coordinates: [13.405, 52.52] },
+    lat: 52.52,
+    lng: 13.405,
     location_label: "Downtown",
     note: null,
     status: "active",
