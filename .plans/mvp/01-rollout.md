@@ -60,16 +60,18 @@ auth (chapter 3) — only chapter 4 (posting, which requires a signed-in seller)
 | 4 | Post a listing | frontend + schema | vitest + `./ci.sh` | [04-post-a-listing.md](chapters/04-post-a-listing.md) | shipped |
 | 5 | Browse and map | frontend | vitest + `./ci.sh` | [05-browse-and-map.md](chapters/05-browse-and-map.md) | shipped |
 | 6 | Reserve a listing | frontend + schema | vitest + `./ci.sh` | [06-reserve-a-listing.md](chapters/06-reserve-a-listing.md) | shipped |
-| 7 | Lifecycle and expiry | schema + frontend | `pg_cron` smoke script + `./ci.sh` | [07-lifecycle-and-expiry.md](chapters/07-lifecycle-and-expiry.md) | planned |
-| 8 | Deploy and docs sync | ops + docs | production smoke test | [08-deploy-and-docs-sync.md](chapters/08-deploy-and-docs-sync.md) | planned |
+| 7 | Lifecycle and expiry | schema + frontend | `pg_cron` smoke script + `./ci.sh` | [07-lifecycle-and-expiry.md](chapters/07-lifecycle-and-expiry.md) | shipped |
+| 8 | Deploy and docs sync | ops + docs | production smoke test | [08-deploy-and-docs-sync.md](chapters/08-deploy-and-docs-sync.md) | in progress |
 
 "Shipped" means the chapter's code is merged to `main` and its refactor gate outcome is reported in the
 chapter doc; "planned" means the chapter doc itself (Goal, design decisions, files, manual configuration,
-tests, gate) is written but no code exists yet. Chapters 1–6 are shipped; chapter 7 (lifecycle and expiry)
-is next — it only depends on chapter 2, already shipped. Chapters 1, 3 and 8 each carry a **Manual
-configuration** section for the Supabase dashboard, Google Cloud Console and Cloudflare Pages steps that
-have no code equivalent; every other chapter's section explicitly says none is needed, so the split is
-visible even where it's empty.
+tests, gate) is written but no code exists yet. Chapters 1–7 are shipped. Chapter 8 (deploy and docs sync)
+is "in progress": the runbook is written and merged, but the manual dashboard configuration and the
+production smoke test it depends on remain to be run by hand — see
+[docs/operations/deploy.md](../../docs/operations/deploy.md) and the chapter's own status line. Chapters
+1, 3 and 8 each carry a **Manual configuration** section for the Supabase dashboard, Google Cloud Console
+and Cloudflare Pages steps that have no code equivalent; every other chapter's section explicitly says
+none is needed, so the split is visible even where it's empty.
 
 ## Per-chapter gate
 
