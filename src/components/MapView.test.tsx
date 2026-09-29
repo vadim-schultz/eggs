@@ -40,13 +40,13 @@ function renderMap(props: Partial<ComponentProps<typeof MapView>> = {}) {
 }
 
 describe("MapView", () => {
-  it("marks the user's location with a basket emoji", () => {
+  it("marks the user's location with a basket icon", () => {
     renderMap();
 
-    expect(screen.getByText("🧺")).toBeInTheDocument();
+    expect(screen.getByTitle("Your location")).toBeInTheDocument();
   });
 
-  it("marks each egg listing with an egg emoji", () => {
+  it("marks each egg listing with an egg icon", () => {
     renderMap({
       listings: [
         listing({ id: "listing-1" }),
@@ -54,6 +54,6 @@ describe("MapView", () => {
       ],
     });
 
-    expect(screen.getAllByText("🥚")).toHaveLength(2);
+    expect(screen.getAllByTitle("Egg listing")).toHaveLength(2);
   });
 });
