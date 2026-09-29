@@ -3,20 +3,20 @@ import L from "leaflet";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import { Box } from "@chakra-ui/react";
 import "leaflet/dist/leaflet.css";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import type { GeoPoint } from "../hooks/useGeolocation";
 import type { ListingNear } from "../lib/listing";
 
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
-  ._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
+function emojiIcon(emoji: string) {
+  return L.divIcon({
+    html: emoji,
+    className: "emoji-marker",
+    iconSize: [28, 28],
+  });
+}
+
+const userLocationIcon = emojiIcon("🧺");
+const listingIcon = emojiIcon("🥚");
 
 interface MapViewProps {
   center: GeoPoint;
@@ -59,10 +59,12 @@ export default function MapView({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
+        <Marker position={[center.lat, center.lng]} icon={userLocationIcon} />
         {listings.map((listing) => (
           <Marker
             key={listing.id}
             position={[listing.lat, listing.lng]}
+            icon={listingIcon}
             opacity={listing.id === selectedId ? 1 : 0.7}
             eventHandlers={{ click: () => onSelect(listing.id) }}
           />
