@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Text } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
-import { useSession } from "../auth/useSession";
-import { t } from "../i18n/t";
-import { supabase } from "../lib/supabaseClient";
-import type { Listing } from "../lib/listing";
+import { useSession } from "../../auth/useSession";
+import { t } from "../../i18n/t";
+import { supabase } from "../../lib/supabaseClient";
+import type { Listing } from "../../lib/listing";
+import ReserveActionButton from "./ReserveActionButton";
 
 interface ActiveReservation {
   id: string;
@@ -86,35 +87,25 @@ export default function ReserveButton({
 
   if (isActive) {
     return (
-      <>
-        <Button
-          disabled={busy}
-          onClick={() =>
-            callRpc("reserve_listing", { p_listing_id: listing.id })
-          }
-        >
-          {t("reserve.reserve")}
-        </Button>
-        {error && <Text color="fg.error">{t("reserve.error")}</Text>}
-      </>
+      <ReserveActionButton
+        label={t("reserve.reserve")}
+        busy={busy}
+        error={error}
+        onClick={() => callRpc("reserve_listing", { p_listing_id: listing.id })}
+      />
     );
   }
 
   if (!reservationLoading && reservation) {
     return (
-      <>
-        <Button
-          disabled={busy}
-          onClick={() =>
-            callRpc("cancel_reservation", {
-              p_reservation_id: reservation.id,
-            })
-          }
-        >
-          {t("reserve.cancel")}
-        </Button>
-        {error && <Text color="fg.error">{t("reserve.error")}</Text>}
-      </>
+      <ReserveActionButton
+        label={t("reserve.cancel")}
+        busy={busy}
+        error={error}
+        onClick={() =>
+          callRpc("cancel_reservation", { p_reservation_id: reservation.id })
+        }
+      />
     );
   }
 

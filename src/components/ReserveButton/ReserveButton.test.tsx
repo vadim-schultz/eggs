@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import ReserveButton from "./ReserveButton";
-import type { Listing } from "../lib/listing";
+import type { Listing } from "../../lib/listing";
 
 const {
   useSessionMock,
@@ -30,8 +30,8 @@ const {
   };
 });
 
-vi.mock("../auth/useSession", () => ({ useSession: useSessionMock }));
-vi.mock("../lib/supabaseClient", () => ({
+vi.mock("../../auth/useSession", () => ({ useSession: useSessionMock }));
+vi.mock("../../lib/supabaseClient", () => ({
   supabase: { from: fromMock, rpc: rpcMock },
 }));
 
