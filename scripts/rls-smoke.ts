@@ -407,6 +407,150 @@ async function main() {
     },
   );
 
+  let expiredListingId = "";
+  await check(
+    "expire_listings() sets status = 'expired' on an active listing whose expires_at is in the past",
+    async () => {
+      const { data, error } = await admin
+        .from("listing")
+        .insert({
+          ...newListing(),
+          expires_at: new Date(Date.now() - 1000).toISOString(),
+        })
+        .select("id")
+        .single();
+      assert(!error, `unexpected error: ${error?.message}`);
+      expiredListingId = data!.id as string;
+
+      const { error: rpcError } = await admin.rpc("expire_listings");
+      assert(!rpcError, `unexpected error: ${rpcError?.message}`);
+
+      const { data: row, error: fetchError } = await admin
+        .from("listing")
+        .select("status")
+        .eq("id", expiredListingId)
+        .single();
+      assert(!fetchError, `unexpected error: ${fetchError?.message}`);
+      assert(
+        row!.status === "expired",
+        `expected status 'expired', got '${row!.status}'`,
+      );
+    },
+  );
+
+  let futureListingId = "";
+  await check(
+    "expire_listings() does not touch an active listing whose expires_at is in the future",
+    async () => {
+      const { data, error } = await admin
+        .from("listing")
+        .insert(newListing())
+        .select("id")
+        .single();
+      assert(!error, `unexpected error: ${error?.message}`);
+      futureListingId = data!.id as string;
+
+      const { error: rpcError } = await admin.rpc("expire_listings");
+      assert(!rpcError, `unexpected error: ${rpcError?.message}`);
+
+      const { data: row, error: fetchError } = await admin
+        .from("listing")
+        .select("status")
+        .eq("id", futureListingId)
+        .single();
+      assert(!fetchError, `unexpected error: ${fetchError?.message}`);
+      assert(
+        row!.status === "active",
+        `expected status 'active', got '${row!.status}'`,
+      );
+    },
+  );
+
+  let reservedPastListingId = "";
+  await check(
+    "expire_listings() does not touch a reserved listing even if expires_at has passed",
+    async () => {
+      const { data, error } = await admin
+        .from("listing")
+        .insert({
+          ...newListing(),
+          status: "reserved",
+          expires_at: new Date(Date.now() - 1000).toISOString(),
+        })
+        .select("id")
+        .single();
+      assert(!error, `unexpected error: ${error?.message}`);
+      reservedPastListingId = data!.id as string;
+
+      const { error: rpcError } = await admin.rpc("expire_listings");
+      assert(!rpcError, `unexpected error: ${rpcError?.message}`);
+
+      const { data: row, error: fetchError } = await admin
+        .from("listing")
+        .select("status")
+        .eq("id", reservedPastListingId)
+        .single();
+      assert(!fetchError, `unexpected error: ${fetchError?.message}`);
+      assert(
+        row!.status === "reserved",
+        `expected status 'reserved', got '${row!.status}'`,
+      );
+    },
+  );
+
+  let sellableListingId = "";
+  await check(
+    "seller A can create a listing for the mark_listing_sold checks",
+    async () => {
+      const { data, error } = await userA
+        .from("listing")
+        .insert(newListing())
+        .select("id")
+        .single();
+      assert(!error, `unexpected error: ${error?.message}`);
+      sellableListingId = data!.id as string;
+    },
+  );
+
+  await check("mark_listing_sold by a non-owner is rejected", async () => {
+    const { error } = await userB.rpc("mark_listing_sold", {
+      p_listing_id: sellableListingId,
+    });
+    assert(!!error, "expected non-owner mark_listing_sold to be rejected");
+  });
+
+  await check("mark_listing_sold by the owner succeeds", async () => {
+    const { error } = await userA.rpc("mark_listing_sold", {
+      p_listing_id: sellableListingId,
+    });
+    assert(!error, `unexpected error: ${error?.message}`);
+
+    const { data, error: fetchError } = await admin
+      .from("listing")
+      .select("status")
+      .eq("id", sellableListingId)
+      .single();
+    assert(!fetchError, `unexpected error: ${fetchError?.message}`);
+    assert(
+      data!.status === "sold",
+      `expected status 'sold', got '${data!.status}'`,
+    );
+  });
+
+  await check(
+    "updating expires_at beyond the allowed bound violates the CHECK constraint",
+    async () => {
+      const tooFar = new Date(
+        Date.now() + 15 * 24 * 60 * 60 * 1000,
+      ).toISOString();
+      const { error } = await userA
+        .from("listing")
+        .update({ expires_at: tooFar })
+        .eq("id", sellableListingId);
+      assert(!!error, "expected the bound CHECK to reject an expires_at 15 days out");
+    },
+  );
+
   console.log(`\n${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
 }

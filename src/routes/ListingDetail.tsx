@@ -4,14 +4,11 @@ import { Heading, Stack, Text } from "@chakra-ui/react";
 
 import ContactReveal from "../components/ContactReveal";
 import ReserveButton from "../components/ReserveButton";
+import SellerActions from "../components/SellerActions";
+import StatusBadge from "../components/StatusBadge";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
-import {
-  formatPrice,
-  statusLabelKey,
-  unitLabelKey,
-  type Listing,
-} from "../lib/listing";
+import { formatPrice, unitLabelKey, type Listing } from "../lib/listing";
 
 function useListing(id: string | undefined) {
   const [listing, setListing] = useState<Listing | null>(null);
@@ -62,7 +59,7 @@ export default function ListingDetail() {
         {formatPrice(listing.price_cents, listing.currency)}
       </Text>
       <Text>
-        {t("listing.status.label")}: {t(statusLabelKey(listing.status))}
+        {t("listing.status.label")}: <StatusBadge status={listing.status} />
       </Text>
       <ReserveButton listing={listing} onChange={refetch} />
       {/* key={listing.status}: a successful reserve/cancel changes who RLS
@@ -70,6 +67,7 @@ export default function ListingDetail() {
           on status change to re-run the query instead of caching a stale
           "not visible yet" result. */}
       <ContactReveal key={listing.status} listingId={listing.id} />
+      <SellerActions listing={listing} onChange={refetch} />
     </Stack>
   );
 }
