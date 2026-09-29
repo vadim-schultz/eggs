@@ -4,22 +4,22 @@ overview: "Vite + React + TypeScript + Chakra UI app shell with three stub route
 todos:
   - id: shell
     content: "Vite/React/TS scaffold, ChakraProvider, router with three stub routes"
-    status: pending
+    status: done
   - id: i18n
     content: "strings.de.ts + t(key) helper"
-    status: pending
+    status: done
   - id: supabase-client
     content: "env validation + supabaseClient.ts"
-    status: pending
+    status: done
   - id: ci
     content: "ci.sh + GitHub Actions workflow"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 1 — Project scaffold + i18n dictionary
 
-**Repo:** `eggs` (root) · **Branch:** `feat/eggs-project-scaffold` · **Status:** planned
+**Repo:** `eggs` (root) · **Branch:** `feat/eggs-project-scaffold` · **Status:** shipped
 
 **Depends on:** none · **Architecture:** [../00-architecture.md](../00-architecture.md) §3, §11 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -120,6 +120,9 @@ Nothing else in this chapter touches the dashboard — schema, extensions and RL
 
 Each stub route stays a single-purpose component under ~20 LOC; `t.ts` and `env.ts` stay one exported
 function each. Report the outcome.
+
+**Outcome:** held as designed — `t.ts` and `env.ts` each stay a single exported function (5 and 24
+lines respectively), no split needed.
 
 ## Verification
 

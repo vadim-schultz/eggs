@@ -4,22 +4,22 @@ overview: "Google as the only OAuth provider, wired through Supabase Auth: a use
 todos:
   - id: google-console
     content: "Google Cloud Console OAuth client for local Supabase auth callback"
-    status: pending
+    status: done
   - id: config-toml
     content: "supabase/config.toml [auth.external.google]"
-    status: pending
+    status: done
   - id: session
     content: "useSession hook + AuthButton"
-    status: pending
+    status: done
   - id: guard
     content: "RequireAuth route guard on /post"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 3 — Auth (Google sign-in)
 
-**Repo:** `eggs` (`src/`, `supabase/config.toml`) · **Branch:** `feat/eggs-auth` · **Status:** planned
+**Repo:** `eggs` (`src/`, `supabase/config.toml`) · **Branch:** `feat/eggs-auth` · **Status:** shipped
 
 **Depends on:** [1](01-project-scaffold.md), [2](02-schema-and-rls.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §7 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -116,6 +116,11 @@ for the local stack; there is nothing to toggle in a dashboard until chapter 8's
 
 `useSession` stays the only place that calls `supabase.auth.getSession`/`onAuthStateChange`; `RequireAuth`
 stays a single conditional render, no additional state. Report the outcome.
+
+**Outcome:** held as designed, no additional state introduced. Two follow-up fixes landed after the
+initial merge: the local Supabase Auth `site_url` needed pointing at the actual dev server for the OAuth
+redirect to land correctly, and CI needed an authenticated GitHub API lookup for `supabase/setup-cli` to
+avoid unauthenticated rate limiting.
 
 ## Verification
 

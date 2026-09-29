@@ -4,12 +4,12 @@ One executable plan per chapter. Order, dependencies and gates: [../01-rollout.m
 
 | # | File | Layer | Status |
 | --- | --- | --- | --- |
-| 1 | [01-project-scaffold.md](01-project-scaffold.md) | frontend | planned |
-| 2 | [02-schema-and-rls.md](02-schema-and-rls.md) | schema | planned |
-| 3 | [03-auth.md](03-auth.md) | frontend + schema | planned |
-| 4 | [04-post-a-listing.md](04-post-a-listing.md) | frontend + schema | planned |
-| 5 | [05-browse-and-map.md](05-browse-and-map.md) | frontend | planned |
-| 6 | [06-reserve-a-listing.md](06-reserve-a-listing.md) | frontend + schema | planned |
+| 1 | [01-project-scaffold.md](01-project-scaffold.md) | frontend | shipped |
+| 2 | [02-schema-and-rls.md](02-schema-and-rls.md) | schema | shipped |
+| 3 | [03-auth.md](03-auth.md) | frontend + schema | shipped |
+| 4 | [04-post-a-listing.md](04-post-a-listing.md) | frontend + schema | shipped |
+| 5 | [05-browse-and-map.md](05-browse-and-map.md) | frontend | shipped |
+| 6 | [06-reserve-a-listing.md](06-reserve-a-listing.md) | frontend + schema | shipped |
 | 7 | [07-lifecycle-and-expiry.md](07-lifecycle-and-expiry.md) | schema + frontend | planned |
 | 8 | [08-deploy-and-docs-sync.md](08-deploy-and-docs-sync.md) | ops + docs | planned |
 
@@ -21,5 +21,5 @@ configuration section added since this app has no backend server and leans on Su
 that only exist as dashboard state, not as versioned code (chapters 1, 3 and 8 carry the real content;
 the rest note explicitly that none is needed).
 
-All eight chapters are written. Implementation starts at chapter 1; chapters 1 and 2 have no dependency
-on each other and can proceed in parallel (see [../01-rollout.md](../01-rollout.md)).
+All eight chapters are written. Chapters 1–6 are shipped; chapter 7 (lifecycle and expiry) is next — it
+only depends on chapter 2, already shipped (see [../01-rollout.md](../01-rollout.md)).

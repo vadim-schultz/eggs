@@ -4,19 +4,19 @@ overview: "The PostListing form (egg count, unit, price, location text, note, co
 todos:
   - id: rpc
     content: "create_listing(...) SQL function, listing + listing_contact in one transaction"
-    status: pending
+    status: done
   - id: geocode
     content: "Nominatim lookup, debounced, with a manual-pin fallback"
-    status: pending
+    status: done
   - id: form
     content: "PostListing form + validation + submit"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 4 — Post a listing
 
-**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-post-a-listing` · **Status:** planned
+**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-post-a-listing` · **Status:** shipped
 
 **Depends on:** [2](02-schema-and-rls.md), [3](03-auth.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §5, §8 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -107,6 +107,10 @@ Nominatim is a public endpoint with no key or account.
 
 `PostListing` delegates validation and geocoding to the two pure/async helpers rather than inlining
 either; the component itself stays presentation + submit-handler wiring. Report the outcome.
+
+**Outcome:** held as designed — `validateListingInput.ts` and `geocode.ts` stay pure/async helpers
+called from `PostListing.tsx`, which stays presentation and submit-handler wiring (180 lines, no inlined
+validation or fetch logic).
 
 ## Verification
 
