@@ -4,19 +4,19 @@ overview: "reserve_listing and cancel_reservation RPCs, the Reserve button and i
 todos:
   - id: rpcs
     content: "reserve_listing(listing_id) and cancel_reservation(reservation_id) SQL functions"
-    status: pending
+    status: done
   - id: reserve-ui
     content: "Reserve button, confirmation, already-reserved state"
-    status: pending
+    status: done
   - id: reveal
     content: "Contact reveal for buyer (active reservation) and seller"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 6 — Reserve a listing
 
-**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-reserve-a-listing` · **Status:** planned
+**Repo:** `eggs` (`src/`, `supabase/`) · **Branch:** `feat/eggs-reserve-a-listing` · **Status:** shipped
 
 **Depends on:** [4](04-post-a-listing.md), [5](05-browse-and-map.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §5, §8 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -112,6 +112,13 @@ None. Both RPCs ship as a versioned migration, applied the same way as chapters 
 `ReserveButton`'s three states stay one small conditional, not a state machine library; `ContactReveal`
 stays a single query + conditional render, no local caching beyond what the Supabase client already does.
 Report the outcome.
+
+**Outcome:** both held as designed — no state machine, no extra caching layer. One gap surfaced in manual
+verification: `ContactReveal`'s query is keyed only on `listing_id`, which never changes across a
+reserve/cancel cycle, so it silently kept rendering the pre-reservation "not visible yet" result after a
+successful reserve. Fixed by mounting it with `key={listing.status}` in `ListingDetail` so a status change
+remounts (and re-queries) it — still a single query + conditional render, just re-triggered by the page's
+own reload cycle instead of a bespoke "fetch again on success" path.
 
 ## Verification
 
