@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
+  Box,
   Button,
   Field,
   Flex,
@@ -86,12 +87,20 @@ export default function Home() {
         onConfirm={setManualCenter}
       />
 
-      <MapView
-        center={center}
-        listings={listings}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-      />
+      <Box
+        h="400px"
+        w="full"
+        borderWidth="1px"
+        borderRadius="md"
+        overflow="hidden"
+      >
+        <MapView
+          center={center}
+          listings={listings}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+      </Box>
 
       <Stack gap="2">
         {listings.length === 0 && <Text>{t("home.empty")}</Text>}

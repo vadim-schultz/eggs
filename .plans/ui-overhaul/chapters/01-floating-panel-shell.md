@@ -4,19 +4,19 @@ overview: "Replace App.tsx's header Flex with an AppShell: MapView as a full-pag
 todos:
   - id: title
     content: "index.html <title> and rendered 'Eierbauer' heading"
-    status: pending
+    status: done
   - id: map-background
     content: "MapView repositioned as a full-page background layer"
-    status: pending
+    status: done
   - id: shell
     content: "AppShell component wrapping FloatingPanel.Root/Positioner/Content"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 1 — Floating panel shell
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-floating-panel-shell` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-floating-panel-shell` · **Status:** in review
 
 **Depends on:** none · **Architecture:** [../00-architecture.md](../00-architecture.md) §4, §6, §10 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -69,6 +69,7 @@ is independently verifiable.
 | `index.html` | `<title>eggs</title>` → `<title>Eierbauer</title>` |
 | `src/App.tsx` | Replace the header `Flex` + bare `Routes` with `AppShell` wrapping the routed content |
 | `src/components/MapView.tsx` | Wrapper `Box` becomes full-viewport-sized instead of `h="400px"` (only when rendered as `AppShell`'s background — prop signature unchanged) |
+| `src/routes/Home.tsx` *(not originally planned, see Implementation notes)* | Wraps its own `MapView` call in the `h="400px"` bordered `Box` that `MapView` used to own internally |
 
 ## Manual configuration
 
@@ -92,7 +93,28 @@ None.
 ## Refactor gate
 
 `AppShell` stays layout-only — no tab state, no data fetching; those arrive in chapter 3 onward.
-Report the outcome.
+
+**Outcome:** `AppShell` is 43 LOC, one component, no branching, no hooks — well under the
+Sandi Metz thresholds, nothing to extract. No refactor needed.
+
+## Implementation notes
+
+Manual verification surfaced a stacking-order bug the plan's Files table didn't anticipate: making
+`MapView`'s own wrapper `position: fixed; inset: 0` unconditionally (as originally scoped) affects
+*every* call site, including `Home.tsx`'s existing `<MapView>` call — which now renders **inside**
+`AppShell`'s floating panel (`Home` is unchanged, so it's still one of `AppShell`'s `children`). A
+`position: fixed` descendant with an explicit `z-index` always paints above plain in-flow siblings
+in its containing stacking context (CSS2.1 §E.5–E.8), so Home's map ended up covering the panel's
+own header/title — the panel was in the DOM (and in the accessibility tree) but not visible.
+
+Fix: `MapView`'s wrapper `Box` now just fills its parent (`w="full" h="full"`) instead of
+self-positioning; each caller owns its own container. `AppShell` wraps its background `MapView` in
+`position: fixed; inset: 0`, and `Home.tsx` was given a small, mechanical edit (not in the original
+Files table) — wrapping its `<MapView>` call in the exact `h="400px"` bordered `Box` that `MapView`
+used to own internally, preserving Home's prior look pixel-for-pixel. `FloatingPanel.Content` also
+gained `maxH="calc(100vh - 3rem)"` (not in the original design decisions) so the panel's body
+scrolls internally instead of the whole panel overflowing the viewport — needed because, for this
+chapter, all of `Home`'s existing content (unwired until chapter 4) renders inside the panel body.
 
 ## Verification
 
