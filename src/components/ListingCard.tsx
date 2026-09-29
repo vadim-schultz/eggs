@@ -1,4 +1,4 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge, Card, Text } from "@chakra-ui/react";
 
 import { t } from "../i18n/t";
 import {
@@ -20,22 +20,22 @@ export default function ListingCard({
   onSelect,
 }: ListingCardProps) {
   return (
-    <Box
-      as="button"
-      onClick={() => onSelect(listing.id)}
-      borderWidth="1px"
-      borderColor={selected ? "border.emphasized" : "border"}
-      borderRadius="md"
-      p="3"
-      textAlign="left"
+    <Card.Root
+      asChild
+      variant={selected ? "elevated" : "outline"}
       w="full"
+      cursor="pointer"
     >
-      <Text fontWeight="bold">{listing.location_label}</Text>
-      <Text>
-        {listing.egg_count} {t(unitLabelKey(listing.unit))} ·{" "}
-        {formatPrice(listing.price_cents, listing.currency)}
-      </Text>
-      <Badge>{t(statusLabelKey(listing.status))}</Badge>
-    </Box>
+      <button type="button" onClick={() => onSelect(listing.id)}>
+        <Card.Body gap="1" textAlign="left">
+          <Text fontWeight="bold">{listing.location_label}</Text>
+          <Text>
+            {listing.egg_count} {t(unitLabelKey(listing.unit))} ·{" "}
+            {formatPrice(listing.price_cents, listing.currency)}
+          </Text>
+          <Badge>{t(statusLabelKey(listing.status))}</Badge>
+        </Card.Body>
+      </button>
+    </Card.Root>
   );
 }

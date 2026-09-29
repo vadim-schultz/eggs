@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Field,
+  Flex,
+  Heading,
+  NativeSelect,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { useSession } from "../auth/useSession";
 import LocationPicker, {
@@ -53,18 +61,22 @@ export default function Home() {
         <PostCta signedIn={Boolean(session)} />
       </Flex>
 
-      <label htmlFor="radius">{t("home.radius.label")}</label>
-      <select
-        id="radius"
-        value={radiusM}
-        onChange={(event) => setRadiusM(Number(event.target.value))}
-      >
-        {RADIUS_OPTIONS.map((option) => (
-          <option key={option.meters} value={option.meters}>
-            {t(option.labelKey)}
-          </option>
-        ))}
-      </select>
+      <Field.Root>
+        <Field.Label>{t("home.radius.label")}</Field.Label>
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            value={radiusM}
+            onChange={(event) => setRadiusM(Number(event.target.value))}
+          >
+            {RADIUS_OPTIONS.map((option) => (
+              <option key={option.meters} value={option.meters}>
+                {t(option.labelKey)}
+              </option>
+            ))}
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
+      </Field.Root>
 
       <Text>{t("home.location.searchInstead")}</Text>
       <LocationPicker
