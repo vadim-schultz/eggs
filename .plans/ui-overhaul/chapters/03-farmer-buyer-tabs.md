@@ -4,16 +4,16 @@ overview: "A RoleTabs component inside the floating panel's body: Chakra Tabs, v
 todos:
   - id: role-tabs
     content: "RoleTabs component with enclosed Tabs.Root and two triggers"
-    status: pending
+    status: done
   - id: i18n-labels
     content: "Tab label strings through t(key)"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 3 — Farmer/buyer tabs
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-farmer-buyer-tabs` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-farmer-buyer-tabs` · **Status:** in review
 
 **Depends on:** [1](01-floating-panel-shell.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §4, §7 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -53,8 +53,16 @@ as a farmer, so it shouldn't be the first thing a new visitor sees.
 
 | Path | Change |
 | --- | --- |
-| `src/components/AppShell.tsx` | Render `RoleTabs` (instead of raw `children`) inside `FloatingPanel.Body` |
+| `src/components/AppShell.tsx` | Render `RoleTabs` (instead of raw `children`) inside `Popover.Body` — see Implementation notes for why this is `Popover.Body` and not `FloatingPanel.Body` |
 | `src/i18n/strings.de.ts` | Add `tabs.farmer`, `tabs.buyer` keys |
+
+**Edit (not originally planned, see Implementation notes):**
+
+| Path | Change |
+| --- | --- |
+| `src/App.tsx` | Each route mounts `AppShell` directly instead of threading page content through it as `children` |
+| `src/App.test.tsx` | Assert the farmer/buyer tabs render at each route, not the old per-route page content |
+| `src/components/AppShell.test.tsx` | Drop the two tests asserting on `children`; add coverage for the tabs rendering in the popover body |
 
 ## Manual configuration
 
@@ -77,7 +85,49 @@ None.
 ## Refactor gate
 
 `RoleTabs` stays presentation-only — no data fetching, no auth checks; those belong to chapters 4
-and 5's content. Report the outcome.
+and 5's content.
+
+**Outcome:** `RoleTabs` is ~20 LOC, one `Tabs.Root` with two triggers and two placeholder
+`Tabs.Content` panes, no branching, no state of its own beyond what `Tabs.Root`'s `defaultValue`
+already gives it for free. No refactor needed.
+
+## Implementation notes
+
+**`Popover.Body`, not `FloatingPanel.Body`.** The architecture doc and this chapter's own design
+section were written against chapter 1's original `FloatingPanel` shell, but a later,
+out-of-plan chapter (`feat/eggs-ui-popover-menu-button`, merged before this one) replaced the
+always-open `FloatingPanel` with a burger-style `Popover` triggered by the round 🪺 button —
+`AppShell.tsx`'s actual body slot by the time this chapter started was `Popover.Body`. `RoleTabs`
+itself doesn't care which shell it sits in, so this chapter just targets the shell that actually
+exists on `main` today instead of the one originally planned.
+
+**`AppShell` stops rendering `children`, so `App.tsx`'s routes no longer thread page content
+through it.** The design decision above is explicit that opening the panel shows *only* the two
+placeholder tab panes — manual verification asks for exactly that ("switching tabs swaps the
+(placeholder) content", nothing else). That's incompatible with `AppShell` continuing to render
+whatever `Routes` element `App.tsx` passes it as `children`, which is what let `Home`'s live search
+and `PostListing`'s form show up inside the panel before this chapter. Keeping `children` around
+unused (to avoid touching `App.tsx`) would leave dead scaffolding sitting in `AppShellProps`, so
+`AppShell` dropped the prop entirely: `App.tsx` now mounts `AppShell` directly on each of `/`,
+`/post`, and `/listings/:id`, so all three keep resolving as valid routes (no 404, satisfying the
+"kept, not removed" half of `../00-architecture.md` §8 / D2), but none of them shows page-specific
+content yet — that arrives when chapters 4 and 5 wire real content into the tabs, and chapter 6
+gives `AppShell` a way to read the current route and open a dialog. `Home.tsx`, `PostListing.tsx`,
+`ListingDetail.tsx`, and `RequireAuth.tsx` are untouched and keep their own test coverage; they're
+just not wired into anything reachable from the UI until those later chapters. This was confirmed
+with the user before implementing, since it breaks three existing `App.test.tsx` assertions and one
+`AppShell.test.tsx` assertion that depended on the old pass-through behavior — those tests were
+updated to assert the new (intended) behavior rather than removed.
+
+**Interaction assertions need `findByRole`/`waitFor`, not a synchronous `getByRole` after
+`fireEvent.click`.** Both Ark UI's `Tabs` (selecting a tab) and its `Popover` (opening) update their
+underlying Zag.js machine state asynchronously under React 18 in this test environment — the DOM
+update lands a microtask after the click, so a query that's sensitive to computed visibility
+(`getByRole`, which excludes inaccessible elements) can run before that update commits and report
+the state as unchanged, even though a visibility-insensitive query like `getByText` on the same
+render would already succeed. `RoleTabs.test.tsx`'s click test and both `AppShell.test.tsx`/
+`App.test.tsx` tests that query a `tab` role after opening the menu now `await` that update instead
+of asserting immediately.
 
 ## Verification
 
