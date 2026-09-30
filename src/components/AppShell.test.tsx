@@ -3,9 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import AppShell from "./AppShell";
+import { usePublishBackgroundMap } from "./BackgroundMap";
 
 vi.mock("./MapView", () => ({
-  default: () => <div data-testid="map-view" />,
+  default: ({ selectedId }: { selectedId: string | null }) => (
+    <div data-testid="map-view">selected: {selectedId ?? "none"}</div>
+  ),
 }));
 
 function renderShell(children: React.ReactNode) {
@@ -33,5 +36,23 @@ describe("AppShell", () => {
     renderShell(<div />);
 
     expect(screen.getByTestId("map-view")).toBeInTheDocument();
+  });
+
+  it("reflects a child's published background map selection", () => {
+    function Publisher() {
+      usePublishBackgroundMap({
+        center: { lat: 52.52, lng: 13.405 },
+        listings: [],
+        selectedId: "listing-9",
+        onSelect: () => {},
+      });
+      return null;
+    }
+
+    renderShell(<Publisher />);
+
+    expect(screen.getByTestId("map-view")).toHaveTextContent(
+      "selected: listing-9",
+    );
   });
 });

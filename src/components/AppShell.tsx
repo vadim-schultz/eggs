@@ -1,26 +1,32 @@
 import type { ReactNode } from "react";
 import { Box, FloatingPanel } from "@chakra-ui/react";
 
+import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
 import MapView from "./MapView";
-import type { GeoPoint } from "../hooks/useGeolocation";
-
-const BACKGROUND_CENTER: GeoPoint = { lat: 52.52, lng: 13.405 };
 
 interface AppShellProps {
   children: ReactNode;
 }
 
+function BackgroundMap() {
+  const { center, listings, selectedId, onSelect } = useBackgroundMapState();
+
+  return (
+    <Box position="fixed" inset="0" zIndex="0">
+      <MapView
+        center={center}
+        listings={listings}
+        selectedId={selectedId}
+        onSelect={onSelect}
+      />
+    </Box>
+  );
+}
+
 export default function AppShell({ children }: AppShellProps) {
   return (
-    <>
-      <Box position="fixed" inset="0" zIndex="0">
-        <MapView
-          center={BACKGROUND_CENTER}
-          listings={[]}
-          selectedId={null}
-          onSelect={() => {}}
-        />
-      </Box>
+    <BackgroundMapProvider>
+      <BackgroundMap />
       <FloatingPanel.Root defaultOpen draggable={false} resizable={false}>
         <FloatingPanel.Positioner
           style={{ top: "1.5rem", right: "1.5rem", left: "auto" }}
@@ -39,6 +45,6 @@ export default function AppShell({ children }: AppShellProps) {
           </FloatingPanel.Content>
         </FloatingPanel.Positioner>
       </FloatingPanel.Root>
-    </>
+    </BackgroundMapProvider>
   );
 }
