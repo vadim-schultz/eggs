@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
@@ -19,15 +19,21 @@ function renderShell(children: React.ReactNode) {
   );
 }
 
+function openMenu() {
+  fireEvent.click(screen.getByRole("button", { name: "Menü" }));
+}
+
 describe("AppShell", () => {
-  it('renders "Eierbauer" as the panel title', () => {
+  it('renders "Eierbauer" as the popover title once opened', () => {
     renderShell(<div />);
+    openMenu();
 
     expect(screen.getByText("Eierbauer")).toBeInTheDocument();
   });
 
-  it("renders its children inside the floating panel body", () => {
+  it("renders its children inside the popover body once opened", () => {
     renderShell(<div>panel content</div>);
+    openMenu();
 
     expect(screen.getByText("panel content")).toBeInTheDocument();
   });
@@ -38,7 +44,7 @@ describe("AppShell", () => {
     expect(screen.getByTestId("map-view")).toBeInTheDocument();
   });
 
-  it("reflects a child's published background map selection", () => {
+  it("reflects a child's published background map selection once opened", () => {
     function Publisher() {
       usePublishBackgroundMap({
         center: { lat: 52.52, lng: 13.405 },
@@ -50,6 +56,7 @@ describe("AppShell", () => {
     }
 
     renderShell(<Publisher />);
+    openMenu();
 
     expect(screen.getByTestId("map-view")).toHaveTextContent(
       "selected: listing-9",

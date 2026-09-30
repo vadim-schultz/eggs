@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Box, FloatingPanel } from "@chakra-ui/react";
+import { Box, IconButton, Popover, Portal } from "@chakra-ui/react";
 
 import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
 import MapView from "./MapView";
@@ -27,24 +27,42 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <BackgroundMapProvider>
       <BackgroundMap />
-      <FloatingPanel.Root defaultOpen draggable={false} resizable={false}>
-        <FloatingPanel.Positioner
-          style={{ top: "1.5rem", right: "1.5rem", left: "auto" }}
-        >
-          <FloatingPanel.Content
-            maxW="sm"
-            maxH="calc(100vh - 3rem)"
-            style={{ width: "auto", height: "auto" }}
+      <Popover.Root positioning={{ placement: "bottom-end" }}>
+        <Popover.Trigger asChild>
+          <IconButton
+            aria-label="Menü"
+            position="fixed"
+            top="1.5rem"
+            right="1.5rem"
+            zIndex="1"
+            rounded="full"
+            boxSize="52px"
+            minW="52px"
+            padding="0"
+            fontSize="46px"
+            lineHeight="1"
+            bg="white"
+            borderWidth="1px"
+            borderColor="gray.200"
+            boxShadow="sm"
           >
-            <FloatingPanel.Header>
-              <FloatingPanel.Title fontSize="4xl" textAlign="center">
-                Eierbauer
-              </FloatingPanel.Title>
-            </FloatingPanel.Header>
-            <FloatingPanel.Body>{children}</FloatingPanel.Body>
-          </FloatingPanel.Content>
-        </FloatingPanel.Positioner>
-      </FloatingPanel.Root>
+            🪺
+          </IconButton>
+        </Popover.Trigger>
+        <Portal>
+          <Popover.Positioner>
+            <Popover.Content maxW="sm" maxH="calc(100vh - 3rem)">
+              <Popover.Arrow />
+              <Popover.Header>
+                <Popover.Title fontSize="4xl" textAlign="center">
+                  Eierbauer
+                </Popover.Title>
+              </Popover.Header>
+              <Popover.Body overflowY="auto">{children}</Popover.Body>
+            </Popover.Content>
+          </Popover.Positioner>
+        </Portal>
+      </Popover.Root>
     </BackgroundMapProvider>
   );
 }
