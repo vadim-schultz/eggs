@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
@@ -35,6 +35,8 @@ function renderAt(path: string) {
       </MemoryRouter>
     </ChakraProvider>,
   );
+
+  fireEvent.click(screen.getByRole("button", { name: "Menü" }));
 }
 
 describe("App", () => {
