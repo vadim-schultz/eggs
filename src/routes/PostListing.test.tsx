@@ -1,21 +1,12 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 import PostListing from "./PostListing";
 
-const { useSessionMock, rpcMock, searchPlaceMock, navigateMock } = vi.hoisted(
-  () => ({
-    useSessionMock: vi.fn(),
-    rpcMock: vi.fn(),
-    searchPlaceMock: vi.fn(),
-    navigateMock: vi.fn(),
-  }),
-);
-
-vi.mock("../auth/useSession", () => ({
-  useSession: useSessionMock,
+const { rpcMock, searchPlaceMock } = vi.hoisted(() => ({
+  rpcMock: vi.fn(),
+  searchPlaceMock: vi.fn(),
 }));
 
 vi.mock("../lib/supabaseClient", () => ({
@@ -26,20 +17,10 @@ vi.mock("../lib/geocode", () => ({
   searchPlace: searchPlaceMock,
 }));
 
-vi.mock("react-router-dom", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("react-router-dom")>();
-  return { ...actual, useNavigate: () => navigateMock };
-});
-
-function renderPostListing() {
+function renderPostListing(onCreated = vi.fn()) {
   return render(
     <ChakraProvider value={defaultSystem}>
-      <MemoryRouter initialEntries={["/post"]}>
-        <Routes>
-          <Route path="/" element={<div>Home</div>} />
-          <Route path="/post" element={<PostListing />} />
-        </Routes>
-      </MemoryRouter>
+      <PostListing onCreated={onCreated} />
     </ChakraProvider>,
   );
 }
@@ -72,14 +53,8 @@ async function selectUnit(label: string) {
 describe("PostListing", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    useSessionMock.mockReset();
     rpcMock.mockReset();
     searchPlaceMock.mockReset();
-    navigateMock.mockReset();
-    useSessionMock.mockReturnValue({
-      session: { user: { id: "seller-1" } },
-      loading: false,
-    });
   });
 
   afterEach(() => {
@@ -117,9 +92,10 @@ describe("PostListing", () => {
     expect(rpcMock).not.toHaveBeenCalled();
   });
 
-  it('calls supabase.rpc("create_listing", ...) with the confirmed fields and navigates to the new listing', async () => {
+  it('calls supabase.rpc("create_listing", ...) with the confirmed fields and opens the detail dialog for the new listing', async () => {
     rpcMock.mockResolvedValue({ data: { id: "listing-1" }, error: null });
-    renderPostListing();
+    const onCreated = vi.fn();
+    renderPostListing(onCreated);
 
     fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
       target: { value: "12" },
@@ -149,15 +125,7 @@ describe("PostListing", () => {
       p_note: null,
       p_contact_note: "Ring the bell",
     });
-    expect(navigateMock).toHaveBeenCalledWith("/listings/listing-1");
-  });
-
-  it('redirects to "/" when rendered without a session', async () => {
-    useSessionMock.mockReturnValue({ session: null, loading: false });
-
-    renderPostListing();
-
-    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(onCreated).toHaveBeenCalledWith("listing-1");
   });
 
   it("unit field has no native <select> element", () => {

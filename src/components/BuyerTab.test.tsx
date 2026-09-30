@@ -6,13 +6,17 @@ import BuyerTab from "./BuyerTab";
 import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
 import type { ListingNear } from "../lib/listing";
 
-const { useSessionMock, useGeolocationMock, useListingsNearMock } = vi.hoisted(
-  () => ({
-    useSessionMock: vi.fn(),
-    useGeolocationMock: vi.fn(),
-    useListingsNearMock: vi.fn(),
-  }),
-);
+const {
+  useSessionMock,
+  useGeolocationMock,
+  useListingsNearMock,
+  useAppDialogMock,
+} = vi.hoisted(() => ({
+  useSessionMock: vi.fn(),
+  useGeolocationMock: vi.fn(),
+  useListingsNearMock: vi.fn(),
+  useAppDialogMock: vi.fn(),
+}));
 
 vi.mock("../auth/useSession", () => ({ useSession: useSessionMock }));
 vi.mock("../hooks/useGeolocation", () => ({
@@ -21,6 +25,7 @@ vi.mock("../hooks/useGeolocation", () => ({
 vi.mock("../hooks/useListingsNear", () => ({
   useListingsNear: useListingsNearMock,
 }));
+vi.mock("./AppDialogState", () => ({ useAppDialog: useAppDialogMock }));
 
 function BackgroundMapProbe() {
   const { selectedId } = useBackgroundMapState();
@@ -64,10 +69,17 @@ describe("BuyerTab", () => {
     useSessionMock.mockReset();
     useGeolocationMock.mockReset();
     useListingsNearMock.mockReset();
+    useAppDialogMock.mockReset();
     useSessionMock.mockReturnValue({ session: null, loading: false });
     useGeolocationMock.mockReturnValue({
       center: { lat: 52.52, lng: 13.405 },
       loading: false,
+    });
+    useAppDialogMock.mockReturnValue({
+      open: null,
+      openPostDialog: vi.fn(),
+      openDetailDialog: vi.fn(),
+      closeDialog: vi.fn(),
     });
   });
 
@@ -117,6 +129,27 @@ describe("BuyerTab", () => {
     expect(screen.getByTestId("background-map")).toHaveTextContent(
       "selected: listing-1",
     );
+  });
+
+  it("clicking a grid card opens the detail dialog for that listing", () => {
+    useListingsNearMock.mockReturnValue({
+      listings: [listing({ id: "listing-1" })],
+      loading: false,
+      error: false,
+    });
+    const openDetailDialog = vi.fn();
+    useAppDialogMock.mockReturnValue({
+      open: null,
+      openPostDialog: vi.fn(),
+      openDetailDialog,
+      closeDialog: vi.fn(),
+    });
+
+    renderBuyerTab();
+
+    fireEvent.click(screen.getByRole("button", { name: /Downtown/ }));
+
+    expect(openDetailDialog).toHaveBeenCalledWith("listing-1");
   });
 
   it("shows the empty state when there are no listings in range", () => {

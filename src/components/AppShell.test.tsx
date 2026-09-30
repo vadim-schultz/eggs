@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { MemoryRouter } from "react-router-dom";
 
 import AppShell from "./AppShell";
 
@@ -18,10 +19,16 @@ vi.mock("./FarmerTab", () => ({
   default: () => <div data-testid="farmer-tab" />,
 }));
 
+vi.mock("../auth/useSession", () => ({
+  useSession: () => ({ session: null, loading: false }),
+}));
+
 function renderShell() {
   return render(
     <ChakraProvider value={defaultSystem}>
-      <AppShell />
+      <MemoryRouter>
+        <AppShell />
+      </MemoryRouter>
     </ChakraProvider>,
   );
 }
