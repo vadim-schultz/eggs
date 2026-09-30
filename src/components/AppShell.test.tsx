@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import AppShell from "./AppShell";
-import { usePublishBackgroundMap } from "./BackgroundMap";
 
 vi.mock("./MapView", () => ({
   default: ({ selectedId }: { selectedId: string | null }) => (
@@ -11,10 +10,10 @@ vi.mock("./MapView", () => ({
   ),
 }));
 
-function renderShell(children: React.ReactNode) {
+function renderShell() {
   return render(
     <ChakraProvider value={defaultSystem}>
-      <AppShell>{children}</AppShell>
+      <AppShell />
     </ChakraProvider>,
   );
 }
@@ -25,41 +24,23 @@ function openMenu() {
 
 describe("AppShell", () => {
   it('renders "Eierbauer" as the popover title once opened', () => {
-    renderShell(<div />);
+    renderShell();
     openMenu();
 
     expect(screen.getByText("Eierbauer")).toBeInTheDocument();
   });
 
-  it("renders its children inside the popover body once opened", () => {
-    renderShell(<div>panel content</div>);
+  it("renders the farmer/buyer tabs inside the popover body once opened", async () => {
+    renderShell();
     openMenu();
 
-    expect(screen.getByText("panel content")).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: /🧑‍🌾/ })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /👨🏻‍💼/ })).toBeInTheDocument();
   });
 
   it("renders MapView as a background element", () => {
-    renderShell(<div />);
+    renderShell();
 
     expect(screen.getByTestId("map-view")).toBeInTheDocument();
-  });
-
-  it("reflects a child's published background map selection once opened", () => {
-    function Publisher() {
-      usePublishBackgroundMap({
-        center: { lat: 52.52, lng: 13.405 },
-        listings: [],
-        selectedId: "listing-9",
-        onSelect: () => {},
-      });
-      return null;
-    }
-
-    renderShell(<Publisher />);
-    openMenu();
-
-    expect(screen.getByTestId("map-view")).toHaveTextContent(
-      "selected: listing-9",
-    );
   });
 });

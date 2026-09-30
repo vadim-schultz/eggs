@@ -1,12 +1,8 @@
-import type { ReactNode } from "react";
 import { Box, IconButton, Popover, Portal } from "@chakra-ui/react";
 
 import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
 import MapView from "./MapView";
-
-interface AppShellProps {
-  children: ReactNode;
-}
+import RoleTabs from "./RoleTabs";
 
 function BackgroundMap() {
   const { center, listings, selectedId, onSelect } = useBackgroundMapState();
@@ -23,7 +19,7 @@ function BackgroundMap() {
   );
 }
 
-export default function AppShell({ children }: AppShellProps) {
+export default function AppShell() {
   return (
     <BackgroundMapProvider>
       <BackgroundMap />
@@ -58,7 +54,9 @@ export default function AppShell({ children }: AppShellProps) {
                   Eierbauer
                 </Popover.Title>
               </Popover.Header>
-              <Popover.Body overflowY="auto">{children}</Popover.Body>
+              <Popover.Body overflowY="auto">
+                <RoleTabs />
+              </Popover.Body>
             </Popover.Content>
           </Popover.Positioner>
         </Portal>
