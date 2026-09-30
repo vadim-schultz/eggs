@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Heading,
@@ -10,7 +9,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
-import { useSession } from "../auth/useSession";
 import LocationPicker, {
   type ConfirmedPin,
 } from "../components/LocationPicker";
@@ -73,16 +71,15 @@ function FieldError({ errorKey }: { errorKey?: ListingErrorKey }) {
   return <Text color="fg.error">{t(errorKey)}</Text>;
 }
 
-export default function PostListing() {
-  const { session, loading } = useSession();
-  const navigate = useNavigate();
+interface PostListingProps {
+  onCreated: (listingId: string) => void;
+}
+
+export default function PostListing({ onCreated }: PostListingProps) {
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState<ListingInputErrors>({});
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
-  if (loading) return null;
-  if (!session) return <Navigate to="/" replace />;
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -109,12 +106,12 @@ export default function PostListing() {
       setSubmitError(true);
       return;
     }
-    navigate(`/listings/${data.id}`);
+    onCreated(data.id);
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap="4" p="4" maxW="md">
+      <Stack gap="4">
         <Heading>{t("post.heading")}</Heading>
 
         <label htmlFor="egg-count">{t("post.eggCount.label")}</label>

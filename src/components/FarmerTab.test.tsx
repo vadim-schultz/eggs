@@ -1,22 +1,21 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MemoryRouter } from "react-router-dom";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import FarmerTab from "./FarmerTab";
 
-const { useSessionMock } = vi.hoisted(() => ({
+const { useSessionMock, useAppDialogMock } = vi.hoisted(() => ({
   useSessionMock: vi.fn(),
+  useAppDialogMock: vi.fn(),
 }));
 
 vi.mock("../auth/useSession", () => ({ useSession: useSessionMock }));
+vi.mock("./AppDialogState", () => ({ useAppDialog: useAppDialogMock }));
 
 function renderFarmerTab() {
   render(
     <ChakraProvider value={defaultSystem}>
-      <MemoryRouter>
-        <FarmerTab />
-      </MemoryRouter>
+      <FarmerTab />
     </ChakraProvider>,
   );
 }
@@ -24,6 +23,13 @@ function renderFarmerTab() {
 describe("FarmerTab", () => {
   beforeEach(() => {
     useSessionMock.mockReset();
+    useAppDialogMock.mockReset();
+    useAppDialogMock.mockReturnValue({
+      openPostDialog: vi.fn(),
+      openDetailDialog: vi.fn(),
+      closeDialog: vi.fn(),
+      open: null,
+    });
   });
 
   it("shows the sign-in-required message when signed out", () => {
@@ -42,8 +48,24 @@ describe("FarmerTab", () => {
     renderFarmerTab();
 
     expect(
-      screen.getByRole("link", { name: "Angebot einstellen" }),
+      screen.getByRole("button", { name: "Angebot einstellen" }),
     ).toBeInTheDocument();
+  });
+
+  it("opens the post dialog when the add-listing trigger is clicked", () => {
+    useSessionMock.mockReturnValue({ session: {}, loading: false });
+    const openPostDialog = vi.fn();
+    useAppDialogMock.mockReturnValue({
+      openPostDialog,
+      openDetailDialog: vi.fn(),
+      closeDialog: vi.fn(),
+      open: null,
+    });
+
+    renderFarmerTab();
+    fireEvent.click(screen.getByRole("button", { name: "Angebot einstellen" }));
+
+    expect(openPostDialog).toHaveBeenCalled();
   });
 
   it("renders AuthButton", () => {

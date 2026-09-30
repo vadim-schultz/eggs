@@ -6,6 +6,7 @@ import { useGeolocation, type GeoPoint } from "../hooks/useGeolocation";
 import { useListingsNear } from "../hooks/useListingsNear";
 import { t } from "../i18n/t";
 import type { ListingNear } from "../lib/listing";
+import { useAppDialog } from "./AppDialogState";
 import { usePublishBackgroundMap } from "./BackgroundMap";
 import ListingCard from "./ListingCard";
 import LocationPicker, { type ConfirmedPin } from "./LocationPicker";
@@ -81,15 +82,21 @@ export default function BuyerTab() {
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { openDetailDialog } = useAppDialog();
 
   const center = manualCenter ?? geoCenter;
   const { listings } = useListingsNear(center, radiusM);
+
+  function selectListing(id: string) {
+    setSelectedId(id);
+    openDetailDialog(id);
+  }
 
   usePublishBackgroundMap({
     center,
     listings,
     selectedId,
-    onSelect: setSelectedId,
+    onSelect: selectListing,
   });
 
   return (
@@ -106,7 +113,7 @@ export default function BuyerTab() {
       <ResultsGrid
         listings={listings}
         selectedId={selectedId}
-        onSelect={setSelectedId}
+        onSelect={selectListing}
       />
     </Stack>
   );

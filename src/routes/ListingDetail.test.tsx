@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 import ListingDetail from "./ListingDetail";
 import type { Listing } from "../lib/listing";
@@ -52,11 +51,7 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
 function renderAt(id: string) {
   render(
     <ChakraProvider value={defaultSystem}>
-      <MemoryRouter initialEntries={[`/listings/${id}`]}>
-        <Routes>
-          <Route path="/listings/:id" element={<ListingDetail />} />
-        </Routes>
-      </MemoryRouter>
+      <ListingDetail id={id} />
     </ChakraProvider>,
   );
 }
@@ -106,13 +101,13 @@ describe("ListingDetail", () => {
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
   });
 
-  it("renders with no session at all", async () => {
-    singleMock.mockResolvedValue({ data: activeListing(), error: null });
+  it("shows the not-found message when the listing can't be loaded", async () => {
+    singleMock.mockResolvedValue({ data: null, error: null });
 
-    renderAt("listing-1");
+    renderAt("missing-listing");
 
     expect(
-      await screen.findByText("Downtown, near the market"),
+      await screen.findByText("Angebot nicht gefunden."),
     ).toBeInTheDocument();
   });
 });
