@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
-  Box,
   Button,
   Field,
   Flex,
@@ -12,11 +11,11 @@ import {
 } from "@chakra-ui/react";
 
 import { useSession } from "../auth/useSession";
+import { usePublishBackgroundMap } from "../components/BackgroundMap";
 import LocationPicker, {
   type ConfirmedPin,
 } from "../components/LocationPicker";
 import ListingCard from "../components/ListingCard";
-import MapView from "../components/MapView";
 import { useGeolocation, type GeoPoint } from "../hooks/useGeolocation";
 import { useListingsNear } from "../hooks/useListingsNear";
 import { t } from "../i18n/t";
@@ -54,6 +53,13 @@ export default function Home() {
   const center = manualCenter ?? geoCenter;
   const { listings } = useListingsNear(center, radiusM);
 
+  usePublishBackgroundMap({
+    center,
+    listings,
+    selectedId,
+    onSelect: setSelectedId,
+  });
+
   return (
     <Stack gap="4" p="4">
       <Heading>{t("home.heading")}</Heading>
@@ -86,21 +92,6 @@ export default function Home() {
         confirmed={manualCenter}
         onConfirm={setManualCenter}
       />
-
-      <Box
-        h="400px"
-        w="full"
-        borderWidth="1px"
-        borderRadius="md"
-        overflow="hidden"
-      >
-        <MapView
-          center={center}
-          listings={listings}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-        />
-      </Box>
 
       <Stack gap="2">
         {listings.length === 0 && <Text>{t("home.empty")}</Text>}
