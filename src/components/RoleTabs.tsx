@@ -1,7 +1,8 @@
-import { Tabs, Text } from "@chakra-ui/react";
+import { Tabs } from "@chakra-ui/react";
 
 import { t } from "../i18n/t";
 import BuyerTab from "./BuyerTab";
+import FarmerTab from "./FarmerTab";
 
 export default function RoleTabs() {
   return (
@@ -11,7 +12,7 @@ export default function RoleTabs() {
         <Tabs.Trigger value="buyer">👨🏻‍💼 {t("tabs.buyer")}</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="farmer">
-        <Text>{t("common.comingSoon")}</Text>
+        <FarmerTab />
       </Tabs.Content>
       <Tabs.Content value="buyer">
         <BuyerTab />
