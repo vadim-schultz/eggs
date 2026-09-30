@@ -4,6 +4,10 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { MemoryRouter } from "react-router-dom";
 
 import Home from "./Home";
+import {
+  BackgroundMapProvider,
+  useBackgroundMapState,
+} from "../components/BackgroundMap";
 import type { ListingNear } from "../lib/listing";
 
 const { useSessionMock, useGeolocationMock, useListingsNearMock } = vi.hoisted(
@@ -21,11 +25,13 @@ vi.mock("../hooks/useGeolocation", () => ({
 vi.mock("../hooks/useListingsNear", () => ({
   useListingsNear: useListingsNearMock,
 }));
-vi.mock("../components/MapView", () => ({
-  default: ({ selectedId }: { selectedId: string | null }) => (
-    <div data-testid="map-view">selected: {selectedId ?? "none"}</div>
-  ),
-}));
+
+function BackgroundMapProbe() {
+  const { selectedId } = useBackgroundMapState();
+  return (
+    <div data-testid="background-map">selected: {selectedId ?? "none"}</div>
+  );
+}
 
 function listing(overrides: Partial<ListingNear> = {}): ListingNear {
   return {
@@ -50,7 +56,10 @@ function renderHome() {
   render(
     <ChakraProvider value={defaultSystem}>
       <MemoryRouter>
-        <Home />
+        <BackgroundMapProvider>
+          <Home />
+          <BackgroundMapProbe />
+        </BackgroundMapProvider>
       </MemoryRouter>
     </ChakraProvider>,
   );
@@ -80,7 +89,7 @@ describe("Home", () => {
     expect(screen.getAllByRole("button", { name: /Downtown/ })).toHaveLength(2);
   });
 
-  it("selecting a card highlights the matching marker", () => {
+  it("selecting a card publishes the selection to the background map", () => {
     useListingsNearMock.mockReturnValue({
       listings: [listing({ id: "listing-1" })],
       loading: false,
@@ -91,7 +100,7 @@ describe("Home", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Downtown/ }));
 
-    expect(screen.getByTestId("map-view")).toHaveTextContent(
+    expect(screen.getByTestId("background-map")).toHaveTextContent(
       "selected: listing-1",
     );
   });

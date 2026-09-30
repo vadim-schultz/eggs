@@ -43,12 +43,17 @@ whole viewport is 100% of the screen, this doesn't look neat" from the brief. No
 triggers are wired up in this chapter (`FloatingPanel.DragTrigger`/`ResizeTrigger` exist but aren't
 part of the ask); the panel is fixed-position, not user-movable, for now.
 
-**The map keeps its own props/behavior unchanged.** `MapView`'s `center`/`listings`/`selectedId`/
-`onSelect` props (`src/components/MapView.tsx:43-48`) aren't touched in this chapter — only its
-wrapper changes from a bordered 400px `Box` (`Home.tsx`) to a full-page one. `Home.tsx` itself isn't
-touched here either; wiring `MapView` and the results grid into the buyer tab is chapter 4's job.
-This chapter only builds the shell and renders a placeholder inside the panel so the shell itself
-is independently verifiable.
+**The map keeps its own props/behavior unchanged, and there is exactly one of it.** `MapView`'s
+`center`/`listings`/`selectedId`/`onSelect` props (`src/components/MapView.tsx:43-48`) aren't
+touched — but the single `MapView` instance now renders as `AppShell`'s full-page background,
+**not** inside `Home.tsx` any more (see Implementation notes: the first version of this chapter got
+this wrong — a placeholder background map plus `Home`'s own real map produced two maps, one dead).
+`Home.tsx` still owns the real geolocation/radius/listings/selection state (unchanged), but instead
+of rendering `MapView` itself, it publishes that state to `AppShell` through a small
+`BackgroundMap` context (`src/components/BackgroundMap.tsx`) so `AppShell` can render the one real,
+active map without owning search state itself — wiring `MapView` and the results grid into the
+*buyer tab specifically* (as opposed to whichever route happens to be mounted) is still chapter 4's
+job.
 
 **"Eierbauer" is static chrome, not a `t(key)` string** — see
 [../00-architecture.md §10](../00-architecture.md#10-typography-and-i18n-conventions).
@@ -61,6 +66,7 @@ is independently verifiable.
 | --- | --- |
 | `src/components/AppShell.tsx` | Full-page map background + `FloatingPanel` shell, `children` render into `FloatingPanel.Body` |
 | `src/components/AppShell.test.tsx` | Tests below |
+| `src/components/BackgroundMap.tsx` *(not originally planned, see Implementation notes)* | `BackgroundMapProvider`/`useBackgroundMapState`/`usePublishBackgroundMap` — lets a route publish the live center/listings/selection `AppShell`'s single background `MapView` should render |
 
 **Edit:**
 
@@ -68,8 +74,9 @@ is independently verifiable.
 | --- | --- |
 | `index.html` | `<title>eggs</title>` → `<title>Eierbauer</title>` |
 | `src/App.tsx` | Replace the header `Flex` + bare `Routes` with `AppShell` wrapping the routed content |
-| `src/components/MapView.tsx` | Wrapper `Box` becomes full-viewport-sized instead of `h="400px"` (only when rendered as `AppShell`'s background — prop signature unchanged) |
-| `src/routes/Home.tsx` *(not originally planned, see Implementation notes)* | Wraps its own `MapView` call in the `h="400px"` bordered `Box` that `MapView` used to own internally |
+| `src/components/MapView.tsx` | Wrapper `Box` now just fills its parent (`w="full" h="full"`) instead of a hardcoded `h="400px"` — each caller owns its own container/positioning |
+| `src/routes/Home.tsx` *(not originally planned, see Implementation notes)* | No longer renders `MapView` itself; calls `usePublishBackgroundMap({ center, listings, selectedId, onSelect })` instead |
+| `src/routes/Home.test.tsx` *(not originally planned)* | The map-selection test now asserts against the published `BackgroundMap` context instead of a `MapView` mock rendered by `Home` |
 
 ## Manual configuration
 
@@ -94,27 +101,48 @@ None.
 
 `AppShell` stays layout-only — no tab state, no data fetching; those arrive in chapter 3 onward.
 
-**Outcome:** `AppShell` is 43 LOC, one component, no branching, no hooks — well under the
-Sandi Metz thresholds, nothing to extract. No refactor needed.
+**Outcome:** `AppShell` itself does no fetching or state computation (see Implementation notes) —
+it's ~35 LOC across two small components (`AppShell`, `BackgroundMap`), no branching. The new
+`src/components/BackgroundMap.tsx` is ~50 LOC: two contexts and three one-purpose functions, each
+well under the Sandi Metz thresholds. No refactor needed.
 
 ## Implementation notes
 
-Manual verification surfaced a stacking-order bug the plan's Files table didn't anticipate: making
-`MapView`'s own wrapper `position: fixed; inset: 0` unconditionally (as originally scoped) affects
-*every* call site, including `Home.tsx`'s existing `<MapView>` call — which now renders **inside**
-`AppShell`'s floating panel (`Home` is unchanged, so it's still one of `AppShell`'s `children`). A
-`position: fixed` descendant with an explicit `z-index` always paints above plain in-flow siblings
-in its containing stacking context (CSS2.1 §E.5–E.8), so Home's map ended up covering the panel's
-own header/title — the panel was in the DOM (and in the accessibility tree) but not visible.
+Two rounds of manual-verification fixes, on top of what the plan's Files table originally scoped:
 
-Fix: `MapView`'s wrapper `Box` now just fills its parent (`w="full" h="full"`) instead of
-self-positioning; each caller owns its own container. `AppShell` wraps its background `MapView` in
-`position: fixed; inset: 0`, and `Home.tsx` was given a small, mechanical edit (not in the original
-Files table) — wrapping its `<MapView>` call in the exact `h="400px"` bordered `Box` that `MapView`
-used to own internally, preserving Home's prior look pixel-for-pixel. `FloatingPanel.Content` also
-gained `maxH="calc(100vh - 3rem)"` (not in the original design decisions) so the panel's body
-scrolls internally instead of the whole panel overflowing the viewport — needed because, for this
-chapter, all of `Home`'s existing content (unwired until chapter 4) renders inside the panel body.
+**Round 1 — stacking-order bug.** Making `MapView`'s own wrapper `position: fixed; inset: 0`
+unconditionally (as originally scoped) affects *every* call site, including `Home.tsx`'s existing
+`<MapView>` call — which renders **inside** `AppShell`'s floating panel (`Home` is one of
+`AppShell`'s `children`). A `position: fixed` descendant with an explicit `z-index` always paints
+above plain in-flow siblings in its containing stacking context (CSS2.1 §E.5–E.8), so Home's map
+covered the panel's own header/title — present in the DOM (and the accessibility tree) but not
+visible on screen. Fix: `MapView`'s wrapper `Box` just fills its parent (`w="full" h="full"`)
+instead of self-positioning; each caller owns its own container/positioning.
+
+**Round 2 — two maps, one of them dead.** Round 1's fix left `AppShell` rendering its *own*,
+separate `MapView` instance as a placeholder background (static center, empty listings, no
+selection) while `Home.tsx` kept rendering *its own* real, working `MapView` (live geolocation,
+real listings, click-to-select) inside the panel — reported by the user: two maps, the visible
+"active" one behind the panel unusable, the real one small and boxed inside it. The correct reading
+of the architecture doc (§4: "`MapView` — full-page background (*was*: 400px box in `Home.tsx`)")
+is that it's the *same* map that relocates, not a second one.
+
+Since `AppShell` has no way to reach into a specific routed child's state (it only receives an
+opaque `children: ReactNode` from `App.tsx`'s `<Routes>`), and `Home.tsx`'s existing
+"click a card, highlight the marker" behavior (already covered by a test) requires `Home` and the
+map to share `selectedId`, the fix is a small `BackgroundMap` context
+(`src/components/BackgroundMap.tsx`): `Home` keeps its own geolocation/radius/listings/selection
+state exactly as before, but instead of rendering `MapView` itself, calls
+`usePublishBackgroundMap({ center, listings, selectedId, onSelect })`; `AppShell` renders the one
+real `MapView` from whatever the current route last published (falling back to a static center with
+no listings for routes — `/listings/:id`, `/post` — that don't publish anything). `AppShell` still
+doesn't compute or fetch anything itself; it only displays what it's handed, so it stays
+presentation-only even though it's no longer literally stateless.
+
+`FloatingPanel.Content` also gained `maxH="calc(100vh - 3rem)"` (not in the original design
+decisions) so the panel's body scrolls internally instead of the whole panel overflowing the
+viewport — needed because, for this chapter, all of `Home`'s existing content (unwired into a
+buyer tab until chapters 3–4) renders inside the panel body.
 
 ## Verification
 
