@@ -8,6 +8,10 @@ vi.mock("./BuyerTab", () => ({
   default: () => <div data-testid="buyer-tab" />,
 }));
 
+vi.mock("./FarmerTab", () => ({
+  default: () => <div data-testid="farmer-tab" />,
+}));
+
 function renderRoleTabs() {
   return render(
     <ChakraProvider value={defaultSystem}>
