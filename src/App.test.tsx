@@ -9,6 +9,10 @@ vi.mock("./components/MapView", () => ({
   default: () => null,
 }));
 
+vi.mock("./components/BuyerTab", () => ({
+  default: () => null,
+}));
+
 function renderAt(path: string) {
   render(
     <ChakraProvider value={defaultSystem}>

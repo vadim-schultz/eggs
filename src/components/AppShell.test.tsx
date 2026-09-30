@@ -10,6 +10,10 @@ vi.mock("./MapView", () => ({
   ),
 }));
 
+vi.mock("./BuyerTab", () => ({
+  default: () => <div data-testid="buyer-tab" />,
+}));
+
 function renderShell() {
   return render(
     <ChakraProvider value={defaultSystem}>

@@ -56,7 +56,7 @@ listed last only because it's the smallest, most isolated chapter.
 | 1 | Floating panel shell | frontend | vitest + `./ci.sh` | [01-floating-panel-shell.md](chapters/01-floating-panel-shell.md) | in review |
 | 2 | Component hygiene | frontend | vitest + `./ci.sh` | [02-component-hygiene.md](chapters/02-component-hygiene.md) | planned |
 | 3 | Farmer/buyer tabs | frontend | vitest + `./ci.sh` | [03-farmer-buyer-tabs.md](chapters/03-farmer-buyer-tabs.md) | in review |
-| 4 | Buyer tab: search and grid | frontend | vitest + `./ci.sh` | [04-buyer-tab-search-and-grid.md](chapters/04-buyer-tab-search-and-grid.md) | planned |
+| 4 | Buyer tab: search and grid | frontend | vitest + `./ci.sh` | [04-buyer-tab-search-and-grid.md](chapters/04-buyer-tab-search-and-grid.md) | in review |
 | 5 | Farmer tab: add listing | frontend | vitest + `./ci.sh` | [05-farmer-tab-add-listing.md](chapters/05-farmer-tab-add-listing.md) | planned |
 | 6 | Detail and post dialogs | frontend | vitest + `./ci.sh` | [06-detail-and-post-dialogs.md](chapters/06-detail-and-post-dialogs.md) | planned |
 | 7 | Google OAuth redirect fix | frontend + ops | vitest + `./ci.sh` | [07-google-oauth-redirect-fix.md](chapters/07-google-oauth-redirect-fix.md) | planned |

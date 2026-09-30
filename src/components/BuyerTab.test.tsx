@@ -1,13 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { MemoryRouter } from "react-router-dom";
 
-import Home from "./Home";
-import {
-  BackgroundMapProvider,
-  useBackgroundMapState,
-} from "../components/BackgroundMap";
+import BuyerTab from "./BuyerTab";
+import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
 import type { ListingNear } from "../lib/listing";
 
 const { useSessionMock, useGeolocationMock, useListingsNearMock } = vi.hoisted(
@@ -52,20 +48,18 @@ function listing(overrides: Partial<ListingNear> = {}): ListingNear {
   };
 }
 
-function renderHome() {
+function renderBuyerTab() {
   render(
     <ChakraProvider value={defaultSystem}>
-      <MemoryRouter>
-        <BackgroundMapProvider>
-          <Home />
-          <BackgroundMapProbe />
-        </BackgroundMapProvider>
-      </MemoryRouter>
+      <BackgroundMapProvider>
+        <BuyerTab />
+        <BackgroundMapProbe />
+      </BackgroundMapProvider>
     </ChakraProvider>,
   );
 }
 
-describe("Home", () => {
+describe("BuyerTab", () => {
   beforeEach(() => {
     useSessionMock.mockReset();
     useGeolocationMock.mockReset();
@@ -77,26 +71,46 @@ describe("Home", () => {
     });
   });
 
-  it("renders one ListingCard per returned listing", () => {
+  it("renders the radius selector, location picker, and auth control", () => {
+    useListingsNearMock.mockReturnValue({
+      listings: [],
+      loading: false,
+      error: false,
+    });
+
+    renderBuyerTab();
+
+    expect(screen.getByText("Umkreis")).toBeInTheDocument();
+    expect(
+      screen.getByText("Ort (z. B. „Innenstadt, beim Markt“)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Mit Google anmelden" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders listings in a grid, not a single-column stack", () => {
     useListingsNearMock.mockReturnValue({
       listings: [listing({ id: "listing-1" }), listing({ id: "listing-2" })],
       loading: false,
       error: false,
     });
 
-    renderHome();
+    renderBuyerTab();
 
-    expect(screen.getAllByRole("button", { name: /Downtown/ })).toHaveLength(2);
+    expect(screen.getByTestId("results-grid")).toHaveStyle({
+      display: "grid",
+    });
   });
 
-  it("selecting a card publishes the selection to the background map", () => {
+  it("selecting a listing card calls onSelect with its id", () => {
     useListingsNearMock.mockReturnValue({
       listings: [listing({ id: "listing-1" })],
       loading: false,
       error: false,
     });
 
-    renderHome();
+    renderBuyerTab();
 
     fireEvent.click(screen.getByRole("button", { name: /Downtown/ }));
 
@@ -105,17 +119,17 @@ describe("Home", () => {
     );
   });
 
-  it("renders with no session at all", () => {
+  it("shows the empty state when there are no listings in range", () => {
     useListingsNearMock.mockReturnValue({
       listings: [],
       loading: false,
       error: false,
     });
 
-    renderHome();
+    renderBuyerTab();
 
     expect(
-      screen.getByRole("heading", { name: "Eier in deiner Nähe" }),
+      screen.getByText("Keine Angebote in diesem Umkreis gefunden."),
     ).toBeInTheDocument();
   });
 });

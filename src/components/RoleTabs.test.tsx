@@ -1,8 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import RoleTabs from "./RoleTabs";
+
+vi.mock("./BuyerTab", () => ({
+  default: () => <div data-testid="buyer-tab" />,
+}));
 
 function renderRoleTabs() {
   return render(
