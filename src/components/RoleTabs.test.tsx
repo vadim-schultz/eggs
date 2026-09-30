@@ -1,0 +1,48 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+
+import RoleTabs from "./RoleTabs";
+
+function renderRoleTabs() {
+  return render(
+    <ChakraProvider value={defaultSystem}>
+      <RoleTabs />
+    </ChakraProvider>,
+  );
+}
+
+describe("RoleTabs", () => {
+  it("renders a farmer tab and a buyer tab trigger", () => {
+    renderRoleTabs();
+
+    expect(
+      screen.getByRole("tab", { name: /🧑‍🌾/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: /👨🏻‍💼/ }),
+    ).toBeInTheDocument();
+  });
+
+  it("defaults to the buyer tab's content visible", () => {
+    renderRoleTabs();
+
+    expect(
+      screen.getByRole("tab", { name: /👨🏻‍💼/ }),
+    ).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel")).toBeInTheDocument();
+  });
+
+  it("clicking the farmer tab shows farmer content and hides buyer content", () => {
+    renderRoleTabs();
+
+    fireEvent.click(screen.getByRole("tab", { name: /🧑‍🌾/ }));
+
+    expect(
+      screen.getByRole("tab", { name: /🧑‍🌾/ }),
+    ).toHaveAttribute("aria-selected", "true");
+    expect(
+      screen.getByRole("tab", { name: /👨🏻‍💼/ }),
+    ).toHaveAttribute("aria-selected", "false");
+  });
+});
