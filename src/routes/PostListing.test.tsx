@@ -32,7 +32,7 @@ vi.mock("react-router-dom", async (importOriginal) => {
 });
 
 function renderPostListing() {
-  render(
+  return render(
     <ChakraProvider value={defaultSystem}>
       <MemoryRouter initialEntries={["/post"]}>
         <Routes>
@@ -56,6 +56,17 @@ async function confirmLocation(query = "Berlin") {
     await vi.advanceTimersByTimeAsync(500);
   });
   fireEvent.click(screen.getByRole("button", { name: "Berlin, Germany" }));
+}
+
+async function selectUnit(label: string) {
+  fireEvent.click(screen.getByRole("combobox", { name: "Einheit" }));
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(0);
+  });
+  fireEvent.click(screen.getByText(label));
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(0);
+  });
 }
 
 describe("PostListing", () => {
@@ -147,5 +158,40 @@ describe("PostListing", () => {
     renderPostListing();
 
     expect(screen.getByText("Home")).toBeInTheDocument();
+  });
+
+  it("unit field has no native <select> element", () => {
+    const { container } = renderPostListing();
+
+    expect(container.querySelectorAll("select")).toHaveLength(0);
+  });
+
+  it("still submits the chosen unit value", async () => {
+    rpcMock.mockResolvedValue({ data: { id: "listing-1" }, error: null });
+    renderPostListing();
+
+    fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
+      target: { value: "12" },
+    });
+    fireEvent.change(screen.getByLabelText("Preis (€)"), {
+      target: { value: "4" },
+    });
+    fireEvent.change(screen.getByLabelText("Kontakthinweis für Käufer"), {
+      target: { value: "Ring the bell" },
+    });
+    await selectUnit("Stück");
+    await confirmLocation("Berlin");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Angebot veröffentlichen" }),
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(rpcMock).toHaveBeenCalledWith(
+      "create_listing",
+      expect.objectContaining({ p_unit: "each" }),
+    );
   });
 });

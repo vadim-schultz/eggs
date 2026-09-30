@@ -14,6 +14,7 @@ import { useSession } from "../auth/useSession";
 import LocationPicker, {
   type ConfirmedPin,
 } from "../components/LocationPicker";
+import UnitSelect from "../components/UnitSelect";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
 import {
@@ -125,17 +126,10 @@ export default function PostListing() {
         />
         <FieldError errorKey={errors.eggCount} />
 
-        <label htmlFor="unit">{t("post.unit.label")}</label>
-        <select
-          id="unit"
+        <UnitSelect
           value={form.unit}
-          onChange={(e) =>
-            updateField("unit", e.target.value as "dozen" | "each")
-          }
-        >
-          <option value="dozen">{t("post.unit.dozen")}</option>
-          <option value="each">{t("post.unit.each")}</option>
-        </select>
+          onChange={(value) => updateField("unit", value)}
+        />
 
         <label htmlFor="price">{t("post.price.label")}</label>
         <Input

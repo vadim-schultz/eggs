@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Badge, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import StatusBadge, { statusColorPalette } from "./StatusBadge";
 import type { ListingStatus } from "../lib/listing";
@@ -27,4 +27,30 @@ describe("StatusBadge", () => {
       expect(statusColorPalette(status)).toBe(color);
     },
   );
+
+  it("renders with the compact xs size", () => {
+    const { container: badgeContainer } = render(
+      <ChakraProvider value={defaultSystem}>
+        <StatusBadge status="active" />
+      </ChakraProvider>,
+    );
+    const { container: xsReference } = render(
+      <ChakraProvider value={defaultSystem}>
+        <Badge colorPalette="green" size="xs" />
+      </ChakraProvider>,
+    );
+    const { container: smReference } = render(
+      <ChakraProvider value={defaultSystem}>
+        <Badge colorPalette="green" size="sm" />
+      </ChakraProvider>,
+    );
+
+    const badgeClass = badgeContainer.querySelector(".chakra-badge")!.className;
+    expect(badgeClass).toBe(
+      xsReference.querySelector(".chakra-badge")!.className,
+    );
+    expect(badgeClass).not.toBe(
+      smReference.querySelector(".chakra-badge")!.className,
+    );
+  });
 });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Input, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Field, Input, Stack, Text } from "@chakra-ui/react";
 
 import { t } from "../i18n/t";
 import { searchPlace, type PlaceCandidate } from "../lib/geocode";
@@ -76,18 +76,14 @@ function ManualPinFallback({
   return (
     <Box>
       <Text>{t("post.location.noResults")}</Text>
-      <label htmlFor="manual-lat">{t("post.location.manualLat.label")}</label>
-      <Input
-        id="manual-lat"
-        value={lat}
-        onChange={(e) => setLat(e.target.value)}
-      />
-      <label htmlFor="manual-lng">{t("post.location.manualLng.label")}</label>
-      <Input
-        id="manual-lng"
-        value={lng}
-        onChange={(e) => setLng(e.target.value)}
-      />
+      <Field.Root>
+        <Field.Label>{t("post.location.manualLat.label")}</Field.Label>
+        <Input value={lat} onChange={(e) => setLat(e.target.value)} />
+      </Field.Root>
+      <Field.Root>
+        <Field.Label>{t("post.location.manualLng.label")}</Field.Label>
+        <Input value={lng} onChange={(e) => setLng(e.target.value)} />
+      </Field.Root>
       <Button
         onClick={() =>
           onConfirm({ lat: parseFloat(lat), lng: parseFloat(lng) })
@@ -111,12 +107,13 @@ export default function LocationPicker({
 
   return (
     <Stack gap="2">
-      <label htmlFor="location-query">{t("post.location.label")}</label>
-      <Input
-        id="location-query"
-        value={query}
-        onChange={(event) => onQueryChange(event.target.value)}
-      />
+      <Field.Root>
+        <Field.Label>{t("post.location.label")}</Field.Label>
+        <Input
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+        />
+      </Field.Root>
       {searching && <Text>{t("post.location.searching")}</Text>}
       {candidates.length > 0 && (
         <CandidateList candidates={candidates} onConfirm={onConfirm} />
