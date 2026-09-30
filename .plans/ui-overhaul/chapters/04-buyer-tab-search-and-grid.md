@@ -4,16 +4,16 @@ overview: "Move Home.tsx's radius selector, LocationPicker and AuthButton into t
 todos:
   - id: buyer-tab-content
     content: "BuyerTab component: search controls + AuthButton"
-    status: pending
+    status: done
   - id: results-grid
     content: "SimpleGrid of ListingCard replacing the results Stack"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 4 — Buyer tab: search and grid
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-buyer-tab-search-and-grid` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-buyer-tab-search-and-grid` · **Status:** in review
 
 **Depends on:** [2](02-component-hygiene.md), [3](03-farmer-buyer-tabs.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §4, §6 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -60,8 +60,16 @@ each tab is a self-contained mini-app.
 | Path | Change |
 | --- | --- |
 | `src/components/RoleTabs.tsx` | Buyer `Tabs.Content` renders `BuyerTab` instead of the placeholder |
-| `src/components/AppShell.tsx` | Owns/receives the `listings`/`selectedId`/`onSelect` state `MapView` and `BuyerTab` both need |
-| `src/routes/Home.tsx` | Trimmed to whatever remains needed for the `/` route wrapper, or removed if `BuyerTab` fully supersedes it (confirm against chapter 6's routing needs first) |
+| `src/routes/Home.tsx`, `src/routes/Home.test.tsx` | Removed — see Implementation notes |
+
+**Not edited (see Implementation notes):** `src/components/AppShell.tsx` — the
+`listings`/`selectedId`/`onSelect` lifting this row anticipated was already built in chapter 1 as
+`BackgroundMapProvider`/`usePublishBackgroundMap` (`src/components/BackgroundMap.tsx`), which
+`Home.tsx` was already using. `BuyerTab` calls `usePublishBackgroundMap` exactly as `Home.tsx` did;
+`AppShell.tsx` itself needed no change.
+
+**Also edited (not originally planned, see Implementation notes):** `src/App.test.tsx`,
+`src/components/AppShell.test.tsx`, `src/components/RoleTabs.test.tsx` — each now mocks `BuyerTab`.
 
 ## Manual configuration
 
@@ -89,6 +97,43 @@ None.
 `BuyerTab` stays under ~100 LOC by delegating to the existing hooks/components rather than inlining
 fetch or geolocation logic — same discipline `Home.tsx` already had. Report the outcome.
 
+**Outcome:** `BuyerTab.tsx` is 117 lines total (imports and the `RADIUS_OPTIONS` table account for
+about a third of that), matching `Home.tsx`'s own shape before it was removed. The default export
+is ~24 lines and delegates entirely to `useGeolocation`/`useListingsNear`/`usePublishBackgroundMap`/
+`LocationPicker`/`AuthButton`; two small presentational helpers (`RadiusSelect`, `ResultsGrid`) stay
+in the same file rather than splitting into their own, following the precedent already set by
+`Home.tsx`'s `PostCta` and `LocationPicker.tsx`'s own inline helpers. No branch has a third
+conditional arm, no nesting beyond one level. No refactor needed.
+
+## Implementation notes
+
+**The "lifting mechanism" this chapter's design section left open was already built in chapter
+1.** `BackgroundMap.tsx`'s `BackgroundMapProvider`/`usePublishBackgroundMap`/`useBackgroundMapState`
+(added for `Home.tsx`, still live on `main`) is exactly the "small shared hook" the design decisions
+section described as an implementation-time call — `AppShell`'s `BackgroundMap` component already
+reads `useBackgroundMapState()` to feed `MapView`. `BuyerTab` only had to call
+`usePublishBackgroundMap` the same way `Home.tsx` did; no new wiring, and no `AppShell.tsx` change,
+was needed.
+
+**`Home.tsx` was dead code by the time this chapter started, not just supersedable.** Chapter 3's
+implementation notes record that `App.tsx` stopped threading route content through `AppShell` as
+`children` — every route (`/`, `/post`, `/listings/:id`) has mounted `AppShell` directly, with no
+route referencing `Home` at all, since that chapter merged. `BuyerTab` fully supersedes `Home.tsx`'s
+content per the plan's own Files table, so this chapter removes `Home.tsx` and `Home.test.tsx`
+outright rather than trimming — there was nothing reachable left to trim down to.
+
+**Mounting a real, hook-driven `BuyerTab` inside `RoleTabs` required mocking it in three test files
+that weren't in this chapter's plan.** `RoleTabs.test.tsx`, `AppShell.test.tsx`, and `App.test.tsx`
+all render `RoleTabs` (directly or transitively) without previously needing to mock anything beyond
+`MapView`, because the buyer tab's content was static placeholder text. Once it renders `BuyerTab`,
+those same tests transitively mount `useSession`, `useGeolocation`, and `useListingsNear` for real —
+the last two are harmless, but `useSession` and `AuthButton` reach the real `supabaseClient`, which
+makes an actual network call to whatever project `.env.local` points at. That call happened to
+resolve fast enough not to fail these tests locally, but it's not something a unit test for tab
+switching or panel chrome should depend on. Each of the three files now mocks `./BuyerTab` (or
+`./components/BuyerTab` from `App.test.tsx`), the same isolation pattern `AppShell.test.tsx` already
+used for `MapView` — `BuyerTab`'s own behavior is covered by `BuyerTab.test.tsx` instead.
+
 ## Verification
 
 ```bash
@@ -98,6 +143,13 @@ npm run dev
 # manual: open localhost, confirm the buyer tab shows the radius selector, a location search, and
 # a grid (not a single column) of nearby listings, and clicking a card highlights its map pin
 ```
+
+Manually verified in a running `npm run dev` session: opening the menu shows the buyer tab with the
+auth button, radius selector (5/15/30 km), and location search; with no listings within range the
+existing `home.empty` copy renders in place of the grid. (The dev database had no listings within
+30 km of the fallback Berlin center at verification time, so the populated-grid path was confirmed
+via `BuyerTab.test.tsx` instead of manually — same coverage the automated layout/interaction tests
+already give the `SimpleGrid` and card-selection contract.)
 
 ## Out of scope
 
