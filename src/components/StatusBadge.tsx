@@ -20,7 +20,7 @@ export function statusColorPalette(status: ListingStatus): string {
 
 export default function StatusBadge({ status }: { status: ListingStatus }) {
   return (
-    <Badge colorPalette={statusColorPalette(status)}>
+    <Badge colorPalette={statusColorPalette(status)} size="xs">
       {t(statusLabelKey(status))}
     </Badge>
   );
