@@ -7,6 +7,7 @@ export const strings = {
   "auth.signIn": "Mit Google anmelden",
   "auth.signOut": "Abmelden",
   "auth.signInRequired": "Bitte melde dich an, um ein Angebot einzustellen.",
+  "dialog.close": "Schließen",
   "post.heading": "Neues Angebot",
   "post.eggCount.label": "Anzahl Eier",
   "post.unit.label": "Einheit",
