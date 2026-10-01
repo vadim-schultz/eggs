@@ -4,13 +4,13 @@ overview: "Remove empty legacy directories and verify no imports reference src/r
 todos:
   - id: cleanup
     content: "delete vacated dirs + grep verification"
-    status: pending
+    status: completed
 isProject: false
 ---
 
 # Chapter 15 — Retire vacated directories
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-fs-retire-vacated-dirs` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-fs-retire-vacated-dirs` · **Status:** shipped
 
 **Depends on:** [14](14-shell-and-app-routing.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §8 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -71,6 +71,8 @@ No new Vitest cases required unless a straggler fix needs regression coverage.
 
 **No production code changes** unless grep finds imports — report: "cleanup only" or list fixed stragglers.
 
+**Outcome:** cleanup only. Grep under `src/` found no stragglers, so no imports were rewritten.
+
 ## Verification
 
 ```bash
@@ -95,3 +97,32 @@ git checkout -b feat/eggs-fs-retire-vacated-dirs
 ```text
 chore(web): remove vacated src directories after feature-folder migration
 ```
+
+## Outcome
+
+`src/routes/`, `src/auth/`, and `src/hooks/` were already absent (removed in chapters 2, 9–10, and 12).
+`src/components/` contains only `ui/toaster.tsx`. `src/lib/` contains only `env.ts`, `env.test.ts`, and
+`supabaseClient.ts`. No empty legacy directories and no stray re-export files remained to delete.
+
+Negative check (`test -d src/routes && test -d src/auth`) fails, as required: both directories are absent.
+
+Grep (`src/` only; `.plans/mvp` and `.plans/ui-overhaul` left stale per D7):
+
+```text
+rg 'from ["\']/../(../)*(routes|auth|hooks|lib/listing|lib/geocode|components/BuyerTab)' src
+# no matches
+
+rg 'src/auth/|src/routes/|src/hooks/' src
+# no matches
+
+rg 'from ["\']/../auth' src
+# no matches
+```
+
+`rg 'src/auth/|src/routes/|src/hooks/' .plans/frontend-structure` still hits the architecture file map and
+earlier chapter plans, which describe the pre-move paths. Those are historical plan text, not live imports.
+
+`import/no-restricted-paths` is not configured. The open seam in gaps-and-decisions stays deferred; this
+chapter does not add the eslint plugin.
+
+Refactor gate: cleanup only.

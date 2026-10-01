@@ -56,7 +56,9 @@ user-visible behavior change — moves and extractions only. Fifteen chapters.
 | [gaps-and-decisions.md](frontend-structure/gaps-and-decisions.md) | Settled structural decisions and deferred lint enforcement |
 | [chapters/](frontend-structure/chapters/) | One executable plan per chapter |
 
-Status: planned — all chapter docs are written; no restructuring code has shipped yet.
+Status: shipped — chapters 1–15 are on main. `src/` matches the feature-folder tree
+(`features/{auth,location,listings,browse,shell}`, `app/App.tsx`, `components/ui/toaster.tsx`,
+`lib/env.ts`, `lib/supabaseClient.ts`). Vacated `src/routes`, `src/auth`, and `src/hooks` are gone.
 
 ### [frontend-dry/](frontend-dry/) — DRY helpers and Chakra form hygiene
 
