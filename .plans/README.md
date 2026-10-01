@@ -58,6 +58,21 @@ user-visible behavior change — moves and extractions only. Fifteen chapters.
 
 Status: planned — all chapter docs are written; no restructuring code has shipped yet.
 
+### [frontend-dry/](frontend-dry/) — DRY helpers and Chakra form hygiene
+
+Shared Supabase read/mutation lifecycle hooks, a default map center constant, `ListingSummaryLine`, and
+Chakra `Field.*` markup for post listing and seller expiry — behavior-preserving, no schema changes. Eight
+chapters; can ship on today’s flat `src/` or after [frontend-structure/](frontend-structure/) paths land.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](frontend-dry/00-architecture.md) | DRY targets, Chakra conventions, prerequisites vs structure |
+| [01-rollout.md](frontend-dry/01-rollout.md) | Eight chapters, dependency graph, invariants, gate |
+| [gaps-and-decisions.md](frontend-dry/gaps-and-decisions.md) | useSupabaseQuery / useAsyncAction decisions; ui-overhaul overlap |
+| [chapters/](frontend-dry/chapters/) | One executable plan per chapter |
+
+Status: planned — all eight chapter docs are written; no code has shipped yet.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.

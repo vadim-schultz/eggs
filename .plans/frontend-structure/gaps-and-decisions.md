@@ -26,6 +26,6 @@ isProject: false
 ## Open seams (deferred past this folder)
 
 - **ESLint import boundaries** — after chapter 15, add `import/no-restricted-paths` (or equivalent) so features cannot import each other’s containers and `lib/` stays free of domain types. Not enforced mid-migration to avoid fighting half-moved trees.
-- **TanStack Query** — rsb uses query hooks heavily; eggs still uses `useEffect` + local state for Supabase. Replacing fetch patterns is a separate initiative, not part of these fifteen chapters (services layer is thin wrappers around today’s calls).
+- **TanStack Query** — rsb uses query hooks heavily; eggs still uses `useEffect` + local state for Supabase. Replacing fetch patterns is a separate initiative, not part of these fifteen chapters (services layer is thin wrappers around today’s calls). Shared **`useSupabaseQuery`** / **`useAsyncAction`** are specified in [.plans/frontend-dry/](../frontend-dry/00-architecture.md) instead.
 - **Shared `GeoPoint` type** — may live on `useGeolocation` export or `browse/types`; pick one in chapter 12 and document in the chapter outcome — no second duplicate type.
 - **Farmer “my listings” grid** — still deferred per [ui-overhaul gaps](../ui-overhaul/gaps-and-decisions.md); the new `listings/` feature folder is the intended home when that plan lands.
