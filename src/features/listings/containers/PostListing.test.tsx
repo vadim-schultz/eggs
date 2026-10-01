@@ -88,10 +88,10 @@ describe("PostListing", () => {
 
     expect(
       screen.getByText("Die Anzahl muss größer als 0 sein."),
-    ).toBeInTheDocument();
+    ).toHaveAttribute("data-part", "error-text");
     expect(
       screen.getByText("Bitte gib einen Kontakthinweis an."),
-    ).toBeInTheDocument();
+    ).toHaveAttribute("data-part", "error-text");
     expect(
       screen.queryByText(
         "Angebot konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
@@ -140,6 +140,17 @@ describe("PostListing", () => {
     const { container } = renderPostListing();
 
     expect(container.querySelectorAll("select")).toHaveLength(0);
+  });
+
+  it("has no native <label> elements", () => {
+    const { container } = renderPostListing();
+
+    // UnitSelect's Chakra Select.Label uses data-scope="select".
+    expect(
+      container.querySelectorAll(
+        'label:not([data-scope="field"]):not([data-scope="select"])',
+      ),
+    ).toHaveLength(0);
   });
 
   it("shows submit error when create_listing fails", async () => {
