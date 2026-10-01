@@ -100,6 +100,31 @@ immediately (`TS2353: Object literal may only specify known properties`). Both t
 implementation use `{ provider: "google", options: { redirectTo: window.location.origin } }`
 instead.
 
+**Opening the PR surfaced two unrelated, pre-existing CI/deploy breakages, fixed in the same PR at
+the user's request.** Neither is caused by this chapter's one-line change, but both were blocking
+it (and had been silently blocking every merge back through at least chapter 5 — `gh pr checks` on
+PRs #23 and #24 shows the same `ci`/Workers-Builds failures, merged anyway with no branch
+protection catching it):
+
+- **`ci` (GitHub Actions) failed on `AppShell.test.tsx`, `BuyerTab.test.tsx`, `FarmerTab.test.tsx`**
+  with `Missing required environment variable: VITE_SUPABASE_URL`. These three test files render
+  components that import `supabaseClient.ts` without mocking it (unlike `AuthButton.test.tsx`),
+  so `src/lib/env.ts`'s `requireVar` throws for real. Locally this was masked by `.env.local`
+  (gitignored, not present in CI) — Vite's env loading reads `.env.local` in every mode, including
+  vitest's `test` mode. Fix: added `.env.test` (committed, non-secret dummy values) — the Vite
+  convention for mode-specific env that CI should also see. No secret was invented or exposed: the
+  values are placeholders (`http://localhost:54321` / `test-anon-key`), never used for a real
+  network call in these tests.
+- **Cloudflare's preview build failed** with `Your Wrangler configuration is missing a 'previews'
+  block`. The live `eggs` project runs under Cloudflare's Workers Builds product, which runs
+  `npx wrangler preview` for every non-production branch/PR; that command hard-requires a
+  `previews` block in a Wrangler config file, even an empty one, and the repo had no Wrangler
+  config at all. Fix: added `wrangler.jsonc` (`name: "eggs"`, `assets.directory: "./dist"`,
+  `previews: {}`) — see `docs/operations/deploy.md` step 4's new note. This also means
+  `docs/operations/deploy.md`'s step 4 was describing classic Cloudflare Pages when the live
+  project is actually a Workers Builds project; noted there rather than rewritten wholesale, since
+  rewriting the deploy runbook's product model is out of scope for this chapter.
+
 ## Verification
 
 ```bash
