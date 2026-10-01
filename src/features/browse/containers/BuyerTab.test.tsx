@@ -5,7 +5,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import {
   BackgroundMapProvider,
   useBackgroundMapState,
-} from "@/components/BackgroundMap";
+} from "@/features/shell/context/backgroundMap";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 import BuyerTab from "./BuyerTab";
@@ -31,7 +31,7 @@ vi.mock("@/features/browse/hooks/useGeolocation", () => ({
 vi.mock("@/features/browse/hooks/useListingsNear", () => ({
   useListingsNear: useListingsNearMock,
 }));
-vi.mock("@/components/AppDialogState", () => ({
+vi.mock("@/features/shell/context/appDialog", () => ({
   useAppDialog: useAppDialogMock,
 }));
 
