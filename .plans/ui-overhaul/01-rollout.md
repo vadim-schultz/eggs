@@ -59,7 +59,7 @@ listed last only because it's the smallest, most isolated chapter.
 | 4 | Buyer tab: search and grid | frontend | vitest + `./ci.sh` | [04-buyer-tab-search-and-grid.md](chapters/04-buyer-tab-search-and-grid.md) | in review |
 | 5 | Farmer tab: add listing | frontend | vitest + `./ci.sh` | [05-farmer-tab-add-listing.md](chapters/05-farmer-tab-add-listing.md) | in review |
 | 6 | Detail and post dialogs | frontend | vitest + `./ci.sh` | [06-detail-and-post-dialogs.md](chapters/06-detail-and-post-dialogs.md) | in review |
-| 7 | Google OAuth redirect fix | frontend + ops | vitest + `./ci.sh` | [07-google-oauth-redirect-fix.md](chapters/07-google-oauth-redirect-fix.md) | planned |
+| 7 | Google OAuth redirect fix | frontend + ops | vitest + `./ci.sh` | [07-google-oauth-redirect-fix.md](chapters/07-google-oauth-redirect-fix.md) | in review (code); dashboard fix still manual |
 
 "Shipped" means the chapter's code is merged to `main` and its refactor gate outcome is reported in
 the chapter doc; "planned" means the chapter doc itself (Goal, design decisions, files, manual

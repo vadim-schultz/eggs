@@ -48,6 +48,20 @@ describe("AuthButton", () => {
     ).toBeInTheDocument();
   });
 
+  it("calls signInWithOAuth with redirectTo set to the current origin", () => {
+    useSessionMock.mockReturnValue({ session: null, loading: false });
+
+    renderButton();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Mit Google anmelden" }),
+    );
+
+    expect(signInWithOAuthMock).toHaveBeenCalledWith({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+  });
+
   it('shows "Sign out" and calls supabase.auth.signOut on click', () => {
     useSessionMock.mockReturnValue({
       session: { user: { id: "user-1" } },

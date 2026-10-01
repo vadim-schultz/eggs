@@ -60,6 +60,14 @@ Back in the Supabase dashboard for the hosted project:
    wherever steps 2 and 3 above referenced it (Google's authorized origin, Supabase's Site URL /
    Redirect URLs) if it wasn't known yet.
 
+> The live `eggs` project actually runs under Cloudflare's unified Workers Builds product rather
+> than classic Pages, which is why a repo-level `wrangler.jsonc` exists: Workers Builds runs
+> `npx wrangler preview` for every non-production branch/PR, and that command refuses to run
+> without a (possibly empty) `previews` block in the Wrangler config — see
+> [chapter 7's implementation notes](../../.plans/ui-overhaul/chapters/07-google-oauth-redirect-fix.md)
+> for how this was discovered. No other step in this runbook changes because of it; `npm run build`
+> → `dist` is still what gets deployed, env vars are still set the same way.
+
 ### 5. Smoke test
 
 Load the Cloudflare Pages URL, sign in with a non-test Google account, post a listing, reserve it from a

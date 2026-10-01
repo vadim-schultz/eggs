@@ -4,7 +4,7 @@ overview: "Fix the Google sign-in redirect landing on http://localhost:3000 inst
 todos:
   - id: redirect-to
     content: "AuthButton.tsx passes redirectTo: window.location.origin"
-    status: pending
+    status: done
   - id: dashboard-fix
     content: "Supabase Authentication -> URL Configuration corrected for the hosted project"
     status: pending
@@ -13,7 +13,7 @@ isProject: false
 
 # Chapter 7 — Google OAuth redirect fix
 
-**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-google-oauth-redirect-fix` · **Status:** planned
+**Repo:** `eggs` (`src/`) · **Branch:** `feat/eggs-ui-google-oauth-redirect-fix` · **Status:** in review (code); dashboard fix still manual
 
 **Depends on:** none · **Architecture:** [../00-architecture.md](../00-architecture.md) §9 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
@@ -78,9 +78,52 @@ than `localhost`.
 1. `AuthButton.tsx` — add `redirectTo: window.location.origin`; test 1.
 2. Manual: correct the Supabase dashboard Site URL / Redirect URLs as above.
 
+**Outcome:** Step 1 shipped. Step 2 is a dashboard change this environment has no access to
+perform — see Manual configuration above and the walkthrough the assistant gave the user in chat;
+it's the only remaining item before this chapter is fully done.
+
 ## Refactor gate
 
 Single-line change to an existing call — no structural change to report against.
+
+**Outcome:** Confirmed — the diff is one call-site edit plus its test; no method or file crossed a
+size/nesting threshold. No refactor needed.
+
+## Implementation notes
+
+**`redirectTo` nests under `options`, not top-level, contrary to this chapter's own Design
+decisions section.** The plan's prose (and the Files table) describes
+`signInWithOAuth({ provider: "google", redirectTo: window.location.origin })`, but
+`@supabase/auth-js`'s `SignInWithOAuthCredentials` type only accepts `provider` and an optional
+`options` object at the top level — `redirectTo` lives at `options.redirectTo`. `tsc` caught this
+immediately (`TS2353: Object literal may only specify known properties`). Both the test and the
+implementation use `{ provider: "google", options: { redirectTo: window.location.origin } }`
+instead.
+
+**Opening the PR surfaced two unrelated, pre-existing CI/deploy breakages, fixed in the same PR at
+the user's request.** Neither is caused by this chapter's one-line change, but both were blocking
+it (and had been silently blocking every merge back through at least chapter 5 — `gh pr checks` on
+PRs #23 and #24 shows the same `ci`/Workers-Builds failures, merged anyway with no branch
+protection catching it):
+
+- **`ci` (GitHub Actions) failed on `AppShell.test.tsx`, `BuyerTab.test.tsx`, `FarmerTab.test.tsx`**
+  with `Missing required environment variable: VITE_SUPABASE_URL`. These three test files render
+  components that import `supabaseClient.ts` without mocking it (unlike `AuthButton.test.tsx`),
+  so `src/lib/env.ts`'s `requireVar` throws for real. Locally this was masked by `.env.local`
+  (gitignored, not present in CI) — Vite's env loading reads `.env.local` in every mode, including
+  vitest's `test` mode. Fix: added `.env.test` (committed, non-secret dummy values) — the Vite
+  convention for mode-specific env that CI should also see. No secret was invented or exposed: the
+  values are placeholders (`http://localhost:54321` / `test-anon-key`), never used for a real
+  network call in these tests.
+- **Cloudflare's preview build failed** with `Your Wrangler configuration is missing a 'previews'
+  block`. The live `eggs` project runs under Cloudflare's Workers Builds product, which runs
+  `npx wrangler preview` for every non-production branch/PR; that command hard-requires a
+  `previews` block in a Wrangler config file, even an empty one, and the repo had no Wrangler
+  config at all. Fix: added `wrangler.jsonc` (`name: "eggs"`, `assets.directory: "./dist"`,
+  `previews: {}`) — see `docs/operations/deploy.md` step 4's new note. This also means
+  `docs/operations/deploy.md`'s step 4 was describing classic Cloudflare Pages when the live
+  project is actually a Workers Builds project; noted there rather than rewritten wholesale, since
+  rewriting the deploy runbook's product model is out of scope for this chapter.
 
 ## Verification
 
@@ -90,6 +133,12 @@ npm run test -- --run
 # manual: after the dashboard fix, sign in with Google against https://eierbauer.cc and confirm
 # the redirect lands back on the app, signed in — not on localhost
 ```
+
+`npm run test -- --run` (75 passed) and `./ci.sh` (lint, format, typecheck, test, build) both pass
+on this branch. The manual dashboard fix and the real-Google-account smoke test are outside this
+environment's reach — no access to the hosted Supabase project's dashboard or a real Google
+account/browser round-trip against production — so they're left for the user; see the walkthrough
+given in chat.
 
 ## Out of scope
 

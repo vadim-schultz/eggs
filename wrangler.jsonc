@@ -1,0 +1,14 @@
+{
+  "name": "eggs",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist"
+  },
+  // Cloudflare Workers Builds runs `npx wrangler preview` for non-production
+  // branches (PRs); that command refuses to run without an explicit
+  // `previews` block, even an empty one. This static site needs no
+  // preview-specific overrides — the build already bakes VITE_SUPABASE_URL/
+  // VITE_SUPABASE_ANON_KEY into the bundle from Cloudflare's project
+  // environment variables.
+  "previews": {}
+}

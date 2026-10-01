@@ -10,7 +10,12 @@ export default function AuthButton() {
   if (!session) {
     return (
       <Button
-        onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
+        onClick={() =>
+          supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: { redirectTo: window.location.origin },
+          })
+        }
       >
         {t("auth.signIn")}
       </Button>
