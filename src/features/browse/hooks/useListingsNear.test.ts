@@ -15,14 +15,16 @@ describe("useListingsNear", () => {
     rpcMock.mockResolvedValue({ data: [], error: null });
   });
 
-  it("calls the listings_near RPC with the given center and radius", () => {
+  it("calls the listings_near RPC with the given center and radius", async () => {
     renderHook(() => useListingsNear({ lat: 52.52, lng: 13.405 }, 15000));
 
-    expect(rpcMock).toHaveBeenCalledWith("listings_near", {
-      p_lat: 52.52,
-      p_lng: 13.405,
-      p_radius_m: 15000,
-    });
+    await waitFor(() =>
+      expect(rpcMock).toHaveBeenCalledWith("listings_near", {
+        p_lat: 52.52,
+        p_lng: 13.405,
+        p_radius_m: 15000,
+      }),
+    );
   });
 
   it("exposes loading then the resolved listings", async () => {
