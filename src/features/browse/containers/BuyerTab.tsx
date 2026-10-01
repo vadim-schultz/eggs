@@ -10,17 +10,16 @@ import {
 } from "@/features/browse/components/BuyerTab";
 import { useGeolocation } from "@/features/browse/hooks/useGeolocation";
 import { useListingsNear } from "@/features/browse/hooks/useListingsNear";
-import type { GeoPoint } from "@/features/browse/types/geo";
 import LocationPicker, {
   type ConfirmedPin,
 } from "@/features/location/components/LocationPicker";
 import { t } from "@/i18n/t";
+import { DEFAULT_MAP_CENTER } from "@/lib/geo/constants";
 
-const FALLBACK_CENTER: GeoPoint = { lat: 52.52, lng: 13.405 };
 const DEFAULT_RADIUS_M = 15000;
 
 export default function BuyerTab() {
-  const { center: geoCenter } = useGeolocation(FALLBACK_CENTER);
+  const { center: geoCenter } = useGeolocation(DEFAULT_MAP_CENTER);
   const [manualCenter, setManualCenter] = useState<ConfirmedPin | null>(null);
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
