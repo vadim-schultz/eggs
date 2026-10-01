@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
+import { Button, Field, HStack, Input } from "@chakra-ui/react";
 
 import { updateListingExpiry } from "@/features/listings/services/listingsApi";
 import { t } from "@/i18n/t";
@@ -9,8 +9,19 @@ import type { SellerActionsProps } from "./SellerActions";
 
 const MAX_EXPIRY_DAYS = 14;
 
+type ExpiryFieldError = "bound" | "rpc";
+
 function maxExpiryDate(): Date {
   return new Date(Date.now() + MAX_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+}
+
+function expiryFieldError(
+  boundError: boolean,
+  rpcError: boolean,
+): ExpiryFieldError | null {
+  if (boundError) return "bound";
+  if (rpcError) return "rpc";
+  return null;
 }
 
 /** Expiry date field and save action for listing owners. */
@@ -22,6 +33,7 @@ export default function ExpiryEditor({
   const [value, setValue] = useState(listing.expires_at.slice(0, 10));
   const [boundError, setBoundError] = useState(false);
   const { busy, error: rpcError, run, resetError } = useAsyncAction();
+  const error = expiryFieldError(boundError, rpcError);
 
   async function save() {
     const next = new Date(`${value}T00:00:00.000Z`);
@@ -41,8 +53,8 @@ export default function ExpiryEditor({
   }
 
   return (
-    <Stack gap="1">
-      <Text>{t("seller.expiresAt.label")}</Text>
+    <Field.Root invalid={error !== null}>
+      <Field.Label>{t("seller.expiresAt.label")}</Field.Label>
       <HStack gap="2">
         <Input
           type="date"
@@ -54,10 +66,12 @@ export default function ExpiryEditor({
           {t("seller.expiresAt.save")}
         </Button>
       </HStack>
-      {boundError && (
-        <Text color="fg.error">{t("seller.expiresAt.error")}</Text>
+      {error === "bound" && (
+        <Field.ErrorText>{t("seller.expiresAt.error")}</Field.ErrorText>
       )}
-      {rpcError && <Text color="fg.error">{t("seller.error")}</Text>}
-    </Stack>
+      {error === "rpc" && (
+        <Field.ErrorText>{t("seller.error")}</Field.ErrorText>
+      )}
+    </Field.Root>
   );
 }
