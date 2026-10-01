@@ -21,10 +21,10 @@ const {
 vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
-vi.mock("../hooks/useGeolocation", () => ({
+vi.mock("@/features/browse/hooks/useGeolocation", () => ({
   useGeolocation: useGeolocationMock,
 }));
-vi.mock("../hooks/useListingsNear", () => ({
+vi.mock("@/features/browse/hooks/useListingsNear", () => ({
   useListingsNear: useListingsNearMock,
 }));
 vi.mock("./AppDialogState", () => ({ useAppDialog: useAppDialogMock }));

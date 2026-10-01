@@ -7,7 +7,7 @@ import { FaEgg } from "react-icons/fa6";
 import { RiShoppingBasketLine } from "react-icons/ri";
 import "leaflet/dist/leaflet.css";
 
-import type { GeoPoint } from "../hooks/useGeolocation";
+import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 const PIN_STYLE = [
