@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { Badge, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import StatusBadge, { statusColorPalette } from "./StatusBadge";
-import type { ListingStatus } from "../lib/listing";
+import type { ListingStatus } from "@/features/listings/types/listing";
 
 const cases: [ListingStatus, string, string][] = [
   ["active", "Verfügbar", "green"],

@@ -1,7 +1,8 @@
 import { Badge } from "@chakra-ui/react";
 
 import { t } from "../i18n/t";
-import { statusLabelKey, type ListingStatus } from "../lib/listing";
+import type { ListingStatus } from "@/features/listings/types/listing";
+import { statusLabelKey } from "@/features/listings/utils/formatListing";
 
 export function statusColorPalette(status: ListingStatus): string {
   switch (status) {

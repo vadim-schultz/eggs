@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import SellerActions from "./SellerActions";
-import type { Listing } from "../lib/listing";
+import type { Listing } from "@/features/listings/types/listing";
 
 const { useSessionMock, rpcMock, eqMock, updateMock, fromMock } = vi.hoisted(
   () => {

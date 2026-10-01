@@ -5,7 +5,7 @@ import AuthButton from "@/features/auth/components/AuthButton";
 import { useGeolocation, type GeoPoint } from "../hooks/useGeolocation";
 import { useListingsNear } from "../hooks/useListingsNear";
 import { t } from "../i18n/t";
-import type { ListingNear } from "../lib/listing";
+import type { ListingNear } from "@/features/listings/types/listing";
 import { useAppDialog } from "./AppDialogState";
 import { usePublishBackgroundMap } from "./BackgroundMap";
 import ListingCard from "./ListingCard";

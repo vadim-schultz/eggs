@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import MapView from "./MapView";
-import type { ListingNear } from "../lib/listing";
+import type { ListingNear } from "@/features/listings/types/listing";
 
 function listing(overrides: Partial<ListingNear> = {}): ListingNear {
   return {

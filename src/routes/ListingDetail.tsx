@@ -7,7 +7,11 @@ import SellerActions from "../components/SellerActions";
 import StatusBadge from "../components/StatusBadge";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
-import { formatPrice, unitLabelKey, type Listing } from "../lib/listing";
+import type { Listing } from "@/features/listings/types/listing";
+import {
+  formatPrice,
+  unitLabelKey,
+} from "@/features/listings/utils/formatListing";
 
 function useListing(id: string) {
   const [listing, setListing] = useState<Listing | null>(null);

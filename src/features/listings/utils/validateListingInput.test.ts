@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  validateListingInput,
-  type ListingInput,
-} from "./validateListingInput";
+import type { ListingInput } from "../types/listingInput";
+import { validateListingInput } from "./validateListingInput";
 
 function wellFormedInput(): ListingInput {
   return {

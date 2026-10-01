@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { supabase } from "../lib/supabaseClient";
-import type { ListingNear } from "../lib/listing";
+import type { ListingNear } from "@/features/listings/types/listing";
 import type { GeoPoint } from "./useGeolocation";
 
 export interface UseListingsNearResult {
