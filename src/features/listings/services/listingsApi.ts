@@ -6,6 +6,22 @@ export interface ListingContactRow {
   contact_note: string;
 }
 
+export interface CreateListingArgs {
+  p_egg_count: number;
+  p_unit: "dozen" | "each";
+  p_price_cents: number;
+  p_lat: number;
+  p_lng: number;
+  p_location_label: string;
+  p_note: string | null;
+  p_contact_note: string;
+}
+
+export interface ActiveReservationRow {
+  id: string;
+  buyer_id: string;
+}
+
 export async function fetchListing(
   id: string,
 ): Promise<{ listing: Listing | null }> {
@@ -28,4 +44,90 @@ export async function fetchListingContact(
     .maybeSingle();
 
   return { contact: (data as ListingContactRow | null) ?? null };
+}
+
+export async function createListing(
+  args: CreateListingArgs,
+): Promise<{ id: string } | { error: true }> {
+  const { data, error } = await supabase.rpc("create_listing", args);
+  if (error || !data) {
+    return { error: true };
+  }
+  return { id: data.id as string };
+}
+
+export async function fetchActiveReservation(
+  listingId: string,
+): Promise<{ reservation: ActiveReservationRow | null }> {
+  const { data } = await supabase
+    .from("reservation")
+    .select("id, buyer_id")
+    .eq("listing_id", listingId)
+    .eq("status", "active")
+    .maybeSingle();
+
+  return { reservation: (data as ActiveReservationRow | null) ?? null };
+}
+
+export async function markListingSold(
+  listingId: string,
+): Promise<{ error?: true }> {
+  const { error } = await supabase.rpc("mark_listing_sold", {
+    p_listing_id: listingId,
+  });
+  if (error) {
+    return { error: true };
+  }
+  return {};
+}
+
+export async function markListingCancelled(
+  listingId: string,
+): Promise<{ error?: true }> {
+  const { error } = await supabase.rpc("mark_listing_cancelled", {
+    p_listing_id: listingId,
+  });
+  if (error) {
+    return { error: true };
+  }
+  return {};
+}
+
+export async function updateListingExpiry(
+  listingId: string,
+  isoDate: string,
+): Promise<{ error?: true }> {
+  const { error } = await supabase
+    .from("listing")
+    .update({ expires_at: isoDate })
+    .eq("id", listingId);
+
+  if (error) {
+    return { error: true };
+  }
+  return {};
+}
+
+export async function reserveListing(
+  listingId: string,
+): Promise<{ error?: true }> {
+  const { error } = await supabase.rpc("reserve_listing", {
+    p_listing_id: listingId,
+  });
+  if (error) {
+    return { error: true };
+  }
+  return {};
+}
+
+export async function cancelReservation(
+  reservationId: string,
+): Promise<{ error?: true }> {
+  const { error } = await supabase.rpc("cancel_reservation", {
+    p_reservation_id: reservationId,
+  });
+  if (error) {
+    return { error: true };
+  }
+  return {};
 }
