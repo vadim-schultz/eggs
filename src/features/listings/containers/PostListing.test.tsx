@@ -82,6 +82,9 @@ describe("PostListing", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Angebot veröffentlichen" }),
     );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
 
     expect(
       screen.getByText("Die Anzahl muss größer als 0 sein."),
@@ -89,6 +92,11 @@ describe("PostListing", () => {
     expect(
       screen.getByText("Bitte gib einen Kontakthinweis an."),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Angebot konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
+      ),
+    ).not.toBeInTheDocument();
     expect(rpcMock).not.toHaveBeenCalled();
   });
 

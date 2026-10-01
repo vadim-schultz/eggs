@@ -10,6 +10,7 @@ import {
   toListingInput,
 } from "@/features/listings/utils/postListingMappers";
 import { validateListingInput } from "@/features/listings/utils/validateListingInput";
+import { useAsyncAction } from "@/lib/async/useAsyncAction";
 
 const initialFormState: PostListingFormState = {
   eggCount: "",
@@ -28,8 +29,7 @@ interface PostListingProps {
 export default function PostListing({ onCreated }: PostListingProps) {
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState<ListingInputErrors>({});
-  const [submitError, setSubmitError] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const { busy: submitting, error: submitError, run } = useAsyncAction();
 
   function updateField<K extends keyof PostListingFormState>(
     key: K,
@@ -40,23 +40,20 @@ export default function PostListing({ onCreated }: PostListingProps) {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!form.pin) return;
+    const pin = form.pin;
+    if (!pin) return;
 
     const input = toListingInput(form);
     const validationErrors = validateListingInput(input);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
 
-    setSubmitError(false);
-    setSubmitting(true);
-    const result = await createListing(toCreateListingArgs(input, form.pin));
-    setSubmitting(false);
-
-    if ("error" in result) {
-      setSubmitError(true);
-      return;
-    }
-    onCreated(result.id);
+    await run(async () => {
+      const result = await createListing(toCreateListingArgs(input, pin));
+      if ("error" in result) return { ok: false };
+      onCreated(result.id);
+      return { ok: true };
+    });
   }
 
   return (

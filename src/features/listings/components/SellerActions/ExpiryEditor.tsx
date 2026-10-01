@@ -3,6 +3,7 @@ import { Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 
 import { updateListingExpiry } from "@/features/listings/services/listingsApi";
 import { t } from "@/i18n/t";
+import { useAsyncAction } from "@/lib/async/useAsyncAction";
 
 import type { SellerActionsProps } from "./SellerActions";
 
@@ -19,25 +20,24 @@ export default function ExpiryEditor({
   onChange,
 }: SellerActionsProps) {
   const [value, setValue] = useState(listing.expires_at.slice(0, 10));
-  const [error, setError] = useState<"bound" | "rpc" | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [boundError, setBoundError] = useState(false);
+  const { busy, error: rpcError, run, resetError } = useAsyncAction();
 
   async function save() {
     const next = new Date(`${value}T00:00:00.000Z`);
     if (Number.isNaN(next.getTime()) || next > maxExpiryDate()) {
-      setError("bound");
+      setBoundError(true);
+      resetError();
       return;
     }
 
-    setBusy(true);
-    setError(null);
-    const result = await updateListingExpiry(listing.id, next.toISOString());
-    setBusy(false);
-    if (result.error) {
-      setError("rpc");
-      return;
-    }
-    onChange();
+    setBoundError(false);
+    await run(async () => {
+      const result = await updateListingExpiry(listing.id, next.toISOString());
+      if (result.error) return { ok: false };
+      onChange();
+      return { ok: true };
+    });
   }
 
   return (
@@ -54,10 +54,10 @@ export default function ExpiryEditor({
           {t("seller.expiresAt.save")}
         </Button>
       </HStack>
-      {error === "bound" && (
+      {boundError && (
         <Text color="fg.error">{t("seller.expiresAt.error")}</Text>
       )}
-      {error === "rpc" && <Text color="fg.error">{t("seller.error")}</Text>}
+      {rpcError && <Text color="fg.error">{t("seller.error")}</Text>}
     </Stack>
   );
 }
