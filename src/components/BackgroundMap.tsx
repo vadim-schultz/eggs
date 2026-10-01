@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 
-import type { GeoPoint } from "../hooks/useGeolocation";
+import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 export interface BackgroundMapState {

@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 
-export interface GeoPoint {
-  lat: number;
-  lng: number;
-}
+import type { GeoPoint } from "@/features/browse/types/geo";
 
 export interface UseGeolocationResult {
   center: GeoPoint;

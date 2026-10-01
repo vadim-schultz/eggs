@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { supabase } from "../lib/supabaseClient";
+import { fetchListingsNear } from "@/features/browse/services/browseApi";
+import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
-import type { GeoPoint } from "./useGeolocation";
 
 export interface UseListingsNearResult {
   listings: ListingNear[];
@@ -23,21 +23,15 @@ export function useListingsNear(
     setLoading(true);
     setError(false);
 
-    supabase
-      .rpc("listings_near", {
-        p_lat: center.lat,
-        p_lng: center.lng,
-        p_radius_m: radiusM,
-      })
-      .then(({ data, error: rpcError }) => {
-        if (cancelled) return;
-        if (rpcError || !data) {
-          setError(true);
-        } else {
-          setListings(data as ListingNear[]);
-        }
-        setLoading(false);
-      });
+    fetchListingsNear(center, radiusM).then((result) => {
+      if (cancelled) return;
+      if ("error" in result) {
+        setError(true);
+      } else {
+        setListings(result.listings);
+      }
+      setLoading(false);
+    });
 
     return () => {
       cancelled = true;
