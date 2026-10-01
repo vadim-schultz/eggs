@@ -42,6 +42,37 @@ changes. Seven chapters.
 
 Status: planned — all seven chapter docs are written; no code has shipped yet.
 
+### [frontend-structure/](frontend-structure/) — Feature folders and layer hygiene
+
+A structural pass on `src/` only: align eggs with the rsb-test-storage **feature-folder** frontend
+(`features/<name>/{containers,components,hooks,services,types,utils}`), extract inline sub-components
+into hierarchical directories with barrels, and introduce a `@/` import alias. No schema, RLS, or
+user-visible behavior change — moves and extractions only. Fifteen chapters.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](frontend-structure/00-architecture.md) | Audit summary, target tree, layer roles, nested-component rule, file map |
+| [01-rollout.md](frontend-structure/01-rollout.md) | Fifteen chapters, dependency graph, invariants, per-chapter gate |
+| [gaps-and-decisions.md](frontend-structure/gaps-and-decisions.md) | Settled structural decisions and deferred lint enforcement |
+| [chapters/](frontend-structure/chapters/) | One executable plan per chapter |
+
+Status: planned — all chapter docs are written; no restructuring code has shipped yet.
+
+### [frontend-dry/](frontend-dry/) — DRY helpers and Chakra form hygiene
+
+Shared Supabase read/mutation lifecycle hooks, a default map center constant, `ListingSummaryLine`, and
+Chakra `Field.*` markup for post listing and seller expiry — behavior-preserving, no schema changes. Eight
+chapters; can ship on today’s flat `src/` or after [frontend-structure/](frontend-structure/) paths land.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](frontend-dry/00-architecture.md) | DRY targets, Chakra conventions, prerequisites vs structure |
+| [01-rollout.md](frontend-dry/01-rollout.md) | Eight chapters, dependency graph, invariants, gate |
+| [gaps-and-decisions.md](frontend-dry/gaps-and-decisions.md) | useSupabaseQuery / useAsyncAction decisions; ui-overhaul overlap |
+| [chapters/](frontend-dry/chapters/) | One executable plan per chapter |
+
+Status: planned — all eight chapter docs are written; no code has shipped yet.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
