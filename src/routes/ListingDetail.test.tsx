@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import ListingDetail from "./ListingDetail";
-import type { Listing } from "../lib/listing";
+import type { Listing } from "@/features/listings/types/listing";
 
 const { singleMock, eqMock, selectMock, fromMock } = vi.hoisted(() => {
   const singleMock = vi.fn();

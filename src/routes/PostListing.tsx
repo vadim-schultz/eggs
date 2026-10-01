@@ -15,12 +15,12 @@ import LocationPicker, {
 import UnitSelect from "../components/UnitSelect";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
-import {
-  validateListingInput,
-  type ListingErrorKey,
-  type ListingInput,
-  type ListingInputErrors,
-} from "../lib/validateListingInput";
+import type {
+  ListingErrorKey,
+  ListingInput,
+  ListingInputErrors,
+} from "@/features/listings/types/listingInput";
+import { validateListingInput } from "@/features/listings/utils/validateListingInput";
 
 interface FormState {
   eggCount: string;

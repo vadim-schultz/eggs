@@ -4,7 +4,7 @@ import { Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 import { useSession } from "@/features/auth/hooks/useSession";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
-import type { Listing } from "../lib/listing";
+import type { Listing } from "@/features/listings/types/listing";
 
 const MAX_EXPIRY_DAYS = 14;
 

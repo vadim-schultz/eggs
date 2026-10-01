@@ -4,7 +4,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import BuyerTab from "./BuyerTab";
 import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
-import type { ListingNear } from "../lib/listing";
+import type { ListingNear } from "@/features/listings/types/listing";
 
 const {
   useSessionMock,

@@ -8,7 +8,7 @@ import { RiShoppingBasketLine } from "react-icons/ri";
 import "leaflet/dist/leaflet.css";
 
 import type { GeoPoint } from "../hooks/useGeolocation";
-import type { ListingNear } from "../lib/listing";
+import type { ListingNear } from "@/features/listings/types/listing";
 
 const PIN_STYLE = [
   "display:flex",
