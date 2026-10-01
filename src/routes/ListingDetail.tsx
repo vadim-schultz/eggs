@@ -3,7 +3,7 @@ import { Heading, Stack, Text } from "@chakra-ui/react";
 
 import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
-import SellerActions from "../components/SellerActions";
+import SellerActions from "@/features/listings/components/SellerActions";
 import StatusBadge from "../components/StatusBadge";
 import { fetchListing } from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
