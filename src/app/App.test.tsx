@@ -18,7 +18,7 @@ vi.mock("@/features/browse/containers/BuyerTab", () => ({
   default: () => null,
 }));
 
-vi.mock("./components/FarmerTab", () => ({
+vi.mock("@/features/shell/components/FarmerTab", () => ({
   default: () => null,
 }));
 
@@ -87,6 +87,13 @@ describe("App", () => {
     renderAt("/post");
 
     expect(await screen.findByTestId("post-listing")).toBeInTheDocument();
+  });
+
+  it("loading /post without a session does not open the post dialog", async () => {
+    renderAt("/post");
+    await act(async () => {});
+
+    expect(screen.queryByTestId("post-listing")).not.toBeInTheDocument();
   });
 
   it("closing the detail dialog navigates back to /", async () => {
