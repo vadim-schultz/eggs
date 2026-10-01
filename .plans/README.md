@@ -42,6 +42,22 @@ changes. Seven chapters.
 
 Status: planned — all seven chapter docs are written; no code has shipped yet.
 
+### [frontend-structure/](frontend-structure/) — Feature folders and layer hygiene
+
+A structural pass on `src/` only: align eggs with the rsb-test-storage **feature-folder** frontend
+(`features/<name>/{containers,components,hooks,services,types,utils}`), extract inline sub-components
+into hierarchical directories with barrels, and introduce a `@/` import alias. No schema, RLS, or
+user-visible behavior change — moves and extractions only. Fifteen chapters.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](frontend-structure/00-architecture.md) | Audit summary, target tree, layer roles, nested-component rule, file map |
+| [01-rollout.md](frontend-structure/01-rollout.md) | Fifteen chapters, dependency graph, invariants, per-chapter gate |
+| [gaps-and-decisions.md](frontend-structure/gaps-and-decisions.md) | Settled structural decisions and deferred lint enforcement |
+| [chapters/](frontend-structure/chapters/) | One executable plan per chapter |
+
+Status: planned — all chapter docs are written; no restructuring code has shipped yet.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
