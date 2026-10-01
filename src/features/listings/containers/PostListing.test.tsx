@@ -9,7 +9,7 @@ const { rpcMock, searchPlaceMock } = vi.hoisted(() => ({
   searchPlaceMock: vi.fn(),
 }));
 
-vi.mock("../lib/supabaseClient", () => ({
+vi.mock("@/lib/supabaseClient", () => ({
   supabase: { rpc: rpcMock },
 }));
 

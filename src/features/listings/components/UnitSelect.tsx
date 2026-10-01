@@ -1,6 +1,6 @@
 import { Select, createListCollection } from "@chakra-ui/react";
 
-import { t } from "../i18n/t";
+import { t } from "@/i18n/t";
 
 export type Unit = "dozen" | "each";
 
