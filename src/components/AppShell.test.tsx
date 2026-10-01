@@ -19,7 +19,7 @@ vi.mock("./FarmerTab", () => ({
   default: () => <div data-testid="farmer-tab" />,
 }));
 
-vi.mock("../auth/useSession", () => ({
+vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: () => ({ session: null, loading: false }),
 }));
 

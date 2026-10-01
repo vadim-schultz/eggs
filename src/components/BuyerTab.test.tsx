@@ -18,7 +18,9 @@ const {
   useAppDialogMock: vi.fn(),
 }));
 
-vi.mock("../auth/useSession", () => ({ useSession: useSessionMock }));
+vi.mock("@/features/auth/hooks/useSession", () => ({
+  useSession: useSessionMock,
+}));
 vi.mock("../hooks/useGeolocation", () => ({
   useGeolocation: useGeolocationMock,
 }));

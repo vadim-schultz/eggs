@@ -1,7 +1,7 @@
 import { Button, Stack, Text } from "@chakra-ui/react";
 
-import AuthButton from "../auth/AuthButton";
-import { useSession } from "../auth/useSession";
+import AuthButton from "@/features/auth/components/AuthButton";
+import { useSession } from "@/features/auth/hooks/useSession";
 import { t } from "../i18n/t";
 import { useAppDialog } from "./AppDialogState";
 

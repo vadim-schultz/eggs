@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, NativeSelect, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
-import AuthButton from "../auth/AuthButton";
+import AuthButton from "@/features/auth/components/AuthButton";
 import { useGeolocation, type GeoPoint } from "../hooks/useGeolocation";
 import { useListingsNear } from "../hooks/useListingsNear";
 import { t } from "../i18n/t";
