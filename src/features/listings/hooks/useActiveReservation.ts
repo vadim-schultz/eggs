@@ -1,35 +1,26 @@
-import { useEffect, useState } from "react";
-
 import {
   fetchActiveReservation,
   type ActiveReservationRow,
 } from "@/features/listings/services/listingsApi";
+import { useSupabaseQuery } from "@/lib/async/useSupabaseQuery";
 
 export function useActiveReservation(listingId: string, enabled: boolean) {
-  const [reservation, setReservation] = useState<ActiveReservationRow | null>(
-    null,
+  const { data, loading } = useSupabaseQuery([listingId, enabled], () =>
+    loadActiveReservation(listingId, enabled),
   );
-  const [loading, setLoading] = useState(enabled);
 
-  useEffect(() => {
-    if (!enabled) {
-      setReservation(null);
-      setLoading(false);
-      return;
-    }
+  if (!enabled) {
+    return { reservation: null, loading: false };
+  }
 
-    let cancelled = false;
-    setLoading(true);
-    fetchActiveReservation(listingId).then(({ reservation: row }) => {
-      if (cancelled) return;
-      setReservation(row);
-      setLoading(false);
-    });
+  return { reservation: data, loading };
+}
 
-    return () => {
-      cancelled = true;
-    };
-  }, [listingId, enabled]);
-
-  return { reservation, loading };
+async function loadActiveReservation(
+  listingId: string,
+  enabled: boolean,
+): Promise<ActiveReservationRow | null> {
+  if (!enabled) return null;
+  const { reservation } = await fetchActiveReservation(listingId);
+  return reservation;
 }

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-
 import { fetchListingsNear } from "@/features/browse/services/browseApi";
 import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
+import { useSupabaseQuery } from "@/lib/async/useSupabaseQuery";
 
 export interface UseListingsNearResult {
   listings: ListingNear[];
@@ -14,29 +13,21 @@ export function useListingsNear(
   center: GeoPoint,
   radiusM: number,
 ): UseListingsNearResult {
-  const [listings, setListings] = useState<ListingNear[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data, loading, error } = useSupabaseQuery(
+    [center.lat, center.lng, radiusM],
+    () => loadListingsNear(center, radiusM),
+  );
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
+  return { listings: data ?? [], loading, error };
+}
 
-    fetchListingsNear(center, radiusM).then((result) => {
-      if (cancelled) return;
-      if ("error" in result) {
-        setError(true);
-      } else {
-        setListings(result.listings);
-      }
-      setLoading(false);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [center.lat, center.lng, radiusM]);
-
-  return { listings, loading, error };
+async function loadListingsNear(
+  center: GeoPoint,
+  radiusM: number,
+): Promise<ListingNear[]> {
+  const result = await fetchListingsNear(center, radiusM);
+  if ("error" in result) {
+    throw new Error("listings_near failed");
+  }
+  return result.listings;
 }
