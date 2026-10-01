@@ -24,4 +24,4 @@ isProject: false
 ## Open seams
 
 - **Promote `lib/async` to a shared package** — not needed for eggs size; revisit if a second app shares Supabase helpers.
-- **Generic `NativeSelectField`** unifying radius + unit pickers — deferred; different Chakra components (`NativeSelect` vs `Select`) by design.
+- **Styled dropdowns** use Chakra `Select` (listbox; see `UnitSelect`). `NativeSelect` is a styled native `<select>` wrapper — not a target for new fields. **`RadiusSelect` migration** to `Select` stays deferred and out of this folder.

@@ -23,8 +23,8 @@ and for the background map’s initial provider state.
 
 ## Design decisions
 
-Export `DEFAULT_MAP_CENTER` and type it as `GeoPoint` (import type from `useGeolocation` or define in
-`constants.ts` and re-export from hook module in a later cleanup).
+Export `DEFAULT_MAP_CENTER` and type it as `GeoPoint` (import type from
+[`src/features/browse/types/geo.ts`](../../../src/features/browse/types/geo.ts)).
 
 Do not change test fixture literals unless a test asserts the constant re-export.
 
@@ -36,8 +36,8 @@ Do not change test fixture literals unless a test asserts the constant re-export
 
 | Path | Change |
 | --- | --- |
-| `src/components/BuyerTab.tsx` | `FALLBACK_CENTER` → import constant |
-| `src/components/BackgroundMap.tsx` | `FALLBACK_STATE.center` → constant |
+| `src/features/browse/containers/BuyerTab.tsx` | `FALLBACK_CENTER` → import constant |
+| `src/features/shell/context/backgroundMap.tsx` | `FALLBACK_STATE.center` → constant |
 
 ## Manual configuration
 
@@ -64,13 +64,13 @@ Single constant file — **no refactor needed**. Report outcome.
 
 ```bash
 npm run test -- --run src/lib/geo
-npm run test -- --run src/components/BuyerTab.test.tsx
+npm run test -- --run src/features/browse/containers/BuyerTab.test.tsx
 ./ci.sh
 ```
 
 ## Out of scope
 
-Moving constant into `features/browse/` — optional after frontend-structure ch. 12.
+Moving constant into `features/browse/` — out of scope; keep under `src/lib/geo/`.
 
 ## Git workflow
 
