@@ -21,6 +21,18 @@ Stop before the first chapter unless all of these hold:
 2. `git cat-file -e main:.plans/frontend-structure/chapters/README.md` succeeds. If it fails, the plans branch is not on `main`. Tell the user to merge `docs/eggs-frontend-structure-plans` first. Do not check out `main` yourself.
 3. Read `.plans/frontend-structure/run-ledger.md` if it exists. Skip any chapter whose ledger row says `merged`.
 
+## Corporate build environment
+
+Pass these to every `chapter-implementer` prompt (agents cannot see the user’s `.env`). Instruct the implementer to export them before `npm ci` and `./ci.sh`:
+
+- `NPM_CONFIG_REGISTRY`: `https://npm.packages.rsint.net/artifactory/api/npm/rs_npm_virtual/`
+- `HTTP_PROXY` / `HTTPS_PROXY`: `http://185.46.212.88:9480/`
+- `NO_PROXY`: `localhost,127.0.0.1,.rsint.net,.rsext.net`
+- `DOCKER_REGISTRY`: `docker.packages.rsint.net/docker.io`
+- `RS_DOCKER_REGISTRY`: `docker.packages.rsint.net`
+- `PYPI_INDEX_URL`: `https://pypi.packages.rsint.net/api/pypi/rs_pypi_virtual/simple`
+- `PYPI_EXTRA_INDEX_URL`: `https://pypi.packages.rsint.net/api/pypi/rs_common_components/simple`
+
 ## Order
 
 Follow this order. Chapter 11 is before chapter 10 because location must land before the post-listing form.
@@ -46,6 +58,7 @@ Follow this order. Chapter 11 is before chapter 10 because location must land be
 Launch one foreground `chapter-implementer`. Put this in its prompt (it cannot see this chat):
 
 - Absolute path of the single chapter file.
+- Corporate build environment variables (see above); export before any package install or `./ci.sh`.
 - Read that file, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`.
 - `git checkout main && git pull`, then the feature branch named in that chapter.
 - Implement only that chapter, including its red/green pairs and refactor gate.

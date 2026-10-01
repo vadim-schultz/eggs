@@ -11,6 +11,23 @@ You implement one chapter. The prompt names its file. Do not open another chapte
 
 Read the chapter file, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`. Obey that chapter’s files, tests, refactor gate, and git section.
 
+## Corporate build environment
+
+Builds run behind a corporate proxy. **Do not** use the public npm registry, Docker Hub, or pypi.org for installs or image pulls.
+
+Before `npm ci`, `npm install`, or any `./ci.sh` run that might install packages, export (or read the same values from the repo-root `.env` if present — never commit `.env`):
+
+```bash
+export NPM_CONFIG_REGISTRY="${NPM_REGISTRY:-https://npm.packages.rsint.net/artifactory/api/npm/rs_npm_virtual/}"
+export HTTP_PROXY="${HTTP_PROXY:-http://185.46.212.88:9480/}"
+export HTTPS_PROXY="${HTTPS_PROXY:-http://185.46.212.88:9480/}"
+export NO_PROXY="${NO_PROXY:-localhost,127.0.0.1,.rsint.net,.rsext.net}"
+export DOCKER_REGISTRY="${DOCKER_REGISTRY:-docker.packages.rsint.net/docker.io}"
+export RS_DOCKER_REGISTRY="${RS_DOCKER_REGISTRY:-docker.packages.rsint.net}"
+export PYPI_INDEX_URL="${PYPI_INDEX_URL:-https://pypi.packages.rsint.net/api/pypi/rs_pypi_virtual/simple}"
+export PYPI_EXTRA_INDEX_URL="${PYPI_EXTRA_INDEX_URL:-https://pypi.packages.rsint.net/api/pypi/rs_common_components/simple}"
+```
+
 ## Git
 
 ```bash
