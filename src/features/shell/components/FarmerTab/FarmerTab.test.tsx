@@ -12,7 +12,9 @@ const { useSessionMock, useAppDialogMock } = vi.hoisted(() => ({
 vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
-vi.mock("./AppDialogState", () => ({ useAppDialog: useAppDialogMock }));
+vi.mock("@/features/shell/context/appDialog", () => ({
+  useAppDialog: useAppDialogMock,
+}));
 
 function renderFarmerTab() {
   render(

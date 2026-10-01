@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Stack, Text } from "@chakra-ui/react";
 
-import { useAppDialog } from "@/components/AppDialogState";
-import { usePublishBackgroundMap } from "@/components/BackgroundMap";
+import { useAppDialog } from "@/features/shell/context/appDialog";
+import { usePublishBackgroundMap } from "@/features/shell/context/backgroundMap";
 import AuthButton from "@/features/auth/components/AuthButton";
 import {
   RadiusSelect,

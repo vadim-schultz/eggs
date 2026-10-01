@@ -15,7 +15,7 @@ vi.mock("@/features/browse/containers/BuyerTab", () => ({
   default: () => <div data-testid="buyer-tab" />,
 }));
 
-vi.mock("./FarmerTab", () => ({
+vi.mock("@/features/shell/components/FarmerTab", () => ({
   default: () => <div data-testid="farmer-tab" />,
 }));
 

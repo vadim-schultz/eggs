@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
 
-import { t } from "../i18n/t";
+import { t } from "@/i18n/t";
 
 interface AppDialogProps {
   open: boolean;

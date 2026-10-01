@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import AppShell from "./components/AppShell";
+import AppShell from "@/features/shell/containers/AppShell";
 
 export default function App() {
   return (
