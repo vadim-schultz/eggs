@@ -2,18 +2,18 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
-import RequireAuth from "./RequireAuth";
+import RequireAuth from "@/features/auth/components/RequireAuth";
 
 const { useSessionMock, toasterCreateMock } = vi.hoisted(() => ({
   useSessionMock: vi.fn(),
   toasterCreateMock: vi.fn(),
 }));
 
-vi.mock("./useSession", () => ({
+vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
 
-vi.mock("../components/ui/toaster", () => ({
+vi.mock("@/components/ui/toaster", () => ({
   toaster: { create: toasterCreateMock },
 }));
 

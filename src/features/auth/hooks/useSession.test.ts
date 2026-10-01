@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useSession } from "./useSession";
+import { useSession } from "@/features/auth/hooks/useSession";
 
 const { getSessionMock, onAuthStateChangeMock, unsubscribeMock } = vi.hoisted(
   () => ({
@@ -11,7 +11,7 @@ const { getSessionMock, onAuthStateChangeMock, unsubscribeMock } = vi.hoisted(
   }),
 );
 
-vi.mock("../lib/supabaseClient", () => ({
+vi.mock("@/lib/supabaseClient", () => ({
   supabase: {
     auth: {
       getSession: getSessionMock,

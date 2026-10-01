@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
-import AuthButton from "./AuthButton";
+import AuthButton from "@/features/auth/components/AuthButton";
 
 function renderButton() {
   render(
@@ -18,11 +18,11 @@ const { useSessionMock, signOutMock, signInWithOAuthMock } = vi.hoisted(() => ({
   signInWithOAuthMock: vi.fn(),
 }));
 
-vi.mock("./useSession", () => ({
+vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
 
-vi.mock("../lib/supabaseClient", () => ({
+vi.mock("@/lib/supabaseClient", () => ({
   supabase: {
     auth: {
       signOut: signOutMock,
