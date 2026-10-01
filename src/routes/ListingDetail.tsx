@@ -5,9 +5,9 @@ import ContactReveal from "../components/ContactReveal";
 import ReserveButton from "../components/ReserveButton";
 import SellerActions from "../components/SellerActions";
 import StatusBadge from "../components/StatusBadge";
-import { t } from "../i18n/t";
-import { supabase } from "../lib/supabaseClient";
+import { fetchListing } from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
+import { t } from "../i18n/t";
 import {
   formatPrice,
   unitLabelKey,
@@ -20,16 +20,11 @@ function useListing(id: string) {
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from("listing")
-      .select("*")
-      .eq("id", id)
-      .single()
-      .then(({ data }) => {
-        if (cancelled) return;
-        setListing((data as Listing | null) ?? null);
-        setLoading(false);
-      });
+    fetchListing(id).then(({ listing: row }) => {
+      if (cancelled) return;
+      setListing(row);
+      setLoading(false);
+    });
 
     return () => {
       cancelled = true;

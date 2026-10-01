@@ -12,7 +12,7 @@ const { maybeSingleMock, eqMock, selectMock, fromMock } = vi.hoisted(() => {
   return { maybeSingleMock, eqMock, selectMock, fromMock };
 });
 
-vi.mock("../lib/supabaseClient", () => ({
+vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: fromMock },
 }));
 
