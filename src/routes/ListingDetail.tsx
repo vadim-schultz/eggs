@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
-import ContactReveal from "../components/ContactReveal";
+import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
 import SellerActions from "../components/SellerActions";
 import StatusBadge from "../components/StatusBadge";

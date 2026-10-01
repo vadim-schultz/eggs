@@ -21,7 +21,7 @@ vi.mock("@/features/listings/components/ReserveButton", () => ({
   default: () => <div data-testid="reserve-button" />,
 }));
 
-vi.mock("../components/ContactReveal", () => ({
+vi.mock("@/features/listings/components/ContactReveal", () => ({
   default: ({ listingId }: { listingId: string }) => (
     <div data-testid="contact-reveal">{listingId}</div>
   ),
