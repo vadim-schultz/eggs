@@ -1,8 +1,4 @@
-export interface PlaceCandidate {
-  label: string;
-  lat: number;
-  lng: number;
-}
+import type { PlaceCandidate } from "@/features/location/types/place";
 
 interface NominatimResult {
   display_name: string;
@@ -10,6 +6,7 @@ interface NominatimResult {
   lon: string;
 }
 
+/** Search OpenStreetMap Nominatim for place candidates matching ``query``. */
 export async function searchPlace(query: string): Promise<PlaceCandidate[]> {
   if (!query.trim()) return [];
 

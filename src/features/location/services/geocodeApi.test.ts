@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { searchPlace } from "./geocode";
+import { searchPlace } from "./geocodeApi";
 
-describe("searchPlace", () => {
+describe("geocodeApi", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });

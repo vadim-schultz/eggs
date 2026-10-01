@@ -8,7 +8,7 @@ const { searchPlaceMock } = vi.hoisted(() => ({
   searchPlaceMock: vi.fn(),
 }));
 
-vi.mock("../lib/geocode", () => ({
+vi.mock("@/features/location/services/geocodeApi", () => ({
   searchPlace: searchPlaceMock,
 }));
 

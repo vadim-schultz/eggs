@@ -13,7 +13,7 @@ vi.mock("../lib/supabaseClient", () => ({
   supabase: { rpc: rpcMock },
 }));
 
-vi.mock("../lib/geocode", () => ({
+vi.mock("@/features/location/services/geocodeApi", () => ({
   searchPlace: searchPlaceMock,
 }));
 
