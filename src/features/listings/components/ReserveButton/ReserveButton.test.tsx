@@ -33,7 +33,7 @@ const {
 vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
-vi.mock("../../lib/supabaseClient", () => ({
+vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: fromMock, rpc: rpcMock },
 }));
 

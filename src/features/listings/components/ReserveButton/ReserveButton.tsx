@@ -1,45 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
 
 import { useSession } from "@/features/auth/hooks/useSession";
+import { useActiveReservation } from "@/features/listings/hooks/useActiveReservation";
 import {
   cancelReservation,
-  fetchActiveReservation,
   reserveListing,
 } from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
-import { t } from "../../i18n/t";
+import { t } from "@/i18n/t";
 import ReserveActionButton from "./ReserveActionButton";
-
-function useActiveReservation(listingId: string, enabled: boolean) {
-  const [reservation, setReservation] =
-    useState<Awaited<ReturnType<typeof fetchActiveReservation>>["reservation"]>(
-      null,
-    );
-  const [loading, setLoading] = useState(enabled);
-
-  useEffect(() => {
-    if (!enabled) {
-      setReservation(null);
-      setLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    fetchActiveReservation(listingId).then(({ reservation: row }) => {
-      if (cancelled) return;
-      setReservation(row);
-      setLoading(false);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [listingId, enabled]);
-
-  return { reservation, loading };
-}
 
 interface ReserveButtonProps {
   listing: Listing;

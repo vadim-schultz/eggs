@@ -17,7 +17,7 @@ vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: fromMock },
 }));
 
-vi.mock("../components/ReserveButton", () => ({
+vi.mock("@/features/listings/components/ReserveButton", () => ({
   default: () => <div data-testid="reserve-button" />,
 }));
 

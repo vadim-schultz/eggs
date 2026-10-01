@@ -1,6 +1,6 @@
 import { Button, Text } from "@chakra-ui/react";
 
-import { t } from "../../i18n/t";
+import { t } from "@/i18n/t";
 
 interface ReserveActionButtonProps {
   label: string;
