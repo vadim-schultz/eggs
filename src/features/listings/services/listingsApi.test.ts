@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Listing } from "@/features/listings/types/listing";
-import { fetchListing, fetchListingContact } from "./listingsApi";
+import {
+  createListing,
+  fetchListing,
+  fetchListingContact,
+} from "./listingsApi";
 
-const { singleMock, maybeSingleMock, eqMock, selectMock, fromMock } =
+const { singleMock, maybeSingleMock, eqMock, selectMock, fromMock, rpcMock } =
   vi.hoisted(() => {
     const singleMock = vi.fn();
     const maybeSingleMock = vi.fn();
@@ -15,11 +19,19 @@ const { singleMock, maybeSingleMock, eqMock, selectMock, fromMock } =
     });
     const selectMock = vi.fn(() => ({ eq: eqMock }));
     const fromMock = vi.fn(() => ({ select: selectMock }));
-    return { singleMock, maybeSingleMock, eqMock, selectMock, fromMock };
+    const rpcMock = vi.fn();
+    return {
+      singleMock,
+      maybeSingleMock,
+      eqMock,
+      selectMock,
+      fromMock,
+      rpcMock,
+    };
   });
 
 vi.mock("@/lib/supabaseClient", () => ({
-  supabase: { from: fromMock },
+  supabase: { from: fromMock, rpc: rpcMock },
 }));
 
 function activeListing(overrides: Partial<Listing> = {}): Listing {
@@ -39,6 +51,17 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
   };
 }
 
+const createListingPayload = {
+  p_egg_count: 12,
+  p_unit: "dozen" as const,
+  p_price_cents: 400,
+  p_lat: 52.52,
+  p_lng: 13.405,
+  p_location_label: "Berlin",
+  p_note: null,
+  p_contact_note: "Ring the bell",
+};
+
 describe("listingsApi", () => {
   beforeEach(() => {
     fromMock.mockClear();
@@ -46,6 +69,7 @@ describe("listingsApi", () => {
     eqMock.mockClear();
     singleMock.mockReset();
     maybeSingleMock.mockReset();
+    rpcMock.mockReset();
   });
 
   it("fetchListing returns row when supabase resolves data", async () => {
@@ -86,5 +110,25 @@ describe("listingsApi", () => {
     const result = await fetchListingContact("listing-1");
 
     expect(result).toEqual({ contact: null });
+  });
+
+  it("createListing forwards mapped RPC args", async () => {
+    rpcMock.mockResolvedValue({ data: { id: "listing-new" }, error: null });
+
+    const result = await createListing(createListingPayload);
+
+    expect(rpcMock).toHaveBeenCalledWith(
+      "create_listing",
+      createListingPayload,
+    );
+    expect(result).toEqual({ id: "listing-new" });
+  });
+
+  it("createListing returns error when RPC fails", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "fail" } });
+
+    const result = await createListing(createListingPayload);
+
+    expect(result).toEqual({ error: true });
   });
 });

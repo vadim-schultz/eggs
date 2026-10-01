@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { Button } from "@chakra-ui/react";
 
 import { useSession } from "@/features/auth/hooks/useSession";
-import { t } from "../../i18n/t";
-import { supabase } from "../../lib/supabaseClient";
+import {
+  cancelReservation,
+  fetchActiveReservation,
+  reserveListing,
+} from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
+import { t } from "../../i18n/t";
 import ReserveActionButton from "./ReserveActionButton";
 
-interface ActiveReservation {
-  id: string;
-  buyer_id: string;
-}
-
 function useActiveReservation(listingId: string, enabled: boolean) {
-  const [reservation, setReservation] = useState<ActiveReservation | null>(
-    null,
-  );
+  const [reservation, setReservation] =
+    useState<Awaited<ReturnType<typeof fetchActiveReservation>>["reservation"]>(
+      null,
+    );
   const [loading, setLoading] = useState(enabled);
 
   useEffect(() => {
@@ -27,17 +27,11 @@ function useActiveReservation(listingId: string, enabled: boolean) {
 
     let cancelled = false;
     setLoading(true);
-    supabase
-      .from("reservation")
-      .select("id, buyer_id")
-      .eq("listing_id", listingId)
-      .eq("status", "active")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (cancelled) return;
-        setReservation((data as ActiveReservation | null) ?? null);
-        setLoading(false);
-      });
+    fetchActiveReservation(listingId).then(({ reservation: row }) => {
+      if (cancelled) return;
+      setReservation(row);
+      setLoading(false);
+    });
 
     return () => {
       cancelled = true;
@@ -70,15 +64,25 @@ export default function ReserveButton({
     return <Button disabled>{t("reserve.signInRequired")}</Button>;
   }
 
-  async function callRpc(
-    name: "reserve_listing" | "cancel_reservation",
-    args: Record<string, string>,
-  ) {
+  async function reserve() {
     setBusy(true);
     setError(false);
-    const { error: rpcError } = await supabase.rpc(name, args);
+    const result = await reserveListing(listing.id);
     setBusy(false);
-    if (rpcError) {
+    if (result.error) {
+      setError(true);
+      return;
+    }
+    onChange();
+  }
+
+  async function cancel() {
+    if (!reservation) return;
+    setBusy(true);
+    setError(false);
+    const result = await cancelReservation(reservation.id);
+    setBusy(false);
+    if (result.error) {
       setError(true);
       return;
     }
@@ -91,7 +95,7 @@ export default function ReserveButton({
         label={t("reserve.reserve")}
         busy={busy}
         error={error}
-        onClick={() => callRpc("reserve_listing", { p_listing_id: listing.id })}
+        onClick={reserve}
       />
     );
   }
@@ -102,9 +106,7 @@ export default function ReserveButton({
         label={t("reserve.cancel")}
         busy={busy}
         error={error}
-        onClick={() =>
-          callRpc("cancel_reservation", { p_reservation_id: reservation.id })
-        }
+        onClick={cancel}
       />
     );
   }

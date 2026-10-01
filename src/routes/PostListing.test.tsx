@@ -134,6 +134,37 @@ describe("PostListing", () => {
     expect(container.querySelectorAll("select")).toHaveLength(0);
   });
 
+  it("shows submit error when create_listing fails", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "fail" } });
+    const onCreated = vi.fn();
+    renderPostListing(onCreated);
+
+    fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
+      target: { value: "12" },
+    });
+    fireEvent.change(screen.getByLabelText("Preis (€)"), {
+      target: { value: "4" },
+    });
+    fireEvent.change(screen.getByLabelText("Kontakthinweis für Käufer"), {
+      target: { value: "Ring the bell" },
+    });
+    await confirmLocation("Berlin");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Angebot veröffentlichen" }),
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByText(
+        "Angebot konnte nicht veröffentlicht werden. Bitte versuche es erneut.",
+      ),
+    ).toBeInTheDocument();
+    expect(onCreated).not.toHaveBeenCalled();
+  });
+
   it("still submits the chosen unit value", async () => {
     rpcMock.mockResolvedValue({ data: { id: "listing-1" }, error: null });
     renderPostListing();
