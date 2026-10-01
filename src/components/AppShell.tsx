@@ -1,6 +1,6 @@
 import { Box, IconButton, Popover, Portal } from "@chakra-ui/react";
 
-import ListingDetail from "../routes/ListingDetail";
+import ListingDetail from "@/features/listings/containers/ListingDetail";
 import PostListing from "../routes/PostListing";
 import AppDialog from "./AppDialog";
 import {

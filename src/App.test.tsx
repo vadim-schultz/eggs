@@ -22,7 +22,7 @@ vi.mock("./components/FarmerTab", () => ({
   default: () => null,
 }));
 
-vi.mock("./routes/ListingDetail", () => ({
+vi.mock("@/features/listings/containers/ListingDetail", () => ({
   default: ({ id }: { id: string }) => (
     <div data-testid="listing-detail">{id}</div>
   ),
