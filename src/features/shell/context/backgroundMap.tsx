@@ -8,6 +8,7 @@ import {
 
 import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
+import { DEFAULT_MAP_CENTER } from "@/lib/geo/constants";
 
 export interface BackgroundMapState {
   center: GeoPoint;
@@ -17,7 +18,7 @@ export interface BackgroundMapState {
 }
 
 const FALLBACK_STATE: BackgroundMapState = {
-  center: { lat: 52.52, lng: 13.405 },
+  center: DEFAULT_MAP_CENTER,
   listings: [],
   selectedId: null,
   onSelect: () => {},
