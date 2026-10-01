@@ -32,7 +32,9 @@ vi.mock("./routes/PostListing", () => ({
   default: () => <div data-testid="post-listing" />,
 }));
 
-vi.mock("./auth/useSession", () => ({ useSession: useSessionMock }));
+vi.mock("@/features/auth/hooks/useSession", () => ({
+  useSession: useSessionMock,
+}));
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router-dom")>();

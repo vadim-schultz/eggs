@@ -30,7 +30,9 @@ const {
   };
 });
 
-vi.mock("../../auth/useSession", () => ({ useSession: useSessionMock }));
+vi.mock("@/features/auth/hooks/useSession", () => ({
+  useSession: useSessionMock,
+}));
 vi.mock("../../lib/supabaseClient", () => ({
   supabase: { from: fromMock, rpc: rpcMock },
 }));

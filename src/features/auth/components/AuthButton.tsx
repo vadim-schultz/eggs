@@ -1,8 +1,8 @@
 import { Button } from "@chakra-ui/react";
 
-import { t } from "../i18n/t";
-import { supabase } from "../lib/supabaseClient";
-import { useSession } from "./useSession";
+import { t } from "@/i18n/t";
+import { supabase } from "@/lib/supabaseClient";
+import { useSession } from "@/features/auth/hooks/useSession";
 
 export default function AuthButton() {
   const { session } = useSession();

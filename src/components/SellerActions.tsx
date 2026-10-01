@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 
-import { useSession } from "../auth/useSession";
+import { useSession } from "@/features/auth/hooks/useSession";
 import { t } from "../i18n/t";
 import { supabase } from "../lib/supabaseClient";
 import type { Listing } from "../lib/listing";

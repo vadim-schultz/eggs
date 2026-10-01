@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { useSession } from "../auth/useSession";
+import { useSession } from "@/features/auth/hooks/useSession";
 
 export type OpenAppDialog =
   { kind: "post" } | { kind: "detail"; listingId: string } | null;
