@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@chakra-ui/react";
 
 import { useSession } from "@/features/auth/hooks/useSession";
@@ -9,6 +8,7 @@ import {
 } from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
 import { t } from "@/i18n/t";
+import { useAsyncAction } from "@/lib/async/useAsyncAction";
 import ReserveActionButton from "./ReserveActionButton";
 
 interface ReserveButtonProps {
@@ -26,37 +26,29 @@ export default function ReserveButton({
     listing.id,
     Boolean(session) && !isActive,
   );
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  const { busy, error, run } = useAsyncAction();
 
   if (sessionLoading) return null;
   if (!session) {
     return <Button disabled>{t("reserve.signInRequired")}</Button>;
   }
 
+  async function runMutation(action: () => Promise<{ error?: true }>) {
+    await run(async () => {
+      const result = await action();
+      if (result.error) return { ok: false };
+      onChange();
+      return { ok: true };
+    });
+  }
+
   async function reserve() {
-    setBusy(true);
-    setError(false);
-    const result = await reserveListing(listing.id);
-    setBusy(false);
-    if (result.error) {
-      setError(true);
-      return;
-    }
-    onChange();
+    await runMutation(() => reserveListing(listing.id));
   }
 
   async function cancel() {
     if (!reservation) return;
-    setBusy(true);
-    setError(false);
-    const result = await cancelReservation(reservation.id);
-    setBusy(false);
-    if (result.error) {
-      setError(true);
-      return;
-    }
-    onChange();
+    await runMutation(() => cancelReservation(reservation.id));
   }
 
   if (isActive) {
