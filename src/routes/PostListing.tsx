@@ -13,8 +13,8 @@ import LocationPicker, {
   type ConfirmedPin,
 } from "../components/LocationPicker";
 import UnitSelect from "../components/UnitSelect";
+import { createListing } from "@/features/listings/services/listingsApi";
 import { t } from "../i18n/t";
-import { supabase } from "../lib/supabaseClient";
 import type {
   ListingErrorKey,
   ListingInput,
@@ -96,17 +96,14 @@ export default function PostListing({ onCreated }: PostListingProps) {
 
     setSubmitError(false);
     setSubmitting(true);
-    const { data, error } = await supabase.rpc(
-      "create_listing",
-      toCreateListingArgs(input, form.pin),
-    );
+    const result = await createListing(toCreateListingArgs(input, form.pin));
     setSubmitting(false);
 
-    if (error || !data) {
+    if ("error" in result) {
       setSubmitError(true);
       return;
     }
-    onCreated(data.id);
+    onCreated(result.id);
   }
 
   return (

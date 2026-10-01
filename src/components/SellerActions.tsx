@@ -2,9 +2,13 @@ import { useState } from "react";
 import { Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 
 import { useSession } from "@/features/auth/hooks/useSession";
-import { t } from "../i18n/t";
-import { supabase } from "../lib/supabaseClient";
+import {
+  markListingCancelled,
+  markListingSold,
+  updateListingExpiry,
+} from "@/features/listings/services/listingsApi";
 import type { Listing } from "@/features/listings/types/listing";
+import { t } from "../i18n/t";
 
 const MAX_EXPIRY_DAYS = 14;
 
@@ -25,14 +29,15 @@ function MarkStatusActions({ listing, onChange }: SellerActionsProps) {
     return null;
   }
 
-  async function markAs(rpc: "mark_listing_sold" | "mark_listing_cancelled") {
+  async function markAs(kind: "sold" | "cancelled") {
     setBusy(true);
     setError(false);
-    const { error: rpcError } = await supabase.rpc(rpc, {
-      p_listing_id: listing.id,
-    });
+    const result =
+      kind === "sold"
+        ? await markListingSold(listing.id)
+        : await markListingCancelled(listing.id);
     setBusy(false);
-    if (rpcError) {
+    if (result.error) {
       setError(true);
       return;
     }
@@ -42,13 +47,10 @@ function MarkStatusActions({ listing, onChange }: SellerActionsProps) {
   return (
     <Stack gap="1">
       <HStack gap="2">
-        <Button disabled={busy} onClick={() => markAs("mark_listing_sold")}>
+        <Button disabled={busy} onClick={() => markAs("sold")}>
           {t("seller.markSold")}
         </Button>
-        <Button
-          disabled={busy}
-          onClick={() => markAs("mark_listing_cancelled")}
-        >
+        <Button disabled={busy} onClick={() => markAs("cancelled")}>
           {t("seller.markCancelled")}
         </Button>
       </HStack>
@@ -71,12 +73,9 @@ function ExpiryEditor({ listing, onChange }: SellerActionsProps) {
 
     setBusy(true);
     setError(null);
-    const { error: updateError } = await supabase
-      .from("listing")
-      .update({ expires_at: next.toISOString() })
-      .eq("id", listing.id);
+    const result = await updateListingExpiry(listing.id, next.toISOString());
     setBusy(false);
-    if (updateError) {
+    if (result.error) {
       setError("rpc");
       return;
     }
