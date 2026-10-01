@@ -126,7 +126,11 @@ describe("SellerActions", () => {
       loading: false,
     });
 
-    renderActions(activeListing());
+    const { container } = render(
+      <ChakraProvider value={defaultSystem}>
+        <SellerActions listing={activeListing()} onChange={vi.fn()} />
+      </ChakraProvider>,
+    );
 
     const farFuture = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       .toISOString()
@@ -137,11 +141,13 @@ describe("SellerActions", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Speichern" }));
 
-    expect(
-      await screen.findByText(
-        "Das Datum darf höchstens 14 Tage in der Zukunft liegen.",
-      ),
-    ).toBeInTheDocument();
+    const boundError = await screen.findByText(
+      "Das Datum darf höchstens 14 Tage in der Zukunft liegen.",
+    );
+    expect(boundError).toHaveAttribute("data-part", "error-text");
     expect(updateMock).not.toHaveBeenCalled();
+    expect(
+      container.querySelectorAll('label:not([data-scope="field"])'),
+    ).toHaveLength(0);
   });
 });
