@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import L from "leaflet";
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { Box } from "@chakra-ui/react";
 import { FaEgg } from "react-icons/fa6";
 import { RiShoppingBasketLine } from "react-icons/ri";
@@ -9,6 +8,8 @@ import "leaflet/dist/leaflet.css";
 
 import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
+
+import Recenter from "./Recenter";
 
 const PIN_STYLE = [
   "display:flex",
@@ -45,16 +46,6 @@ interface MapViewProps {
   listings: ListingNear[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-}
-
-function Recenter({ center }: { center: GeoPoint }) {
-  const map = useMap();
-
-  useEffect(() => {
-    map.setView([center.lat, center.lng]);
-  }, [center.lat, center.lng, map]);
-
-  return null;
 }
 
 export default function MapView({

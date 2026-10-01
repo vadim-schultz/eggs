@@ -5,13 +5,13 @@ import { MemoryRouter } from "react-router-dom";
 
 import AppShell from "./AppShell";
 
-vi.mock("./MapView", () => ({
+vi.mock("@/features/browse/components/MapView", () => ({
   default: ({ selectedId }: { selectedId: string | null }) => (
     <div data-testid="map-view">selected: {selectedId ?? "none"}</div>
   ),
 }));
 
-vi.mock("./BuyerTab", () => ({
+vi.mock("@/features/browse/containers/BuyerTab", () => ({
   default: () => <div data-testid="buyer-tab" />,
 }));
 

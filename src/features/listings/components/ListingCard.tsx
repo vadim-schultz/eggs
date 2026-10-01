@@ -1,12 +1,13 @@
 import { Card, Text } from "@chakra-ui/react";
 
-import StatusBadge from "./StatusBadge";
-import { t } from "../i18n/t";
 import type { Listing } from "@/features/listings/types/listing";
 import {
   formatPrice,
   unitLabelKey,
 } from "@/features/listings/utils/formatListing";
+import { t } from "@/i18n/t";
+
+import StatusBadge from "./StatusBadge";
 
 interface ListingCardProps {
   listing: Listing;

@@ -4,7 +4,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import RoleTabs from "./RoleTabs";
 
-vi.mock("./BuyerTab", () => ({
+vi.mock("@/features/browse/containers/BuyerTab", () => ({
   default: () => <div data-testid="buyer-tab" />,
 }));
 

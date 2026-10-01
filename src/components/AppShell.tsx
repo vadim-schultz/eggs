@@ -1,5 +1,6 @@
 import { Box, IconButton, Popover, Portal } from "@chakra-ui/react";
 
+import MapView from "@/features/browse/components/MapView";
 import ListingDetail from "@/features/listings/containers/ListingDetail";
 import PostListing from "@/features/listings/containers/PostListing";
 import AppDialog from "./AppDialog";
@@ -9,7 +10,6 @@ import {
   type OpenAppDialog,
 } from "./AppDialogState";
 import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
-import MapView from "./MapView";
 import RoleTabs from "./RoleTabs";
 
 function DialogContent({

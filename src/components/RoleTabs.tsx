@@ -1,7 +1,7 @@
 import { Tabs } from "@chakra-ui/react";
 
+import BuyerTab from "@/features/browse/containers/BuyerTab";
 import { t } from "../i18n/t";
-import BuyerTab from "./BuyerTab";
 import FarmerTab from "./FarmerTab";
 
 export default function RoleTabs() {
