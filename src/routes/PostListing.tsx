@@ -11,7 +11,7 @@ import {
 
 import LocationPicker, {
   type ConfirmedPin,
-} from "../components/LocationPicker";
+} from "@/features/location/components/LocationPicker";
 import UnitSelect from "../components/UnitSelect";
 import { createListing } from "@/features/listings/services/listingsApi";
 import { t } from "../i18n/t";

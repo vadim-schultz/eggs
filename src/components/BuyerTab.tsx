@@ -9,7 +9,9 @@ import type { ListingNear } from "@/features/listings/types/listing";
 import { useAppDialog } from "./AppDialogState";
 import { usePublishBackgroundMap } from "./BackgroundMap";
 import ListingCard from "./ListingCard";
-import LocationPicker, { type ConfirmedPin } from "./LocationPicker";
+import LocationPicker, {
+  type ConfirmedPin,
+} from "@/features/location/components/LocationPicker";
 
 const FALLBACK_CENTER: GeoPoint = { lat: 52.52, lng: 13.405 };
 const DEFAULT_RADIUS_M = 15000;
