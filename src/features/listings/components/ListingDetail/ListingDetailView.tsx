@@ -1,6 +1,6 @@
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
-import StatusBadge from "@/components/StatusBadge";
+import StatusBadge from "@/features/listings/components/StatusBadge";
 import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
 import SellerActions from "@/features/listings/components/SellerActions";

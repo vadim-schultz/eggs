@@ -2,9 +2,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
-import BuyerTab from "./BuyerTab";
-import { BackgroundMapProvider, useBackgroundMapState } from "./BackgroundMap";
+import {
+  BackgroundMapProvider,
+  useBackgroundMapState,
+} from "@/components/BackgroundMap";
 import type { ListingNear } from "@/features/listings/types/listing";
+
+import BuyerTab from "./BuyerTab";
 
 const {
   useSessionMock,
@@ -27,7 +31,9 @@ vi.mock("@/features/browse/hooks/useGeolocation", () => ({
 vi.mock("@/features/browse/hooks/useListingsNear", () => ({
   useListingsNear: useListingsNearMock,
 }));
-vi.mock("./AppDialogState", () => ({ useAppDialog: useAppDialogMock }));
+vi.mock("@/components/AppDialogState", () => ({
+  useAppDialog: useAppDialogMock,
+}));
 
 function BackgroundMapProbe() {
   const { selectedId } = useBackgroundMapState();
@@ -163,6 +169,7 @@ describe("BuyerTab", () => {
 
     renderBuyerTab();
 
+    expect(screen.queryByTestId("results-grid")).not.toBeInTheDocument();
     expect(
       screen.getByText("Keine Angebote in diesem Umkreis gefunden."),
     ).toBeInTheDocument();

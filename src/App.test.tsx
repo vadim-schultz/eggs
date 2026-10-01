@@ -10,11 +10,11 @@ const { useSessionMock, navigateMock } = vi.hoisted(() => ({
   navigateMock: vi.fn(),
 }));
 
-vi.mock("./components/MapView", () => ({
+vi.mock("@/features/browse/components/MapView", () => ({
   default: () => null,
 }));
 
-vi.mock("./components/BuyerTab", () => ({
+vi.mock("@/features/browse/containers/BuyerTab", () => ({
   default: () => null,
 }));
 
