@@ -1,12 +1,5 @@
 import type { FormEvent } from "react";
-import {
-  Button,
-  Heading,
-  Input,
-  Stack,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Field, Heading, Stack, Text } from "@chakra-ui/react";
 
 import LocationPicker from "@/features/location/components/LocationPicker";
 import UnitSelect from "@/features/listings/components/UnitSelect";
@@ -14,7 +7,7 @@ import type { ListingInputErrors } from "@/features/listings/types/listingInput"
 import type { PostListingFormState } from "@/features/listings/utils/postListingMappers";
 import { t } from "@/i18n/t";
 
-import FieldError from "./FieldError";
+import PostFormField from "./PostFormField";
 
 export interface PostListingFormProps {
   form: PostListingFormState;
@@ -36,33 +29,35 @@ export default function PostListingForm({
   onFieldChange,
   onSubmit,
 }: PostListingFormProps) {
+  function changeText(key: "eggCount" | "priceEuros" | "note" | "contactNote") {
+    return (value: string) => onFieldChange(key, value);
+  }
+
   return (
     <form onSubmit={onSubmit}>
       <Stack gap="4">
         <Heading>{t("post.heading")}</Heading>
 
-        <label htmlFor="egg-count">{t("post.eggCount.label")}</label>
-        <Input
-          id="egg-count"
+        <PostFormField
+          labelKey="post.eggCount.label"
           type="number"
           value={form.eggCount}
-          onChange={(e) => onFieldChange("eggCount", e.target.value)}
+          errorKey={errors.eggCount}
+          onChange={changeText("eggCount")}
         />
-        <FieldError errorKey={errors.eggCount} />
 
         <UnitSelect
           value={form.unit}
           onChange={(value) => onFieldChange("unit", value)}
         />
 
-        <label htmlFor="price">{t("post.price.label")}</label>
-        <Input
-          id="price"
+        <PostFormField
+          labelKey="post.price.label"
           type="number"
           value={form.priceEuros}
-          onChange={(e) => onFieldChange("priceEuros", e.target.value)}
+          errorKey={errors.priceCents}
+          onChange={changeText("priceEuros")}
         />
-        <FieldError errorKey={errors.priceCents} />
 
         <LocationPicker
           query={form.locationQuery}
@@ -70,22 +65,26 @@ export default function PostListingForm({
           confirmed={form.pin}
           onConfirm={(pin) => onFieldChange("pin", pin)}
         />
-        <FieldError errorKey={errors.locationLabel} />
+        {errors.locationLabel ? (
+          <Field.Root invalid>
+            <Field.ErrorText>{t(errors.locationLabel)}</Field.ErrorText>
+          </Field.Root>
+        ) : null}
 
-        <label htmlFor="note">{t("post.note.label")}</label>
-        <Textarea
-          id="note"
+        <PostFormField
+          labelKey="post.note.label"
           value={form.note}
-          onChange={(e) => onFieldChange("note", e.target.value)}
+          multiline
+          onChange={changeText("note")}
         />
 
-        <label htmlFor="contact-note">{t("post.contactNote.label")}</label>
-        <Textarea
-          id="contact-note"
+        <PostFormField
+          labelKey="post.contactNote.label"
           value={form.contactNote}
-          onChange={(e) => onFieldChange("contactNote", e.target.value)}
+          errorKey={errors.contactNote}
+          multiline
+          onChange={changeText("contactNote")}
         />
-        <FieldError errorKey={errors.contactNote} />
 
         {submitError && <Text color="fg.error">{t("post.submitError")}</Text>}
 

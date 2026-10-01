@@ -145,8 +145,11 @@ describe("PostListing", () => {
   it("has no native <label> elements", () => {
     const { container } = renderPostListing();
 
+    // UnitSelect's Chakra Select.Label uses data-scope="select".
     expect(
-      container.querySelectorAll('label:not([data-scope="field"])'),
+      container.querySelectorAll(
+        'label:not([data-scope="field"]):not([data-scope="select"])',
+      ),
     ).toHaveLength(0);
   });
 
