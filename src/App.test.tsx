@@ -28,7 +28,7 @@ vi.mock("@/features/listings/containers/ListingDetail", () => ({
   ),
 }));
 
-vi.mock("./routes/PostListing", () => ({
+vi.mock("@/features/listings/containers/PostListing", () => ({
   default: () => <div data-testid="post-listing" />,
 }));
 
