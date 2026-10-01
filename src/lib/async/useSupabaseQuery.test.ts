@@ -37,8 +37,7 @@ describe("useSupabaseQuery", () => {
         }),
     );
 
-    const seen: Array<{ data: unknown; loading: boolean; error: boolean }> =
-      [];
+    const seen: Array<{ data: unknown; loading: boolean; error: boolean }> = [];
     const { unmount } = renderHook(() => {
       const state = useSupabaseQuery(["egg-1"], fetcher);
       seen.push({
