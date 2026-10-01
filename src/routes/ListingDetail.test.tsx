@@ -27,7 +27,7 @@ vi.mock("@/features/listings/components/ContactReveal", () => ({
   ),
 }));
 
-vi.mock("../components/SellerActions", () => ({
+vi.mock("@/features/listings/components/SellerActions", () => ({
   default: () => <div data-testid="seller-actions" />,
 }));
 
