@@ -1,15 +1,20 @@
 ---
 name: chapter-implementer
 description: >-
-  Implements exactly one eggs frontend-structure chapter on a fresh feature
-  branch, waits for GitHub Actions, and merge-commits the PR. Use only when
-  the chief of staff assigns a single chapter file. Never start the next chapter.
+  Implements exactly one eggs plan chapter on a fresh feature branch, waits for
+  GitHub Actions, and merge-commits the PR. Use only when the chief of staff
+  assigns a single chapter file and plan folder. Never start the next chapter.
 model: inherit
 ---
 
-You implement one chapter. The prompt names its file. Do not open another chapter. Do not edit `.plans/frontend-structure/run-ledger.md`.
+You implement one chapter. The assignment prompt names:
 
-Read the chapter file, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`. Obey that chapter’s files, tests, refactor gate, and git section.
+- The single chapter file (absolute path).
+- The plan folder (e.g. `.plans/frontend-structure` or `.plans/frontend-dry`).
+
+Do not open another chapter. Do not edit `{planFolder}/run-ledger.md`.
+
+Read the chapter file, `{planFolder}/00-architecture.md`, and `{planFolder}/gaps-and-decisions.md`. Obey that chapter’s files, tests, refactor gate, and git section.
 
 ## Corporate build environment
 

@@ -22,8 +22,7 @@ DRY the count · price line shared between card grid and detail dialog without c
 
 ## Design decisions
 
-**Component:** `ListingSummaryLine` in `src/components/ListingSummaryLine.tsx` (or
-`features/listings/components/` after structure).
+**Component:** `ListingSummaryLine` in `src/features/listings/components/ListingSummaryLine.tsx`.
 
 **Props:**
 
@@ -41,21 +40,13 @@ interface ListingSummaryLineProps {
 Uses `t(unitLabelKey(unit))` and `formatPrice` internally — Chakra `Text` only, no `Box` wrapper unless `Text`
 asChild needed.
 
-**ListingDetail** may keep separate labeled rows for count vs price — use summary line only where the card’s
-single-line format applies, or add prop `variant: "inline" | "labeled"` if detail keeps two `Text` rows (avoid
-unless tests require).
-
-Minimum scope: replace card body line; detail keeps headings but can use `formatPrice` block via shared helper
-function `formatListingCountPrice` in utils if detail layout differs — prefer **card only** in this chapter if
-detail layout must stay labeled.
+**ListingDetailView** keeps separate labeled rows for count vs price ([`ListingDetailView.tsx`](../../../src/features/listings/components/ListingDetail/ListingDetailView.tsx)) — **card only** in this chapter.
 
 ## Files
 
-**Add:** `ListingSummaryLine.tsx`, `ListingSummaryLine.test.tsx`
+**Add:** `src/features/listings/components/ListingSummaryLine.tsx`, `ListingSummaryLine.test.tsx`
 
-**Edit:** `ListingCard.tsx` — use component
-
-**Optional edit:** `ListingDetail.tsx` — only if inline duplicate removed without changing labels
+**Edit:** `src/features/listings/components/ListingCard.tsx` — use component
 
 ## Manual configuration
 
@@ -80,7 +71,7 @@ Single presentational component — report outcome.
 ## Verification
 
 ```bash
-npm run test -- --run src/components/ListingSummaryLine.test.tsx src/components/BuyerTab.test.tsx src/routes/ListingDetail.test.tsx
+npm run test -- --run src/features/listings/components/ListingSummaryLine.test.tsx src/features/browse/containers/BuyerTab.test.tsx src/features/listings/containers/ListingDetail.test.tsx
 ./ci.sh
 ```
 

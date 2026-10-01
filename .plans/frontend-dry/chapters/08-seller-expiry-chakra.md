@@ -24,7 +24,7 @@ render through `Field.ErrorText` / `Text color="fg.error"` consistently (prefer 
 
 ## Design decisions
 
-**ExpiryEditor** (in `SellerActions` or nested folder):
+**ExpiryEditor** (`src/features/listings/components/SellerActions/ExpiryEditor.tsx`):
 
 ```tsx
 <Field.Root invalid={error !== null}>
@@ -46,9 +46,9 @@ forced abstraction).
 
 ## Files
 
-**Edit:** `src/components/SellerActions.tsx` or `SellerActions/ExpiryEditor.tsx`
+**Edit:** `src/features/listings/components/SellerActions/ExpiryEditor.tsx`
 
-**Edit tests:** `SellerActions.test.tsx` — expiry bound test still finds error text
+**Edit tests:** `src/features/listings/components/SellerActions.test.tsx` — expiry bound test still finds error text
 
 ## Manual configuration
 
@@ -61,7 +61,7 @@ None.
 | **Happy:** `SellerActions · mark sold calls mark_listing_sold` | Unchanged |
 | **Negative:** `SellerActions · expires_at editor rejects a date beyond the allowed bound` | Bound error visible (role/text) |
 
-Add assertion: no raw `<label>` in SellerActions tree after change.
+Add assertion: no raw `<label>` in SellerActions tree — `label:not([data-scope="field"])` count 0 (same as post form / LocationPicker).
 
 ## Green
 
@@ -70,14 +70,12 @@ Add assertion: no raw `<label>` in SellerActions tree after change.
 
 ## Refactor gate
 
-If SellerActions file still >100 LOC with two sub-components inline, note dependency on
-[frontend-structure ch. 8](../frontend-structure/chapters/08-seller-actions-folder.md) — this chapter is markup only.
-Report outcome.
+SellerActions is already split into sub-components — this chapter is **ExpiryEditor markup only**. Report outcome.
 
 ## Verification
 
 ```bash
-npm run test -- --run src/components/SellerActions.test.tsx
+npm run test -- --run src/features/listings/components/SellerActions.test.tsx
 ./ci.sh
 ```
 

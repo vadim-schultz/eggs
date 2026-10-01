@@ -22,23 +22,21 @@ Delete duplicated cancel/loading `useEffect` blocks; keep public hook APIs uncha
 
 ## Design decisions
 
-| Hook | Location today | Fetcher wraps |
+| Hook | Path | Fetcher wraps |
 | --- | --- | --- |
-| `useListingsNear` | `src/hooks/useListingsNear.ts` | `listings_near` RPC (or `browseApi` after structure) |
-| `useListing` | inline in `ListingDetail.tsx` | `.from("listing").select` — extract to hook file if still inline |
-| `useListingContact` | inline in `ContactReveal.tsx` | `listing_contact` select |
-| `useActiveReservation` | `ReserveButton.tsx` | reservation `maybeSingle` |
+| `useListingsNear` | `src/features/browse/hooks/useListingsNear.ts` | `fetchListingsNear` from `browseApi` |
+| `useListing` | `src/features/listings/hooks/useListing.ts` | `fetchListing` from `listingsApi` |
+| `useListingContact` | `src/features/listings/hooks/useListingContact.ts` | `fetchListingContact` from `listingsApi` |
+| `useActiveReservation` | `src/features/listings/hooks/useActiveReservation.ts` | `fetchActiveReservation` from `listingsApi` |
 
-If [frontend-structure ch. 4–7](../frontend-structure/chapters/04-listing-read-services.md) already landed,
-fetchers call `listingsApi` instead of raw supabase.
+**`useActiveReservation`:** keep the `enabled` short-circuit in the hook wrapper — when `enabled` is false, skip
+fetch and clear state. Do not push that branch into `useSupabaseQuery`.
 
 **Do not migrate** `useSearchCandidates` (debounced HTTP, not Supabase) in this chapter.
 
 ## Files
 
-**Edit:** hook implementations above; **remove** inline `useEffect` duplicates.
-
-**Optional extract:** move `useListing` to `src/hooks/useListing.ts` or `features/listings/hooks/` if still inline.
+**Edit:** the four hook files above; **remove** duplicated `useEffect` + `cancelled` blocks.
 
 ## Manual configuration
 
@@ -65,7 +63,7 @@ Each hook file is thin wrapper around fetcher + `useSupabaseQuery` — report LO
 ## Verification
 
 ```bash
-npm run test -- --run src/hooks/useListingsNear.test.ts src/routes/ListingDetail.test.tsx src/components/ContactReveal.test.tsx src/components/ReserveButton
+npm run test -- --run src/features/browse/hooks/useListingsNear.test.ts src/features/listings/containers/ListingDetail.test.tsx src/features/listings/components/ContactReveal.test.tsx src/features/listings/components/ReserveButton src/features/listings/hooks/useActiveReservation.test.ts
 ./ci.sh
 ```
 

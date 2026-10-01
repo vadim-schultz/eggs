@@ -15,7 +15,7 @@ isProject: false
 1. **No schema or backend change.**
 2. **No intentional behavior change** — same RPCs, validation messages, empty states, and deep links.
 3. **Independently shippable** — each chapter merges with green `./ci.sh`.
-4. **Chakra-only for touched form UI** — `Field`, `Input`, `Textarea`, `Button`, `Text`; no raw `<label>`/`<input>` in files this chapter edits.
+4. **Chakra-only for touched form UI** — `Field`, `Input`, `Textarea`, `Select`, `Button`, `Text`, `Stack`; no raw `<label>`/`<input>` in files this chapter edits.
 5. **TDD pair per chapter** — happy path + negative path in Red tests table before Green.
 6. **Refactor gate** — report outcome; extract helpers instead of growing branchy components.
 

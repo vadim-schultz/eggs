@@ -32,8 +32,7 @@ presentational.
 **PostListing:** replace `submitting`/`submitError` with `useAsyncAction` (or map `busy` → `submitting` in JSX for
 minimal test diff).
 
-Use `listingsApi` helpers when [frontend-structure ch. 5](../frontend-structure/chapters/05-listing-write-services.md)
-exists; else inline supabase in action closure.
+Action closures call `listingsApi` helpers (no raw Supabase in components).
 
 ## Files
 
@@ -41,9 +40,10 @@ exists; else inline supabase in action closure.
 
 | Path | Change |
 | --- | --- |
-| `src/components/ReserveButton/ReserveButton.tsx` | `useAsyncAction` |
-| `src/components/SellerActions.tsx` (or folder) | `useAsyncAction` |
-| `src/routes/PostListing.tsx` | submit via `useAsyncAction` |
+| `src/features/listings/components/ReserveButton/ReserveButton.tsx` | `useAsyncAction` |
+| `src/features/listings/components/SellerActions/MarkStatusActions.tsx` | `useAsyncAction` |
+| `src/features/listings/components/SellerActions/ExpiryEditor.tsx` | `useAsyncAction` |
+| `src/features/listings/containers/PostListing.tsx` | submit via `useAsyncAction` |
 
 ## Manual configuration
 
@@ -65,13 +65,13 @@ Existing SellerActions RPC tests remain regression.
 
 ## Refactor gate
 
-If SellerActions still inline two components, split is **frontend-structure ch. 8** — this chapter only swaps async
-state. Report outcome.
+SellerActions is already split (`MarkStatusActions`, `ExpiryEditor`) — this chapter only swaps async state. Report
+outcome.
 
 ## Verification
 
 ```bash
-npm run test -- --run src/components/ReserveButton src/components/SellerActions.test.tsx src/routes/PostListing.test.tsx
+npm run test -- --run src/features/listings/components/ReserveButton src/features/listings/components/SellerActions.test.tsx src/features/listings/containers/PostListing.test.tsx
 ./ci.sh
 ```
 

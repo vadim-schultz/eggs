@@ -58,15 +58,16 @@ Follow this order. Chapter 11 is before chapter 10 because location must land be
 Launch one foreground `chapter-implementer`. Put this in its prompt (it cannot see this chat):
 
 - Absolute path of the single chapter file.
+- Plan folder: `.plans/frontend-structure` — read that chapter, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`.
+- Do not edit `.plans/frontend-structure/run-ledger.md`.
 - Corporate build environment variables (see above); export before any package install or `./ci.sh`.
-- Read that file, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`.
 - `git checkout main && git pull`, then the feature branch named in that chapter.
 - Implement only that chapter, including its red/green pairs and refactor gate.
 - `./ci.sh` from the repo root must pass before any push.
 - Commit with the subjects in that chapter. Push with `git push -u origin HEAD`.
 - `gh pr create`. Then `gh pr checks --watch` until both GitHub Actions jobs (`ci` and `rls-smoke`) pass.
 - Only then `gh pr merge --merge --delete-branch`, then `git checkout main && git pull`.
-- Do not start another chapter. Do not edit `.plans/frontend-structure/run-ledger.md`.
+- Do not start another chapter.
 - Return: chapter, branch, PR URL, local `./ci.sh` result, GitHub check result, merge result, refactor-gate outcome, blockers or "none".
 
 Wait for that subagent. Append one row to `.plans/frontend-structure/run-ledger.md`:

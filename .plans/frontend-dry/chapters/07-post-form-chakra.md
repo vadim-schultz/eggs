@@ -23,27 +23,30 @@ Complete Chakra-only markup for the post listing form: no raw `<label htmlFor=�
 
 ## Design decisions
 
-**PostFormField** (`src/components/PostFormField.tsx` or `features/listings/components/PostListing/`):
+**PostFormField** (`src/features/listings/components/PostListing/PostFormField.tsx`):
 
-- Props: `labelKey`, `errorKey?: ListingErrorKey`, `children` **or** built-in `Input`/`Textarea` via `as` prop
+- Props: `labelKey`, `errorKey?: ListingErrorKey`, `children` **or** built-in `Input`/`Textarea` via `multiline?: boolean`
 - Uses `Field.Root invalid={Boolean(errorKey)}`, `Field.Label`, `Field.ErrorText` with `t(errorKey)`
-- Match [LocationPicker.tsx](../../../src/components/LocationPicker.tsx) spacing (`Stack gap`)
+- Match [LocationPicker.tsx](../../../src/features/location/components/LocationPicker/LocationPicker.tsx) spacing (`Stack gap`)
 
 **Migrate fields:** egg count (number `Input`), price (number `Input`), note (`Textarea`), contact note
 (`Textarea`). Keep `UnitSelect` and `LocationPicker` as-is.
 
-**Remove** inline `FieldError` component from PostListing when subsumed by `PostFormField`.
+**Remove** [FieldError.tsx](../../../src/features/listings/components/PostListing/FieldError.tsx) when subsumed by `PostFormField`.
 
-**Tests:** add `PostListing · has no native <label> elements` mirroring LocationPicker test; keep validation and
-submit tests.
+**Tests:** add `PostListing · has no native <label> elements` mirroring LocationPicker — assert
+`container.querySelectorAll('label:not([data-scope="field"])')` has length 0 (Chakra `Field.Label` renders
+`label[data-scope="field"]`).
 
 ## Files
 
-**Add:** `PostFormField.tsx`, `PostFormField.test.tsx`, extend `PostListing.test.tsx`
+**Add:** `PostFormField.tsx`, `PostFormField.test.tsx` under `PostListing/`
 
-**Edit:** `src/routes/PostListing.tsx` (or `PostListingForm` after structure)
+**Edit:** `src/features/listings/components/PostListing/PostListingForm.tsx`
 
-**Delete:** redundant `FieldError` if fully replaced
+**Edit tests:** `src/features/listings/containers/PostListing.test.tsx`
+
+**Delete:** `FieldError.tsx` if fully replaced
 
 ## Manual configuration
 
@@ -54,13 +57,13 @@ None.
 | Test | Asserts |
 | --- | --- |
 | **Happy:** `PostListing · still submits the chosen unit value` + full create_listing test | Behavior unchanged |
-| **Negative:** `PostListing · has no native <label> elements` | `querySelector('label')` null |
+| **Negative:** `PostListing · has no native <label> elements` | `label:not([data-scope="field"])` count 0 |
 | **Negative:** `PostListing · shows the field validation message from validateListingInput` | Errors via Field.ErrorText |
 
 ## Green
 
 1. Implement PostFormField + tests.
-2. Replace four label/input/error blocks in PostListing.
+2. Replace four label/input/error blocks in `PostListingForm`.
 3. `./ci.sh`.
 
 ## Refactor gate
@@ -71,7 +74,7 @@ form builder. Report outcome.
 ## Verification
 
 ```bash
-npm run test -- --run src/routes/PostListing.test.tsx src/components/PostFormField.test.tsx
+npm run test -- --run src/features/listings/containers/PostListing.test.tsx src/features/listings/components/PostListing/PostFormField.test.tsx
 ./ci.sh
 npm run dev
 # manual: /post dialog — fields look like LocationPicker focus/error styling

@@ -2,3 +2,4 @@ node_modules
 dist
 .env.local
 .plans/frontend-structure/run-ledger.md
+.plans/frontend-dry/run-ledger.md
