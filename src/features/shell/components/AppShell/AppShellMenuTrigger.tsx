@@ -1,11 +1,11 @@
 import { IconButton, Popover } from "@chakra-ui/react";
-import { TbEggs } from "react-icons/tb";
+import { TbMenu2 } from "react-icons/tb";
 
 export default function AppShellMenuTrigger() {
   return (
     <Popover.Trigger asChild>
       <IconButton
-        aria-label="Menü"
+        aria-label="Menü öffnen"
         position="fixed"
         top="1.5rem"
         right="1.5rem"
@@ -20,7 +20,7 @@ export default function AppShellMenuTrigger() {
         borderColor="gray.200"
         boxShadow="sm"
       >
-        <TbEggs />
+        <TbMenu2 />
       </IconButton>
     </Popover.Trigger>
   );

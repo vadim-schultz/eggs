@@ -62,7 +62,6 @@ describe("App", () => {
     "renders the farmer/buyer tabs at %s",
     async (path) => {
       renderAt(path);
-      fireEvent.click(screen.getByRole("button", { name: "Menü" }));
 
       expect(
         await screen.findByRole("tab", { name: /🧑‍🌾/ }),

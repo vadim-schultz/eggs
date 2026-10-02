@@ -14,7 +14,7 @@ export default function AppShell() {
     <AppDialogProvider>
       <BackgroundMapProvider>
         <BackgroundMapLayer />
-        <Popover.Root positioning={{ placement: "bottom-end" }}>
+        <Popover.Root defaultOpen positioning={{ placement: "bottom-end" }}>
           <AppShellMenuTrigger />
           <AppShellPanel />
         </Popover.Root>
