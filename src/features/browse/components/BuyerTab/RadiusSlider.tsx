@@ -1,7 +1,7 @@
 import SliderWithValue from "@/components/ui/SliderWithValue";
 
 const MIN_M = 5000;
-const MAX_M = 30000;
+const MAX_M = 15000;
 const STEP_M = 5000;
 
 export default function RadiusSlider({
