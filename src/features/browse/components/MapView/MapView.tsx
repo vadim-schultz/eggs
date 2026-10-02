@@ -47,6 +47,7 @@ interface MapViewProps {
   onSelect: (id: string) => void;
   fitGermany?: boolean;
   showUserMarker?: boolean;
+  radiusM?: number;
 }
 
 export default function MapView({
@@ -56,6 +57,7 @@ export default function MapView({
   onSelect,
   fitGermany = false,
   showUserMarker = true,
+  radiusM = 5000,
 }: MapViewProps) {
   return (
     <Box w="full" h="full">
@@ -64,7 +66,7 @@ export default function MapView({
         zoom={fitGermany ? 6 : 12}
         style={{ height: "100%", width: "100%" }}
       >
-        <Recenter center={center} fitGermany={fitGermany} />
+        <Recenter center={center} fitGermany={fitGermany} radiusM={radiusM} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
