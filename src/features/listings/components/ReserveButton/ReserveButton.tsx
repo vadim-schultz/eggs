@@ -1,4 +1,5 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
+import { useState } from "react";
 
 import { useSession } from "@/features/auth/hooks/useSession";
 import { useActiveReservation } from "@/features/listings/hooks/useActiveReservation";
@@ -10,6 +11,8 @@ import type { Listing } from "@/features/listings/types/listing";
 import { t } from "@/i18n/t";
 import { useAsyncAction } from "@/lib/async/useAsyncAction";
 import ReserveActionButton from "./ReserveActionButton";
+import ReserveAmountControl from "./ReserveAmountControl";
+import { isReserveCountValid } from "./reserveCount";
 
 interface ReserveButtonProps {
   listing: Listing;
@@ -22,6 +25,7 @@ export default function ReserveButton({
 }: ReserveButtonProps) {
   const { session, loading: sessionLoading } = useSession();
   const isActive = listing.status === "active";
+  const [reserveCount, setReserveCount] = useState(1);
   const { reservation, loading: reservationLoading } = useActiveReservation(
     listing.id,
     Boolean(session) && !isActive,
@@ -43,7 +47,8 @@ export default function ReserveButton({
   }
 
   async function reserve() {
-    await runMutation(() => reserveListing(listing.id));
+    if (!isReserveCountValid(reserveCount, listing.egg_count)) return;
+    await runMutation(() => reserveListing(listing.id, reserveCount));
   }
 
   async function cancel() {
@@ -52,13 +57,24 @@ export default function ReserveButton({
   }
 
   if (isActive) {
+    const canSubmit = isReserveCountValid(reserveCount, listing.egg_count);
+
     return (
-      <ReserveActionButton
-        label={t("reserve.reserve")}
-        busy={busy}
-        error={error}
-        onClick={reserve}
-      />
+      <Stack gap="3" w="full">
+        <ReserveAmountControl
+          unit={listing.unit}
+          maxEggCount={listing.egg_count}
+          eggCount={reserveCount}
+          onEggCountChange={setReserveCount}
+        />
+        <ReserveActionButton
+          label={t("reserve.reserve")}
+          busy={busy}
+          error={error}
+          disabled={!canSubmit}
+          onClick={reserve}
+        />
+      </Stack>
     );
   }
 
