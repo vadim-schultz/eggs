@@ -4,7 +4,8 @@ alter table public.listing
   drop constraint listing_egg_count_check;
 
 alter table public.listing
-  add constraint listing_egg_count_check check (egg_count >= 0);
+  add constraint listing_egg_count_check
+  check (egg_count > 0 or status = 'reserved');
 
 alter table public.reservation
   add column egg_count int,
@@ -75,7 +76,12 @@ begin
   end if;
 
   update public.listing
-  set egg_count = egg_count - p_egg_count
+  set
+    egg_count = egg_count - p_egg_count,
+    status = case
+      when egg_count - p_egg_count = 0 and status = 'active' then 'reserved'
+      else status
+    end
   where id = p_listing_id;
 
   return v_unit;
