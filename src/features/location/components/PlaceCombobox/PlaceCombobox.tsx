@@ -7,7 +7,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TbCurrentLocation } from "react-icons/tb";
 
 import type { PlaceCandidate } from "@/features/location/types/place";
@@ -27,6 +27,21 @@ function toPlaceItem(candidate: PlaceCandidate): PlaceItem {
     lat: candidate.lat,
     lng: candidate.lng,
   };
+}
+
+function shouldOpenListForQuery(
+  query: string,
+  candidates: PlaceCandidate[],
+): boolean {
+  const trimmed = query.trim();
+  if (!trimmed) {
+    return false;
+  }
+  return !candidates.some((candidate) => candidate.label === trimmed);
+}
+
+function candidateFromItem(item: PlaceItem): PlaceCandidate {
+  return { label: item.label, lat: item.lat, lng: item.lng };
 }
 
 export interface PlaceComboboxProps {
@@ -57,8 +72,25 @@ export default function PlaceCombobox({
     [candidates],
   );
 
-  const listOpen =
-    query.trim().length > 0 && (searching || candidates.length > 0);
+  const [open, setOpen] = useState(false);
+  const hasCandidates = searching || candidates.length > 0;
+  const listOpen = open && query.trim().length > 0 && hasCandidates;
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setOpen(false);
+    }
+  }, [query]);
+
+  const syncListOpenFromQuery = (nextQuery: string) => {
+    setOpen(shouldOpenListForQuery(nextQuery, candidates));
+  };
+
+  const selectCandidate = (item: PlaceItem) => {
+    onSelect(candidateFromItem(item));
+    onQueryChange(item.label);
+    setOpen(false);
+  };
 
   return (
     <Flex gap="2" align="center" w="full">
@@ -77,8 +109,11 @@ export default function PlaceCombobox({
         collection={collection}
         open={listOpen}
         onOpenChange={(details) => {
-          if (!details.open && query.trim()) {
-            onQueryChange(query);
+          if (!details.open) {
+            setOpen(false);
+            if (query.trim()) {
+              onQueryChange(query);
+            }
           }
         }}
         onValueChange={(details) => {
@@ -86,8 +121,7 @@ export default function PlaceCombobox({
           if (!value) return;
           const item = collection.items.find((entry) => entry.value === value);
           if (item) {
-            onSelect({ label: item.label, lat: item.lat, lng: item.lng });
-            onQueryChange(item.label);
+            selectCandidate(item);
           }
         }}
         closeOnSelect
@@ -97,7 +131,11 @@ export default function PlaceCombobox({
           <Combobox.Input
             placeholder={t("location.searchPlaceholder")}
             value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
+            onChange={(event) => {
+              const next = event.target.value;
+              onQueryChange(next);
+              syncListOpenFromQuery(next);
+            }}
           />
           <Combobox.IndicatorGroup>
             {searching ? <Spinner size="xs" /> : null}
@@ -116,14 +154,7 @@ export default function PlaceCombobox({
                 <Combobox.Item
                   key={item.value}
                   item={item}
-                  onClick={() => {
-                    onSelect({
-                      label: item.label,
-                      lat: item.lat,
-                      lng: item.lng,
-                    });
-                    onQueryChange(item.label);
-                  }}
+                  onClick={() => selectCandidate(item)}
                 >
                   <Combobox.ItemText>{item.label}</Combobox.ItemText>
                   <Combobox.ItemIndicator />

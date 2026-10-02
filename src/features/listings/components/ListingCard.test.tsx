@@ -3,10 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Listing } from "@/features/listings/types/listing";
-import {
-  renderEggQuantityBraille,
-  totalEggsFromListing,
-} from "@/lib/braille/eggQuantity";
 
 import ListingCard from "./ListingCard";
 
@@ -38,24 +34,26 @@ function renderCard(listing: Listing, selected = false) {
 }
 
 describe("ListingCard", () => {
-  it("shows Braille from listing count and KV labels for price and status", () => {
-    const listing = activeListing();
+  it("shows EggQuantityRow and numeric available count matching egg_count", () => {
+    const listing = activeListing({ egg_count: 7 });
     renderCard(listing);
 
-    const expectedBraille = renderEggQuantityBraille(
-      totalEggsFromListing(listing.egg_count, listing.unit),
-    );
-    expect(screen.getByTestId("braille-quantity-row")).toHaveTextContent(
-      expectedBraille,
-    );
+    expect(screen.getByTestId("egg-quantity-row")).toBeInTheDocument();
+    expect(screen.getAllByTestId("egg-quantity-outline")).toHaveLength(7);
 
     const rows = screen.getAllByTestId("key-value-row");
-    expect(rows).toHaveLength(3);
+    expect(rows).toHaveLength(2);
     expect(screen.getByText("Anzahl")).toBeInTheDocument();
+    expect(screen.getByText("7 Stück")).toBeInTheDocument();
     expect(screen.getByText("Preis")).toBeInTheDocument();
-    expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
-    expect(screen.getByText("Verfügbar")).toBeInTheDocument();
+  });
+
+  it("does not render status label or StatusBadge copy", () => {
+    renderCard(activeListing());
+
+    expect(screen.queryByText("Status")).not.toBeInTheDocument();
+    expect(screen.queryByText("Verfügbar")).not.toBeInTheDocument();
   });
 
   it("does not render the listing place name as a heading", () => {

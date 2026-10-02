@@ -84,7 +84,7 @@ describe("ReserveButton", () => {
     ).toBeDisabled();
   });
 
-  it("shows reserve slider and braille and calls reserve_listing with selected count", async () => {
+  it("shows reserve slider and egg row and calls reserve_listing with selected count", async () => {
     useSessionMock.mockReturnValue({
       session: { user: { id: "buyer-1" } },
       loading: false,
@@ -93,7 +93,7 @@ describe("ReserveButton", () => {
 
     renderButton(activeListing());
 
-    expect(screen.getByTestId("braille-quantity-row")).toBeInTheDocument();
+    expect(screen.getByTestId("egg-quantity-row")).toBeInTheDocument();
     expect(screen.getByTestId("slider-with-value-label")).toHaveTextContent(
       "1",
     );
