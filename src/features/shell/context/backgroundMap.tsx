@@ -15,6 +15,8 @@ export interface BackgroundMapState {
   listings: ListingNear[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  fitGermany: boolean;
+  showUserMarker: boolean;
 }
 
 const FALLBACK_STATE: BackgroundMapState = {
@@ -22,6 +24,8 @@ const FALLBACK_STATE: BackgroundMapState = {
   listings: [],
   selectedId: null,
   onSelect: () => {},
+  fitGermany: true,
+  showUserMarker: false,
 };
 
 const BackgroundMapStateContext =
@@ -49,11 +53,27 @@ export function useBackgroundMapState(): BackgroundMapState {
 /** Lets a route publish the data AppShell's background map should show. */
 export function usePublishBackgroundMap(state: BackgroundMapState): void {
   const setState = useContext(SetBackgroundMapContext);
-  const { listings, selectedId, onSelect } = state;
+  const { listings, selectedId, onSelect, fitGermany, showUserMarker } = state;
   const lat = state.center.lat;
   const lng = state.center.lng;
 
   useEffect(() => {
-    setState({ center: { lat, lng }, listings, selectedId, onSelect });
-  }, [setState, lat, lng, listings, selectedId, onSelect]);
+    setState({
+      center: { lat, lng },
+      listings,
+      selectedId,
+      onSelect,
+      fitGermany,
+      showUserMarker,
+    });
+  }, [
+    setState,
+    lat,
+    lng,
+    listings,
+    selectedId,
+    onSelect,
+    fitGermany,
+    showUserMarker,
+  ]);
 }

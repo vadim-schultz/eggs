@@ -28,6 +28,14 @@ describe("RoleTabs", () => {
     expect(screen.getByRole("tab", { name: /👨🏻‍💼/ })).toBeInTheDocument();
   });
 
+  it("shows Verkäufer and Käufer labels without Landwirt", () => {
+    renderRoleTabs();
+
+    expect(screen.getByRole("tab", { name: /Verkäufer/ })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Käufer/ })).toBeInTheDocument();
+    expect(screen.queryByText("Landwirt")).not.toBeInTheDocument();
+  });
+
   it("defaults to the buyer tab's content visible", () => {
     renderRoleTabs();
 

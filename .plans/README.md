@@ -75,6 +75,23 @@ chapters; can ship on today’s flat `src/` or after [frontend-structure/](front
 
 Status: planned — all eight chapter docs are written; no code has shipped yet.
 
+### [minimal-panel/](minimal-panel/) — Hyperlocal panel UX
+
+Tighten the floating panel: Verkäufer/Käufer labels, two-column grids, Chakra Slider and Combobox for
+Umkreis and Ort, Germany map fallback, Tabler icons, compact listing cards, seller form without Notiz.
+Seven chapters; in-suite [chief-of-staff skill](minimal-panel/skills/chief-of-staff/SKILL.md) and
+[chapter-implementer agent](minimal-panel/agents/chapter-implementer.md).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](minimal-panel/00-architecture.md) | Feature layers, geo rules, component map |
+| [01-rollout.md](minimal-panel/01-rollout.md) | Seven chapters, dependency graph, invariants |
+| [gaps-and-decisions.md](minimal-panel/gaps-and-decisions.md) | Slider bounds, combobox-only Ort, overlaps |
+| [run-ledger.md](minimal-panel/run-ledger.md) | Merge ledger |
+| [chapters/](minimal-panel/chapters/) | One executable plan per chapter |
+
+Status: in progress — suite and implementation on branch `feat/eggs-minimal-panel`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
