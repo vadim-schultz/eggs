@@ -48,8 +48,8 @@ begin
 end;
 $$;
 
--- Buyers may not UPDATE `listing`; definer helper applies inventory in the RPC txn.
-create function public.decrement_listing_egg_count_for_reserve(
+-- Buyers may not UPDATE `listing`; definer helpers run inventory after RLS-governed insert.
+create function public.lock_listing_for_reserve(
   p_listing_id uuid,
   p_egg_count int
 )
@@ -75,6 +75,20 @@ begin
     raise exception 'invalid egg count';
   end if;
 
+  return v_unit;
+end;
+$$;
+
+create function public.apply_listing_reserve_inventory(
+  p_listing_id uuid,
+  p_egg_count int
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
   update public.listing
   set
     egg_count = egg_count - p_egg_count,
@@ -82,11 +96,11 @@ begin
       when egg_count - p_egg_count = 0 and status = 'active' then 'reserved'
       else status
     end
-  where id = p_listing_id;
-
-  return v_unit;
+  where id = p_listing_id and status = 'active';
 end;
 $$;
+
+drop function if exists public.decrement_listing_egg_count_for_reserve(uuid, int);
 
 drop function if exists public.reserve_listing(uuid);
 
@@ -104,10 +118,7 @@ begin
     raise exception 'invalid egg count';
   end if;
 
-  v_unit := public.decrement_listing_egg_count_for_reserve(
-    p_listing_id,
-    p_egg_count
-  );
+  v_unit := public.lock_listing_for_reserve(p_listing_id, p_egg_count);
 
   begin
     insert into public.reservation (listing_id, buyer_id, egg_count, unit)
@@ -118,9 +129,12 @@ begin
       raise exception 'this listing was just reserved by someone else';
   end;
 
+  perform public.apply_listing_reserve_inventory(p_listing_id, p_egg_count);
+
   return v_reservation;
 end;
 $$;
 
-grant execute on function public.decrement_listing_egg_count_for_reserve(uuid, int) to authenticated;
+grant execute on function public.lock_listing_for_reserve(uuid, int) to authenticated;
+grant execute on function public.apply_listing_reserve_inventory(uuid, int) to authenticated;
 grant execute on function public.reserve_listing(uuid, int) to authenticated;
