@@ -105,11 +105,38 @@ describe("BuyerTab", () => {
     expect(screen.getByText("Umkreis")).toBeInTheDocument();
     expect(screen.getByText("Ort")).toBeInTheDocument();
     expect(
-      screen.queryByText("Oder einen anderen Ort suchen"),
-    ).not.toBeInTheDocument();
-    expect(
       screen.getByRole("button", { name: "Mit Google anmelden" }),
     ).toBeInTheDocument();
+  });
+
+  it("renders a slider (not a select) for Umkreis with default 15 km", () => {
+    useListingsNearMock.mockReturnValue({
+      listings: [],
+      loading: false,
+      error: false,
+    });
+
+    renderBuyerTab();
+
+    expect(
+      document.querySelector('[data-scope="slider"][data-part="root"]'),
+    ).toBeInTheDocument();
+    expect(screen.getByText("15 km")).toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Umkreis" })).toBeNull();
+  });
+
+  it("does not render the searchInstead copy", () => {
+    useListingsNearMock.mockReturnValue({
+      listings: [],
+      loading: false,
+      error: false,
+    });
+
+    renderBuyerTab();
+
+    expect(
+      screen.queryByText("Oder einen anderen Ort suchen"),
+    ).not.toBeInTheDocument();
   });
 
   it("renders listings in a grid, not a single-column stack", () => {
