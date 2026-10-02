@@ -4,8 +4,15 @@ import MapView from "@/features/browse/components/MapView";
 import { useBackgroundMapState } from "@/features/shell/context/backgroundMap";
 
 export default function BackgroundMapLayer() {
-  const { center, listings, selectedId, onSelect, fitGermany, showUserMarker } =
-    useBackgroundMapState();
+  const {
+    center,
+    listings,
+    selectedId,
+    onSelect,
+    fitGermany,
+    showUserMarker,
+    radiusM,
+  } = useBackgroundMapState();
 
   return (
     <Box position="fixed" inset="0" zIndex="0">
@@ -16,6 +23,7 @@ export default function BackgroundMapLayer() {
         onSelect={onSelect}
         fitGermany={fitGermany}
         showUserMarker={showUserMarker}
+        radiusM={radiusM}
       />
     </Box>
   );

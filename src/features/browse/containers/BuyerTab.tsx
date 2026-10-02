@@ -52,6 +52,7 @@ export default function BuyerTab() {
     onSelect: selectListing,
     fitGermany,
     showUserMarker,
+    radiusM,
   });
 
   return (

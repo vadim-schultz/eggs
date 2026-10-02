@@ -17,6 +17,7 @@ export interface BackgroundMapState {
   onSelect: (id: string) => void;
   fitGermany: boolean;
   showUserMarker: boolean;
+  radiusM: number;
 }
 
 const FALLBACK_STATE: BackgroundMapState = {
@@ -26,6 +27,7 @@ const FALLBACK_STATE: BackgroundMapState = {
   onSelect: () => {},
   fitGermany: true,
   showUserMarker: false,
+  radiusM: 5000,
 };
 
 const BackgroundMapStateContext =
@@ -53,7 +55,14 @@ export function useBackgroundMapState(): BackgroundMapState {
 /** Lets a route publish the data AppShell's background map should show. */
 export function usePublishBackgroundMap(state: BackgroundMapState): void {
   const setState = useContext(SetBackgroundMapContext);
-  const { listings, selectedId, onSelect, fitGermany, showUserMarker } = state;
+  const {
+    listings,
+    selectedId,
+    onSelect,
+    fitGermany,
+    showUserMarker,
+    radiusM,
+  } = state;
   const lat = state.center.lat;
   const lng = state.center.lng;
 
@@ -65,6 +74,7 @@ export function usePublishBackgroundMap(state: BackgroundMapState): void {
       onSelect,
       fitGermany,
       showUserMarker,
+      radiusM,
     });
   }, [
     setState,
@@ -75,5 +85,6 @@ export function usePublishBackgroundMap(state: BackgroundMapState): void {
     onSelect,
     fitGermany,
     showUserMarker,
+    radiusM,
   ]);
 }
