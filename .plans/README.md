@@ -92,6 +92,20 @@ Seven chapters; in-suite [chief-of-staff skill](minimal-panel/skills/chief-of-st
 
 Status: in progress — suite and implementation on branch `feat/eggs-minimal-panel`.
 
+### [panel-ux/](panel-ux/) — Panel UX loop (executable)
+
+Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 15 km**, **Braille** quantity rows, map bounds and marker popovers, **partial reserve** (chapter 9). Ten chapters; each merges to **`main`** before the next. In-suite [chief-of-staff skill](panel-ux/skills/chief-of-staff/SKILL.md) and [chapter-implementer agent](panel-ux/agents/chapter-implementer.md); Cursor: `@chief-of-staff-panel-ux`.
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](panel-ux/00-architecture.md) | Screen map, Braille module, geo, partial reserve |
+| [01-rollout.md](panel-ux/01-rollout.md) | Ten chapters, git invariants, dependency graph |
+| [gaps-and-decisions.md](panel-ux/gaps-and-decisions.md) | D1–D11 including Braille table and inventory rule |
+| [run-ledger.md](panel-ux/run-ledger.md) | Merge ledger |
+| [chapters/](panel-ux/chapters/) | One executable plan per chapter |
+
+Status: planned — docs suite landing via PR; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
