@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+
+import { system } from "@/theme";
 import { MemoryRouter } from "react-router-dom";
 
 import AppShell from "./AppShell";
@@ -25,7 +27,7 @@ vi.mock("@/features/auth/hooks/useSession", () => ({
 
 function renderShell() {
   return render(
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={system}>
       <MemoryRouter>
         <AppShell />
       </MemoryRouter>
@@ -37,9 +39,7 @@ describe("AppShell", () => {
   it("shows the burger menu trigger and buyer search without opening the menu", () => {
     renderShell();
 
-    expect(
-      screen.getByRole("button", { name: "Menü öffnen" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
     expect(screen.getByTestId("buyer-tab")).toBeInTheDocument();
     expect(screen.getByText("buyer search")).toBeVisible();
   });
