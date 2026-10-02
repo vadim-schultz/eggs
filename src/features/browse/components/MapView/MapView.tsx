@@ -8,6 +8,7 @@ import "leaflet/dist/leaflet.css";
 import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
 
+import ListingMapMarker from "./ListingMapMarker";
 import Recenter from "./Recenter";
 
 const PIN_STYLE = [
@@ -75,12 +76,12 @@ export default function MapView({
           <Marker position={[center.lat, center.lng]} icon={userLocationIcon} />
         ) : null}
         {listings.map((listing) => (
-          <Marker
+          <ListingMapMarker
             key={listing.id}
-            position={[listing.lat, listing.lng]}
+            listing={listing}
+            selected={listing.id === selectedId}
             icon={listingIcon}
-            opacity={listing.id === selectedId ? 1 : 0.7}
-            eventHandlers={{ click: () => onSelect(listing.id) }}
+            onSelect={onSelect}
           />
         ))}
       </MapContainer>

@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
@@ -61,5 +61,36 @@ describe("MapView", () => {
   it("uses no non-Tabler egg or basket icons", () => {
     expect(mapViewSource).not.toMatch(/FaEgg|RiShoppingBasket/);
     expect(mapViewSource).toContain('from "react-icons/tb"');
+  });
+
+  it("shows listing content in the popover layer when a marker is selected", async () => {
+    const onSelect = vi.fn();
+    const item = listing({
+      id: "listing-pop",
+      egg_count: 12,
+      price_cents: 400,
+    });
+    const { unmount } = renderMap({
+      listings: [item],
+      selectedId: null,
+      onSelect,
+    });
+
+    const markers = screen.getAllByTitle("Egg listing");
+    fireEvent.click(markers[0]!.closest(".leaflet-marker-icon") ?? markers[0]!);
+    expect(onSelect).toHaveBeenCalledWith("listing-pop");
+    unmount();
+
+    renderMap({
+      listings: [item],
+      selectedId: "listing-pop",
+      onSelect,
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("listing-marker-popover")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Anzahl")).toBeInTheDocument();
+    expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
   });
 });

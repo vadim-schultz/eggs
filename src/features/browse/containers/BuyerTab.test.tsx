@@ -1,8 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
-import { BackgroundMapProvider } from "@/features/shell/context/backgroundMap";
+import {
+  BackgroundMapProvider,
+  useBackgroundMapState,
+} from "@/features/shell/context/backgroundMap";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 import BuyerTab from "./BuyerTab";
@@ -130,6 +133,43 @@ describe("BuyerTab", () => {
     expect(
       screen.getByRole("button", { name: "Mit Google anmelden" }),
     ).toBeInTheDocument();
+  });
+
+  it("does not open the detail AppDialog when a map listing is selected", () => {
+    const openDetailDialog = vi.fn();
+    useAppDialogMock.mockReturnValue({
+      open: null,
+      openPostDialog: vi.fn(),
+      openDetailDialog,
+      closeDialog: vi.fn(),
+    });
+    useListingsNearMock.mockReturnValue({
+      listings: [listing({ id: "listing-map-1" })],
+      loading: false,
+      error: false,
+    });
+
+    function MapSelectTrigger() {
+      const { onSelect } = useBackgroundMapState();
+      return (
+        <button type="button" onClick={() => onSelect("listing-map-1")}>
+          trigger-map-select
+        </button>
+      );
+    }
+
+    render(
+      <ChakraProvider value={defaultSystem}>
+        <BackgroundMapProvider>
+          <BuyerTab />
+          <MapSelectTrigger />
+        </BackgroundMapProvider>
+      </ChakraProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "trigger-map-select" }));
+
+    expect(openDetailDialog).not.toHaveBeenCalled();
   });
 
   it("does not render the searchInstead copy", () => {
