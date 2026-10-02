@@ -1,4 +1,4 @@
-import { Slider } from "@chakra-ui/react";
+import SliderWithValue from "@/components/ui/SliderWithValue";
 
 const MIN_M = 5000;
 const MAX_M = 30000;
@@ -11,25 +11,15 @@ export default function RadiusSlider({
   radiusM: number;
   onChange: (radiusM: number) => void;
 }) {
-  const km = radiusM / 1000;
-
   return (
-    <Slider.Root
+    <SliderWithValue
       min={MIN_M}
       max={MAX_M}
       step={STEP_M}
-      value={[radiusM]}
-      onValueChange={(details) => onChange(details.value[0] ?? MIN_M)}
-      w="full"
-    >
-      <Slider.ValueText textAlign="right">{`${km} km`}</Slider.ValueText>
-      <Slider.Control>
-        <Slider.Track>
-          <Slider.Range />
-        </Slider.Track>
-        <Slider.Thumbs />
-      </Slider.Control>
-    </Slider.Root>
+      value={radiusM}
+      onValueChange={onChange}
+      formatValue={(meters) => `${meters / 1000} km`}
+    />
   );
 }
 
