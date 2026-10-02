@@ -1,10 +1,9 @@
-import { Button, Flex, Icon, Stack } from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 
+import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
 import SliderWithValue from "@/components/ui/SliderWithValue";
-import { TbEgg } from "react-icons/tb";
 
 import type { Unit } from "@/features/listings/types";
-import { halfDozenIconCount } from "@/features/listings/utils/halfDozenIconCount";
 import { t } from "@/i18n/t";
 
 export interface EggAmountControlProps {
@@ -44,8 +43,6 @@ export default function EggAmountControl({
   onUnitChange,
   onEggCountChange,
 }: EggAmountControlProps) {
-  const iconCount = halfDozenIconCount(eggCount, unit);
-
   return (
     <Stack gap="3" w="full">
       <Flex gap="2">
@@ -60,11 +57,7 @@ export default function EggAmountControl({
           onClick={() => onUnitChange("dozen")}
         />
       </Flex>
-      <Flex gap="1" flexWrap="wrap" minH="6">
-        {Array.from({ length: iconCount }, (_, index) => (
-          <Icon key={index} as={TbEgg} boxSize="5" color="orange.500" />
-        ))}
-      </Flex>
+      <BrailleQuantityRow eggCount={eggCount} unit={unit} />
       <SliderWithValue
         min={1}
         max={12}

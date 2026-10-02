@@ -1,12 +1,11 @@
-import { Card, Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react";
-import { TbEgg } from "react-icons/tb";
+import { Card, SimpleGrid, Text } from "@chakra-ui/react";
 
+import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
 import type { Listing } from "@/features/listings/types/listing";
 import {
   formatPrice,
   unitLabelKey,
 } from "@/features/listings/utils/formatListing";
-import { halfDozenIconCount } from "@/features/listings/utils/halfDozenIconCount";
 import { t } from "@/i18n/t";
 
 import StatusBadge from "./StatusBadge";
@@ -22,7 +21,6 @@ export default function ListingCard({
   selected,
   onSelect,
 }: ListingCardProps) {
-  const iconCount = halfDozenIconCount(listing.egg_count, listing.unit);
   const amountLabel = `${listing.egg_count} ${t(unitLabelKey(listing.unit))}`;
   const priceLabel = formatPrice(listing.price_cents, listing.currency);
 
@@ -36,11 +34,10 @@ export default function ListingCard({
     >
       <button type="button" onClick={() => onSelect(listing.id)}>
         <Card.Body gap="2" textAlign="left">
-          <Flex gap="1" flexWrap="wrap">
-            {Array.from({ length: iconCount }, (_, index) => (
-              <Icon key={index} as={TbEgg} boxSize="4" color="orange.500" />
-            ))}
-          </Flex>
+          <BrailleQuantityRow
+            eggCount={listing.egg_count}
+            unit={listing.unit}
+          />
           <SimpleGrid columns={2} gapX="2" gapY="1" fontSize="sm">
             <Text color="fg.muted">{t("listing.count.label")}</Text>
             <Text>{amountLabel}</Text>
