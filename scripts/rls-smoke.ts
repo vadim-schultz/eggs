@@ -335,11 +335,73 @@ async function main() {
     },
   );
 
+  let partialReservationId = "";
+  await check(
+    "reserve_listing with partial p_egg_count keeps listing active and decrements inventory",
+    async () => {
+      const { error } = await userB.rpc("reserve_listing", {
+        p_listing_id: rpcListingId,
+        p_egg_count: 6,
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+
+      const { data, error: statusError } = await admin
+        .from("listing")
+        .select("status, egg_count")
+        .eq("id", rpcListingId)
+        .single();
+      assert(!statusError, `unexpected error: ${statusError?.message}`);
+      assert(
+        data!.status === "active",
+        `expected status 'active', got '${data!.status}'`,
+      );
+      assert(
+        data!.egg_count === 6,
+        `expected egg_count 6, got '${data!.egg_count}'`,
+      );
+
+      const { data: reservationRow, error: findError } = await admin
+        .from("reservation")
+        .select("id")
+        .eq("listing_id", rpcListingId)
+        .eq("status", "active")
+        .single();
+      assert(!findError, `unexpected error: ${findError?.message}`);
+      partialReservationId = reservationRow!.id as string;
+    },
+  );
+
+  await check(
+    "cancel_reservation after partial reserve restores listing egg_count",
+    async () => {
+      const { error } = await userB.rpc("cancel_reservation", {
+        p_reservation_id: partialReservationId,
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+
+      const { data, error: statusError } = await admin
+        .from("listing")
+        .select("status, egg_count")
+        .eq("id", rpcListingId)
+        .single();
+      assert(!statusError, `unexpected error: ${statusError?.message}`);
+      assert(
+        data!.status === "active",
+        `expected status 'active', got '${data!.status}'`,
+      );
+      assert(
+        data!.egg_count === 12,
+        `expected egg_count 12, got '${data!.egg_count}'`,
+      );
+    },
+  );
+
   await check(
     "reserve_listing by user B on A's active listing succeeds and the listing's status becomes 'reserved'",
     async () => {
       const { error } = await userB.rpc("reserve_listing", {
         p_listing_id: rpcListingId,
+        p_egg_count: 12,
       });
       assert(!error, `unexpected error: ${error?.message}`);
 
@@ -361,6 +423,7 @@ async function main() {
     async () => {
       const { error } = await userC.rpc("reserve_listing", {
         p_listing_id: rpcListingId,
+        p_egg_count: 1,
       });
       assert(!!error, "expected reserve_listing to be rejected");
     },

@@ -110,9 +110,11 @@ export async function updateListingExpiry(
 
 export async function reserveListing(
   listingId: string,
+  eggCount: number,
 ): Promise<{ error?: true }> {
   const { error } = await supabase.rpc("reserve_listing", {
     p_listing_id: listingId,
+    p_egg_count: eggCount,
   });
   if (error) {
     return { error: true };

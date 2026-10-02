@@ -84,7 +84,7 @@ describe("ReserveButton", () => {
     ).toBeDisabled();
   });
 
-  it('shows "Reserve" and calls the reserve_listing RPC on click when active and signed in', async () => {
+  it("shows reserve slider and braille and calls reserve_listing with selected count", async () => {
     useSessionMock.mockReturnValue({
       session: { user: { id: "buyer-1" } },
       loading: false,
@@ -93,11 +93,17 @@ describe("ReserveButton", () => {
 
     renderButton(activeListing());
 
+    expect(screen.getByTestId("braille-quantity-row")).toBeInTheDocument();
+    expect(screen.getByTestId("slider-with-value-label")).toHaveTextContent(
+      "1",
+    );
+
     fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
 
     await waitFor(() =>
       expect(rpcMock).toHaveBeenCalledWith("reserve_listing", {
         p_listing_id: "listing-1",
+        p_egg_count: 1,
       }),
     );
   });
