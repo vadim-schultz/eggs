@@ -24,13 +24,17 @@ export default function RadiusSlider({
     >
       <Slider.ValueText textAlign="right">{`${km} km`}</Slider.ValueText>
       <Slider.Control>
-          <Slider.Track>
-            <Slider.Range />
-          </Slider.Track>
-          <Slider.Thumbs />
-        </Slider.Control>
+        <Slider.Track>
+          <Slider.Range />
+        </Slider.Track>
+        <Slider.Thumbs />
+      </Slider.Control>
     </Slider.Root>
   );
 }
 
-export { MIN_M as RADIUS_MIN_M, MAX_M as RADIUS_MAX_M, STEP_M as RADIUS_STEP_M };
+export {
+  MIN_M as RADIUS_MIN_M,
+  MAX_M as RADIUS_MAX_M,
+  STEP_M as RADIUS_STEP_M,
+};

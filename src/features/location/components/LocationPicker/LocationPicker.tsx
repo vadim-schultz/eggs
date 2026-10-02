@@ -52,7 +52,9 @@ export default function LocationPicker({
 
   return (
     <Stack gap="2">
-      <KeyValueRow label={t("post.location.shortLabel")}>{combobox}</KeyValueRow>
+      <KeyValueRow label={t("post.location.shortLabel")}>
+        {combobox}
+      </KeyValueRow>
     </Stack>
   );
 }

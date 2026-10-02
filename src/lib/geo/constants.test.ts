@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  DEFAULT_MAP_CENTER,
-  GERMANY_BOUNDS,
-  germanyCenter,
-} from "./constants";
+import { DEFAULT_MAP_CENTER, GERMANY_BOUNDS, germanyCenter } from "./constants";
 
 describe("constants", () => {
   it("germanyCenter lies within GERMANY_BOUNDS", () => {
