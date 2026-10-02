@@ -1,9 +1,30 @@
 import type { ComponentProps } from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import MapView from "./MapView";
+
+const { useSessionMock, maybeSingleMock } = vi.hoisted(() => {
+  const maybeSingleMock = vi.fn();
+  return {
+    useSessionMock: vi.fn(),
+    maybeSingleMock,
+  };
+});
+
+vi.mock("@/features/auth/hooks/useSession", () => ({
+  useSession: useSessionMock,
+}));
+vi.mock("@/lib/supabaseClient", () => ({
+  supabase: { from: vi.fn(), rpc: vi.fn() },
+}));
 import mapViewSource from "./MapView.tsx?raw";
 import type { ListingNear } from "@/features/listings/types/listing";
 
@@ -40,7 +61,26 @@ function renderMap(props: Partial<ComponentProps<typeof MapView>> = {}) {
   );
 }
 
+async function renderSelectedPopover(item: ListingNear, onSelect = vi.fn()) {
+  renderMap({
+    listings: [item],
+    selectedId: item.id,
+    onSelect,
+  });
+  await waitFor(() => {
+    expect(screen.getByTestId("listing-marker-popover")).toBeInTheDocument();
+  });
+  return within(screen.getByTestId("listing-marker-popover"));
+}
+
 describe("MapView", () => {
+  beforeEach(() => {
+    useSessionMock.mockReset();
+    useSessionMock.mockReturnValue({ session: null, loading: false });
+    maybeSingleMock.mockReset();
+    maybeSingleMock.mockResolvedValue({ data: null, error: null });
+  });
+
   it("marks the user's location with a basket icon", () => {
     renderMap();
 
@@ -92,5 +132,31 @@ describe("MapView", () => {
     });
     expect(screen.getByText("Anzahl")).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
+  });
+
+  it("shows reserve slider and action in the listing popover for an active listing", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    const item = listing({ id: "listing-pop", status: "active", unit: "each" });
+    const popover = await renderSelectedPopover(item);
+
+    expect(
+      popover.getByRole("button", { name: "Reservieren" }),
+    ).toBeInTheDocument();
+    expect(popover.getByTestId("slider-with-value-label")).toBeInTheDocument();
+  });
+
+  it("does not nest the reserve slider inside a card-wide select button", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    const item = listing({ id: "listing-pop", status: "active", unit: "each" });
+    const popover = await renderSelectedPopover(item);
+    const sliderLabel = popover.getByTestId("slider-with-value-label");
+
+    expect(sliderLabel.closest("button")).toBeNull();
   });
 });

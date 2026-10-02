@@ -1,14 +1,8 @@
-import { Card, Text } from "@chakra-ui/react";
+import { Card } from "@chakra-ui/react";
 
-import EggQuantityRow from "@/components/ui/EggQuantityRow";
-import KeyValueRow from "@/components/ui/KeyValueRow";
 import type { Listing } from "@/features/listings/types/listing";
-import { displayEggCount } from "@/features/listings/utils/displayEggCount";
-import {
-  formatPrice,
-  unitLabelKey,
-} from "@/features/listings/utils/formatListing";
-import { t } from "@/i18n/t";
+
+import ListingCardSummary from "./ListingCardSummary";
 
 interface ListingCardProps {
   listing: Listing;
@@ -21,9 +15,6 @@ export default function ListingCard({
   selected,
   onSelect,
 }: ListingCardProps) {
-  const amountLabel = `${listing.egg_count} ${t(unitLabelKey(listing.unit))}`;
-  const priceLabel = formatPrice(listing.price_cents, listing.currency);
-
   return (
     <Card.Root
       asChild
@@ -34,15 +25,7 @@ export default function ListingCard({
     >
       <button type="button" onClick={() => onSelect(listing.id)}>
         <Card.Body gap="2" textAlign="left">
-          <EggQuantityRow
-            count={displayEggCount(listing.egg_count, listing.unit)}
-          />
-          <KeyValueRow label={t("listing.count.label")}>
-            <Text fontSize="sm">{amountLabel}</Text>
-          </KeyValueRow>
-          <KeyValueRow label={t("listing.price.label")}>
-            <Text fontSize="sm">{priceLabel}</Text>
-          </KeyValueRow>
+          <ListingCardSummary listing={listing} />
         </Card.Body>
       </button>
     </Card.Root>
