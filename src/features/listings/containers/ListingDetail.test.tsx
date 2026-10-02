@@ -64,16 +64,26 @@ describe("ListingDetail", () => {
     singleMock.mockReset();
   });
 
-  it("renders count, unit, price and location_label for an active listing", async () => {
-    singleMock.mockResolvedValue({ data: activeListing(), error: null });
+  it("renders Braille, KV rows for count price and status for an active listing", async () => {
+    const listing = activeListing();
+    singleMock.mockResolvedValue({ data: listing, error: null });
 
     renderAt("listing-1");
 
     expect(
-      await screen.findByText("Downtown, near the market"),
+      await screen.findByTestId("braille-quantity-row"),
     ).toBeInTheDocument();
+    expect(
+      screen.getAllByTestId("key-value-row").length,
+    ).toBeGreaterThanOrEqual(3);
+    expect(screen.getByText("Anzahl")).toBeInTheDocument();
+    expect(screen.getByText("Preis")).toBeInTheDocument();
+    expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText(/12/)).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
+    expect(
+      screen.queryByText("Downtown, near the market"),
+    ).not.toBeInTheDocument();
     expect(fromMock).toHaveBeenCalledWith("listing");
     expect(eqMock).toHaveBeenCalledWith("id", "listing-1");
   });
@@ -82,7 +92,7 @@ describe("ListingDetail", () => {
     singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
-    await screen.findByText("Downtown, near the market");
+    await screen.findByTestId("braille-quantity-row");
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
@@ -96,9 +106,21 @@ describe("ListingDetail", () => {
     });
 
     renderAt("listing-1");
-    await screen.findByText("Downtown, near the market");
+    await screen.findByTestId("braille-quantity-row");
 
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
+  });
+
+  it("shows reserved status in KV for a reserved listing", async () => {
+    singleMock.mockResolvedValue({
+      data: activeListing({ status: "reserved" }),
+      error: null,
+    });
+
+    renderAt("listing-1");
+    await screen.findByTestId("braille-quantity-row");
+
+    expect(screen.getByText("Reserviert")).toBeInTheDocument();
   });
 
   it("shows the not-found message when the listing can't be loaded", async () => {

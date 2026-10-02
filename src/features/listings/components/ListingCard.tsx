@@ -1,6 +1,7 @@
-import { Card, SimpleGrid, Text } from "@chakra-ui/react";
+import { Card, Text } from "@chakra-ui/react";
 
 import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import KeyValueRow from "@/components/ui/KeyValueRow";
 import type { Listing } from "@/features/listings/types/listing";
 import {
   formatPrice,
@@ -28,7 +29,7 @@ export default function ListingCard({
     <Card.Root
       asChild
       variant={selected ? "elevated" : "outline"}
-      w="full"
+      w="fit-content"
       cursor="pointer"
       size="sm"
     >
@@ -38,13 +39,15 @@ export default function ListingCard({
             eggCount={listing.egg_count}
             unit={listing.unit}
           />
-          <SimpleGrid columns={2} gapX="2" gapY="1" fontSize="sm">
-            <Text color="fg.muted">{t("listing.count.label")}</Text>
-            <Text>{amountLabel}</Text>
-            <Text color="fg.muted">{t("listing.price.label")}</Text>
-            <Text>{priceLabel}</Text>
-          </SimpleGrid>
-          <StatusBadge status={listing.status} />
+          <KeyValueRow label={t("listing.count.label")}>
+            <Text fontSize="sm">{amountLabel}</Text>
+          </KeyValueRow>
+          <KeyValueRow label={t("listing.price.label")}>
+            <Text fontSize="sm">{priceLabel}</Text>
+          </KeyValueRow>
+          <KeyValueRow label={t("listing.status.label")}>
+            <StatusBadge status={listing.status} />
+          </KeyValueRow>
         </Card.Body>
       </button>
     </Card.Root>
