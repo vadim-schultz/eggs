@@ -1,8 +1,9 @@
 import { Card, Text } from "@chakra-ui/react";
 
-import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import EggQuantityRow from "@/components/ui/EggQuantityRow";
 import KeyValueRow from "@/components/ui/KeyValueRow";
 import type { Listing } from "@/features/listings/types/listing";
+import { displayEggCount } from "@/features/listings/utils/displayEggCount";
 import {
   formatPrice,
   unitLabelKey,
@@ -35,9 +36,8 @@ export default function ListingCard({
     >
       <button type="button" onClick={() => onSelect(listing.id)}>
         <Card.Body gap="2" textAlign="left">
-          <BrailleQuantityRow
-            eggCount={listing.egg_count}
-            unit={listing.unit}
+          <EggQuantityRow
+            count={displayEggCount(listing.egg_count, listing.unit)}
           />
           <KeyValueRow label={t("listing.count.label")}>
             <Text fontSize="sm">{amountLabel}</Text>

@@ -1,9 +1,10 @@
 import { Button, Flex, Stack } from "@chakra-ui/react";
 
-import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import EggQuantityRow from "@/components/ui/EggQuantityRow";
 import SliderWithValue from "@/components/ui/SliderWithValue";
 
 import type { Unit } from "@/features/listings/types";
+import { displayEggCount } from "@/features/listings/utils/displayEggCount";
 import { t } from "@/i18n/t";
 
 export interface EggAmountControlProps {
@@ -56,7 +57,7 @@ export default function EggAmountControl({
           onClick={() => onUnitChange("dozen")}
         />
       </Flex>
-      <BrailleQuantityRow eggCount={eggCount} unit={unit} />
+      <EggQuantityRow count={displayEggCount(eggCount, unit)} />
       <SliderWithValue
         min={1}
         max={12}

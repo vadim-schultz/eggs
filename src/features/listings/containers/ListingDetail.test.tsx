@@ -64,15 +64,13 @@ describe("ListingDetail", () => {
     singleMock.mockReset();
   });
 
-  it("renders Braille, KV rows for count price and status for an active listing", async () => {
+  it("renders egg row, KV rows for count price and status for an active listing", async () => {
     const listing = activeListing();
     singleMock.mockResolvedValue({ data: listing, error: null });
 
     renderAt("listing-1");
 
-    expect(
-      await screen.findByTestId("braille-quantity-row"),
-    ).toBeInTheDocument();
+    expect(await screen.findByTestId("egg-quantity-row")).toBeInTheDocument();
     expect(
       screen.getAllByTestId("key-value-row").length,
     ).toBeGreaterThanOrEqual(3);
@@ -92,7 +90,7 @@ describe("ListingDetail", () => {
     singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
-    await screen.findByTestId("braille-quantity-row");
+    await screen.findByTestId("egg-quantity-row");
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
@@ -106,7 +104,7 @@ describe("ListingDetail", () => {
     });
 
     renderAt("listing-1");
-    await screen.findByTestId("braille-quantity-row");
+    await screen.findByTestId("egg-quantity-row");
 
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
   });
@@ -118,7 +116,7 @@ describe("ListingDetail", () => {
     });
 
     renderAt("listing-1");
-    await screen.findByTestId("braille-quantity-row");
+    await screen.findByTestId("egg-quantity-row");
 
     expect(screen.getByText("Reserviert")).toBeInTheDocument();
   });

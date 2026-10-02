@@ -1,12 +1,13 @@
 import { Stack, Text } from "@chakra-ui/react";
 
-import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import EggQuantityRow from "@/components/ui/EggQuantityRow";
 import KeyValueRow from "@/components/ui/KeyValueRow";
 import StatusBadge from "@/features/listings/components/StatusBadge";
 import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
 import SellerActions from "@/features/listings/components/SellerActions";
 import type { Listing } from "@/features/listings/types/listing";
+import { displayEggCount } from "@/features/listings/utils/displayEggCount";
 import {
   formatPrice,
   unitLabelKey,
@@ -27,7 +28,9 @@ export default function ListingDetailView({
 
   return (
     <Stack gap="2">
-      <BrailleQuantityRow eggCount={listing.egg_count} unit={listing.unit} />
+      <EggQuantityRow
+        count={displayEggCount(listing.egg_count, listing.unit)}
+      />
       <KeyValueRow label={t("listing.count.label")}>
         <Text fontSize="sm">{amountLabel}</Text>
       </KeyValueRow>
