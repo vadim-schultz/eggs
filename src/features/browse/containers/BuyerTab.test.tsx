@@ -104,7 +104,9 @@ describe("BuyerTab", () => {
 
     expect(screen.getByText("Umkreis")).toBeInTheDocument();
     expect(screen.getByText("Ort")).toBeInTheDocument();
-    expect(screen.queryByText("Oder einen anderen Ort suchen")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Oder einen anderen Ort suchen"),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Mit Google anmelden" }),
     ).toBeInTheDocument();

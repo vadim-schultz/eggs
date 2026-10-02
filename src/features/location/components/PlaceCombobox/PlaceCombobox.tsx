@@ -57,7 +57,8 @@ export default function PlaceCombobox({
     [candidates],
   );
 
-  const listOpen = query.trim().length > 0 && (searching || candidates.length > 0);
+  const listOpen =
+    query.trim().length > 0 && (searching || candidates.length > 0);
 
   return (
     <Flex gap="2" align="center" w="full">

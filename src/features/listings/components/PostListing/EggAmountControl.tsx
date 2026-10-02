@@ -68,9 +68,7 @@ export default function EggAmountControl({
         max={12}
         step={1}
         value={[eggCount]}
-        onValueChange={(details) =>
-          onEggCountChange(details.value[0] ?? 1)
-        }
+        onValueChange={(details) => onEggCountChange(details.value[0] ?? 1)}
         w="full"
       >
         <Slider.Control>

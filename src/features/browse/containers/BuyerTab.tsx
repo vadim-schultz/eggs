@@ -16,8 +16,11 @@ import { DEFAULT_MAP_CENTER } from "@/lib/geo/constants";
 const DEFAULT_RADIUS_M = 15000;
 
 export default function BuyerTab() {
-  const { center: geoCenter, geoGranted, requestLocation } =
-    useGeolocation(DEFAULT_MAP_CENTER);
+  const {
+    center: geoCenter,
+    geoGranted,
+    requestLocation,
+  } = useGeolocation(DEFAULT_MAP_CENTER);
   const [manualCenter, setManualCenter] = useState<ConfirmedPin | null>(null);
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
