@@ -39,10 +39,6 @@ async function confirmLocation(query = "Berlin") {
   fireEvent.click(screen.getByText("Berlin, Germany"));
 }
 
-async function selectUnit(label: string) {
-  fireEvent.click(screen.getByRole("button", { name: label }));
-}
-
 describe("PostListing", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -112,7 +108,7 @@ describe("PostListing", () => {
 
     expect(rpcMock).toHaveBeenCalledWith("create_listing", {
       p_egg_count: 1,
-      p_unit: "dozen",
+      p_unit: "each",
       p_price_cents: 400,
       p_lat: 52.52,
       p_lng: 13.405,
@@ -140,20 +136,16 @@ describe("PostListing", () => {
     ).toBeInTheDocument();
   });
 
-  it("does not position unit chips with absolute layout", () => {
+  it("does not render Stück/Dutzend unit chips on the post form", () => {
     renderPostListing();
 
-    const chipRow = screen.getByTestId("unit-chip-row");
-    expect(window.getComputedStyle(chipRow).position).not.toBe("absolute");
-    for (const element of chipRow.querySelectorAll("*")) {
-      expect(window.getComputedStyle(element).position).not.toBe("absolute");
-    }
-  });
-
-  it("unit field has no native <select> element", () => {
-    const { container } = renderPostListing();
-
-    expect(container.querySelectorAll("select")).toHaveLength(0);
+    expect(screen.queryByTestId("unit-chip-row")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Stück" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Dutzend" }),
+    ).not.toBeInTheDocument();
   });
 
   it("does not render a Notiz field", () => {
@@ -188,31 +180,5 @@ describe("PostListing", () => {
       ),
     ).toBeInTheDocument();
     expect(onCreated).not.toHaveBeenCalled();
-  });
-
-  it("still submits the chosen unit value", async () => {
-    rpcMock.mockResolvedValue({ data: { id: "listing-1" }, error: null });
-    renderPostListing();
-
-    fireEvent.change(screen.getByLabelText("Preis (€)"), {
-      target: { value: "4" },
-    });
-    fireEvent.change(screen.getByLabelText("Kontakthinweis für Käufer"), {
-      target: { value: "Ring the bell" },
-    });
-    await selectUnit("Stück");
-    await confirmLocation("Berlin");
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "Angebot veröffentlichen" }),
-    );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    expect(rpcMock).toHaveBeenCalledWith(
-      "create_listing",
-      expect.objectContaining({ p_unit: "each" }),
-    );
   });
 });
