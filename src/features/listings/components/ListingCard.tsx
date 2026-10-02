@@ -10,8 +10,6 @@ import {
 } from "@/features/listings/utils/formatListing";
 import { t } from "@/i18n/t";
 
-import StatusBadge from "./StatusBadge";
-
 interface ListingCardProps {
   listing: Listing;
   selected: boolean;
@@ -44,9 +42,6 @@ export default function ListingCard({
           </KeyValueRow>
           <KeyValueRow label={t("listing.price.label")}>
             <Text fontSize="sm">{priceLabel}</Text>
-          </KeyValueRow>
-          <KeyValueRow label={t("listing.status.label")}>
-            <StatusBadge status={listing.status} />
           </KeyValueRow>
         </Card.Body>
       </button>
