@@ -105,6 +105,20 @@ Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 1
 
 Status: planned — docs suite landing via PR; implementation loop runs after merge to `main`.
 
+### [egg-ux/](egg-ux/) — Easter palette and egg quantity UX
+
+Replace Braille with a **decade egg row** (`TbEgg` / `TbEggFilled`, max 100), add **light/dark** Easter theme tokens, fix **burger** and **Ort combobox**, default listings to **24h** expiry, simplify **post listing** (slider 1–100, no Stück/Dutzend), refresh **listing cards**, and restore **reserve + slider** on **map popovers**. Nine chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-ux`).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](egg-ux/00-architecture.md) | Egg row algorithm, colour system, screen map, expiry |
+| [01-rollout.md](egg-ux/01-rollout.md) | Nine chapters, dependency graph, execution order |
+| [gaps-and-decisions.md](egg-ux/gaps-and-decisions.md) | D1–D14 palette, popover reserve, git |
+| [run-ledger.md](egg-ux/run-ledger.md) | Merge ledger |
+| [chapters/](egg-ux/chapters/) | One executable plan per chapter |
+
+Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
