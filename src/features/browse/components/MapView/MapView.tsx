@@ -2,8 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { Box } from "@chakra-ui/react";
-import { FaEgg } from "react-icons/fa6";
-import { RiShoppingBasketLine } from "react-icons/ri";
+import { TbBasket, TbEgg } from "react-icons/tb";
 import "leaflet/dist/leaflet.css";
 
 import type { GeoPoint } from "@/features/browse/types/geo";
@@ -32,12 +31,12 @@ function pinIcon(markup: string, background: string) {
 
 const userLocationIcon = pinIcon(
   renderToStaticMarkup(
-    <RiShoppingBasketLine title="Your location" size={18} color="#fff" />,
+    <TbBasket title="Your location" size={18} color="#fff" />,
   ),
   "#2b6cb0",
 );
 const listingIcon = pinIcon(
-  renderToStaticMarkup(<FaEgg title="Egg listing" size={16} color="#fff" />),
+  renderToStaticMarkup(<TbEgg title="Egg listing" size={16} color="#fff" />),
   "#dd6b20",
 );
 
@@ -46,6 +45,8 @@ interface MapViewProps {
   listings: ListingNear[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  fitGermany?: boolean;
+  showUserMarker?: boolean;
 }
 
 export default function MapView({
@@ -53,20 +54,24 @@ export default function MapView({
   listings,
   selectedId,
   onSelect,
+  fitGermany = false,
+  showUserMarker = true,
 }: MapViewProps) {
   return (
     <Box w="full" h="full">
       <MapContainer
         center={[center.lat, center.lng]}
-        zoom={12}
+        zoom={fitGermany ? 6 : 12}
         style={{ height: "100%", width: "100%" }}
       >
-        <Recenter center={center} />
+        <Recenter center={center} fitGermany={fitGermany} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
-        <Marker position={[center.lat, center.lng]} icon={userLocationIcon} />
+        {showUserMarker ? (
+          <Marker position={[center.lat, center.lng]} icon={userLocationIcon} />
+        ) : null}
         {listings.map((listing) => (
           <Marker
             key={listing.id}

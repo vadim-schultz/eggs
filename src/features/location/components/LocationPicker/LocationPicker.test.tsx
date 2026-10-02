@@ -59,24 +59,59 @@ describe("LocationPicker", () => {
     ).toHaveLength(0);
   });
 
-  it("manual lat/lng inputs still call onConfirm with parsed numbers", async () => {
+  it("debounces geocode search for the query prop", async () => {
     searchPlaceMock.mockResolvedValue([]);
-    const { onConfirm } = renderLocationPicker("Nowhere");
+    render(
+      <ChakraProvider value={defaultSystem}>
+        <LocationPicker
+          query="Berlin"
+          onQueryChange={() => {}}
+          confirmed={null}
+          onConfirm={() => {}}
+        />
+      </ChakraProvider>,
+    );
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(500);
     });
 
-    fireEvent.change(screen.getByLabelText("Breitengrad"), {
-      target: { value: "52.52" },
-    });
-    fireEvent.change(screen.getByLabelText("Längengrad"), {
-      target: { value: "13.405" },
-    });
-    fireEvent.click(
-      screen.getByRole("button", { name: "Koordinaten verwenden" }),
+    expect(searchPlaceMock).toHaveBeenCalledWith("Berlin");
+  });
+
+  it("selecting a combobox result calls onConfirm with coordinates", async () => {
+    searchPlaceMock.mockResolvedValue([
+      { label: "Berlin, Germany", lat: 52.52, lng: 13.405 },
+    ]);
+    const onConfirm = vi.fn();
+    render(
+      <ChakraProvider value={defaultSystem}>
+        <LocationPicker
+          query="Berlin"
+          onQueryChange={() => {}}
+          confirmed={null}
+          onConfirm={onConfirm}
+        />
+      </ChakraProvider>,
     );
 
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    fireEvent.click(screen.getByText("Berlin, Germany"));
+
     expect(onConfirm).toHaveBeenCalledWith({ lat: 52.52, lng: 13.405 });
+  });
+
+  it("does not render manual latitude and longitude fields", async () => {
+    searchPlaceMock.mockResolvedValue([]);
+    renderLocationPicker("Nowhere");
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    expect(screen.queryByLabelText("Breitengrad")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Längengrad")).not.toBeInTheDocument();
   });
 });

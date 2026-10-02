@@ -82,6 +82,8 @@ describe("BuyerTab", () => {
     useGeolocationMock.mockReturnValue({
       center: { lat: 52.52, lng: 13.405 },
       loading: false,
+      geoGranted: true,
+      requestLocation: vi.fn(),
     });
     useAppDialogMock.mockReturnValue({
       open: null,
@@ -101,9 +103,8 @@ describe("BuyerTab", () => {
     renderBuyerTab();
 
     expect(screen.getByText("Umkreis")).toBeInTheDocument();
-    expect(
-      screen.getByText("Ort (z. B. „Innenstadt, beim Markt“)"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Ort")).toBeInTheDocument();
+    expect(screen.queryByText("Oder einen anderen Ort suchen")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Mit Google anmelden" }),
     ).toBeInTheDocument();
@@ -132,7 +133,7 @@ describe("BuyerTab", () => {
 
     renderBuyerTab();
 
-    fireEvent.click(screen.getByRole("button", { name: /Downtown/ }));
+    fireEvent.click(screen.getByRole("button", { name: /4,00/ }));
 
     expect(screen.getByTestId("background-map")).toHaveTextContent(
       "selected: listing-1",
@@ -155,7 +156,7 @@ describe("BuyerTab", () => {
 
     renderBuyerTab();
 
-    fireEvent.click(screen.getByRole("button", { name: /Downtown/ }));
+    fireEvent.click(screen.getByRole("button", { name: /4,00/ }));
 
     expect(openDetailDialog).toHaveBeenCalledWith("listing-1");
   });

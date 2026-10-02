@@ -1,9 +1,12 @@
+import { act } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 
+import { germanyCenter } from "@/lib/geo/constants";
+
 import { useGeolocation } from "./useGeolocation";
 
-const FALLBACK = { lat: 52.52, lng: 13.405 };
+const FALLBACK = germanyCenter();
 
 function stubGeolocation(geolocation: Geolocation) {
   Object.defineProperty(globalThis.navigator, "geolocation", {
@@ -33,6 +36,7 @@ describe("useGeolocation", () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.center).toEqual({ lat: 48.1, lng: 11.6 });
+    expect(result.current.geoGranted).toBe(true);
   });
 
   it("resolves to the fallback center when denied", async () => {
@@ -49,5 +53,28 @@ describe("useGeolocation", () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.center).toEqual(FALLBACK);
+    expect(result.current.geoGranted).toBe(false);
+  });
+
+  it("requestLocation re-invokes getCurrentPosition", async () => {
+    let calls = 0;
+    stubGeolocation({
+      getCurrentPosition: (success: PositionCallback) => {
+        calls += 1;
+        success({
+          coords: { latitude: 50, longitude: 10 },
+        } as GeolocationPosition);
+      },
+    } as unknown as Geolocation);
+
+    const { result } = renderHook(() => useGeolocation(FALLBACK));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(calls).toBe(1);
+
+    act(() => {
+      result.current.requestLocation();
+    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(calls).toBe(2);
   });
 });

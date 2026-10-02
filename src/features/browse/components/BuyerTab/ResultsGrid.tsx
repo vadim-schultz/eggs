@@ -1,8 +1,9 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 
 import ListingCard from "@/features/listings/components/ListingCard";
 import type { ListingNear } from "@/features/listings/types/listing";
-import { t } from "@/i18n/t";
+
+import BrowseEmptyState from "./BrowseEmptyState";
 
 export default function ResultsGrid({
   listings,
@@ -14,7 +15,7 @@ export default function ResultsGrid({
   onSelect: (id: string) => void;
 }) {
   if (listings.length === 0) {
-    return <Text>{t("home.empty")}</Text>;
+    return <BrowseEmptyState />;
   }
 
   return (

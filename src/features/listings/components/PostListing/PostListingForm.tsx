@@ -1,12 +1,13 @@
 import type { FormEvent } from "react";
-import { Button, Field, Heading, Stack, Text } from "@chakra-ui/react";
+import { Button, Field, Stack, Text, Textarea } from "@chakra-ui/react";
 
+import KeyValueRow from "@/components/ui/KeyValueRow";
 import LocationPicker from "@/features/location/components/LocationPicker";
-import UnitSelect from "@/features/listings/components/UnitSelect";
 import type { ListingInputErrors } from "@/features/listings/types/listingInput";
 import type { PostListingFormState } from "@/features/listings/utils/postListingMappers";
 import { t } from "@/i18n/t";
 
+import EggAmountControl from "./EggAmountControl";
 import PostFormField from "./PostFormField";
 
 export interface PostListingFormProps {
@@ -19,6 +20,7 @@ export interface PostListingFormProps {
     value: PostListingFormState[K],
   ) => void;
   onSubmit: (event: FormEvent) => void;
+  onRequestGeolocation?: () => void;
 }
 
 export default function PostListingForm({
@@ -28,35 +30,26 @@ export default function PostListingForm({
   submitting,
   onFieldChange,
   onSubmit,
+  onRequestGeolocation,
 }: PostListingFormProps) {
-  function changeText(key: "eggCount" | "priceEuros" | "note" | "contactNote") {
-    return (value: string) => onFieldChange(key, value);
-  }
-
   return (
     <form onSubmit={onSubmit}>
       <Stack gap="4">
-        <Heading>{t("post.heading")}</Heading>
-
-        <PostFormField
-          labelKey="post.eggCount.label"
-          type="number"
-          value={form.eggCount}
-          errorKey={errors.eggCount}
-          onChange={changeText("eggCount")}
-        />
-
-        <UnitSelect
-          value={form.unit}
-          onChange={(value) => onFieldChange("unit", value)}
-        />
+        <KeyValueRow label={t("listing.count.label")}>
+          <EggAmountControl
+            unit={form.unit}
+            eggCount={form.eggCount}
+            onUnitChange={(value) => onFieldChange("unit", value)}
+            onEggCountChange={(value) => onFieldChange("eggCount", value)}
+          />
+        </KeyValueRow>
 
         <PostFormField
           labelKey="post.price.label"
           type="number"
           value={form.priceEuros}
           errorKey={errors.priceCents}
-          onChange={changeText("priceEuros")}
+          onChange={(value) => onFieldChange("priceEuros", value)}
         />
 
         <LocationPicker
@@ -64,27 +57,30 @@ export default function PostListingForm({
           onQueryChange={(value) => onFieldChange("locationQuery", value)}
           confirmed={form.pin}
           onConfirm={(pin) => onFieldChange("pin", pin)}
+          onRequestGeolocation={onRequestGeolocation}
         />
+
         {errors.locationLabel ? (
           <Field.Root invalid>
             <Field.ErrorText>{t(errors.locationLabel)}</Field.ErrorText>
           </Field.Root>
         ) : null}
 
-        <PostFormField
-          labelKey="post.note.label"
-          value={form.note}
-          multiline
-          onChange={changeText("note")}
-        />
-
-        <PostFormField
-          labelKey="post.contactNote.label"
-          value={form.contactNote}
-          errorKey={errors.contactNote}
-          multiline
-          onChange={changeText("contactNote")}
-        />
+        <KeyValueRow label={t("post.contactNote.label")}>
+          <Field.Root invalid={Boolean(errors.contactNote)} w="full">
+            <Textarea
+              aria-label={t("post.contactNote.label")}
+              value={form.contactNote}
+              onChange={(event) =>
+                onFieldChange("contactNote", event.target.value)
+              }
+              rows={3}
+            />
+            {errors.contactNote ? (
+              <Field.ErrorText>{t(errors.contactNote)}</Field.ErrorText>
+            ) : null}
+          </Field.Root>
+        </KeyValueRow>
 
         {submitError && <Text color="fg.error">{t("post.submitError")}</Text>}
 

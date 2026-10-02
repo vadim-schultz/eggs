@@ -13,12 +13,11 @@ import { validateListingInput } from "@/features/listings/utils/validateListingI
 import { useAsyncAction } from "@/lib/async/useAsyncAction";
 
 const initialFormState: PostListingFormState = {
-  eggCount: "",
+  eggCount: 1,
   unit: "dozen",
   priceEuros: "",
   locationQuery: "",
   pin: null,
-  note: "",
   contactNote: "",
 };
 

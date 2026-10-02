@@ -9,7 +9,11 @@ export default function AppShellPanel() {
         <Popover.Content maxW="sm" maxH="calc(100vh - 3rem)">
           <Popover.Arrow />
           <Popover.Header>
-            <Popover.Title fontSize="4xl" textAlign="center">
+            <Popover.Title
+              fontSize="4xl"
+              fontFamily="heading"
+              textAlign="center"
+            >
               Eierbauer
             </Popover.Title>
           </Popover.Header>

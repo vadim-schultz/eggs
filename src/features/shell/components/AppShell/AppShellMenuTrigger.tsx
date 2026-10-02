@@ -1,4 +1,5 @@
 import { IconButton, Popover } from "@chakra-ui/react";
+import { TbEggs } from "react-icons/tb";
 
 export default function AppShellMenuTrigger() {
   return (
@@ -13,14 +14,13 @@ export default function AppShellMenuTrigger() {
         boxSize="52px"
         minW="52px"
         padding="0"
-        fontSize="46px"
-        lineHeight="1"
+        fontSize="28px"
         bg="white"
         borderWidth="1px"
         borderColor="gray.200"
         boxShadow="sm"
       >
-        🪺
+        <TbEggs />
       </IconButton>
     </Popover.Trigger>
   );

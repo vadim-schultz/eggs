@@ -29,25 +29,18 @@ async function confirmLocation(query = "Berlin") {
   searchPlaceMock.mockResolvedValue([
     { label: "Berlin, Germany", lat: 52.52, lng: 13.405 },
   ]);
-  fireEvent.change(
-    screen.getByLabelText("Ort (z. B. „Innenstadt, beim Markt“)"),
-    { target: { value: query } },
-  );
+  fireEvent.change(screen.getByPlaceholderText("Ort suchen …"), {
+    target: { value: query },
+  });
   await act(async () => {
     await vi.advanceTimersByTimeAsync(500);
   });
-  fireEvent.click(screen.getByRole("button", { name: "Berlin, Germany" }));
+  expect(searchPlaceMock).toHaveBeenCalledWith(query);
+  fireEvent.click(screen.getByText("Berlin, Germany"));
 }
 
 async function selectUnit(label: string) {
-  fireEvent.click(screen.getByRole("combobox", { name: "Einheit" }));
-  await act(async () => {
-    await vi.advanceTimersByTimeAsync(0);
-  });
-  fireEvent.click(screen.getByText(label));
-  await act(async () => {
-    await vi.advanceTimersByTimeAsync(0);
-  });
+  fireEvent.click(screen.getByRole("button", { name: label }));
 }
 
 describe("PostListing", () => {
@@ -87,9 +80,6 @@ describe("PostListing", () => {
     });
 
     expect(
-      screen.getByText("Die Anzahl muss größer als 0 sein."),
-    ).toHaveAttribute("data-part", "error-text");
-    expect(
       screen.getByText("Bitte gib einen Kontakthinweis an."),
     ).toHaveAttribute("data-part", "error-text");
     expect(
@@ -105,9 +95,6 @@ describe("PostListing", () => {
     const onCreated = vi.fn();
     renderPostListing(onCreated);
 
-    fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
-      target: { value: "12" },
-    });
     fireEvent.change(screen.getByLabelText("Preis (€)"), {
       target: { value: "4" },
     });
@@ -124,12 +111,12 @@ describe("PostListing", () => {
     });
 
     expect(rpcMock).toHaveBeenCalledWith("create_listing", {
-      p_egg_count: 12,
+      p_egg_count: 1,
       p_unit: "dozen",
       p_price_cents: 400,
       p_lat: 52.52,
       p_lng: 13.405,
-      p_location_label: "Berlin",
+      p_location_label: "Berlin, Germany",
       p_note: null,
       p_contact_note: "Ring the bell",
     });
@@ -142,15 +129,10 @@ describe("PostListing", () => {
     expect(container.querySelectorAll("select")).toHaveLength(0);
   });
 
-  it("has no native <label> elements", () => {
-    const { container } = renderPostListing();
+  it("does not render a Notiz field", () => {
+    renderPostListing();
 
-    // UnitSelect's Chakra Select.Label uses data-scope="select".
-    expect(
-      container.querySelectorAll(
-        'label:not([data-scope="field"]):not([data-scope="select"])',
-      ),
-    ).toHaveLength(0);
+    expect(screen.queryByLabelText("Notiz (optional)")).not.toBeInTheDocument();
   });
 
   it("shows submit error when create_listing fails", async () => {
@@ -158,9 +140,6 @@ describe("PostListing", () => {
     const onCreated = vi.fn();
     renderPostListing(onCreated);
 
-    fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
-      target: { value: "12" },
-    });
     fireEvent.change(screen.getByLabelText("Preis (€)"), {
       target: { value: "4" },
     });
@@ -188,9 +167,6 @@ describe("PostListing", () => {
     rpcMock.mockResolvedValue({ data: { id: "listing-1" }, error: null });
     renderPostListing();
 
-    fireEvent.change(screen.getByLabelText("Anzahl Eier"), {
-      target: { value: "12" },
-    });
     fireEvent.change(screen.getByLabelText("Preis (€)"), {
       target: { value: "4" },
     });
