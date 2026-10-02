@@ -1,6 +1,8 @@
 import { IconButton, Popover } from "@chakra-ui/react";
 import { TbMenu2 } from "react-icons/tb";
 
+import { floatingSurface } from "@/features/shell/theme/floatingSurface";
+
 export default function AppShellMenuTrigger() {
   return (
     <Popover.Trigger asChild>
@@ -10,15 +12,11 @@ export default function AppShellMenuTrigger() {
         top="1.5rem"
         right="1.5rem"
         zIndex="1"
-        rounded="full"
+        {...floatingSurface}
         boxSize="52px"
         minW="52px"
         padding="0"
         fontSize="28px"
-        bg="white"
-        borderWidth="1px"
-        borderColor="gray.200"
-        boxShadow="sm"
       >
         <TbMenu2 />
       </IconButton>
