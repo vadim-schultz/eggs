@@ -26,7 +26,6 @@ function UnitChip({
     <Button
       size="lg"
       rounded="full"
-      flex="1"
       colorPalette={pressed ? "orange" : "gray"}
       variant={pressed ? "solid" : "subtle"}
       aria-pressed={pressed}
@@ -45,7 +44,7 @@ export default function EggAmountControl({
 }: EggAmountControlProps) {
   return (
     <Stack gap="3" w="full">
-      <Flex gap="2">
+      <Flex gap="2" justifyContent="center" data-testid="unit-chip-row">
         <UnitChip
           label={t("post.unit.each")}
           pressed={unit === "each"}
