@@ -13,7 +13,7 @@ export interface PostListingFormState {
 export function toListingInput(form: PostListingFormState): ListingInput {
   return {
     eggCount: form.eggCount,
-    unit: form.unit,
+    unit: "each",
     priceCents: Math.round(Number(form.priceEuros || "0") * 100),
     locationLabel: form.locationQuery,
     note: "",

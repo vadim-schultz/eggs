@@ -14,7 +14,7 @@ import { useAsyncAction } from "@/lib/async/useAsyncAction";
 
 const initialFormState: PostListingFormState = {
   eggCount: 1,
-  unit: "dozen",
+  unit: "each",
   priceEuros: "",
   locationQuery: "",
   pin: null,

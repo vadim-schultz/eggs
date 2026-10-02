@@ -34,14 +34,10 @@ export default function PostListingForm({
   return (
     <form onSubmit={onSubmit}>
       <Stack gap="4">
-        <KeyValueRow label={t("listing.count.label")}>
-          <EggAmountControl
-            unit={form.unit}
-            eggCount={form.eggCount}
-            onUnitChange={(value) => onFieldChange("unit", value)}
-            onEggCountChange={(value) => onFieldChange("eggCount", value)}
-          />
-        </KeyValueRow>
+        <EggAmountControl
+          eggCount={form.eggCount}
+          onEggCountChange={(value) => onFieldChange("eggCount", value)}
+        />
 
         <KeyValueRow label={t("listing.price.label")}>
           <Field.Root invalid={Boolean(errors.priceCents)} w="full">
