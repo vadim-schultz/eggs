@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
@@ -121,6 +121,33 @@ describe("PostListing", () => {
       p_contact_note: "Ring the bell",
     });
     expect(onCreated).toHaveBeenCalledWith("listing-1");
+  });
+
+  it("renders price in KeyValueRow and Ort row like buyer search", () => {
+    renderPostListing();
+
+    const rows = screen.getAllByTestId("key-value-row");
+    const priceRows = rows.filter((row) => within(row).queryByText("Preis"));
+    expect(priceRows).toHaveLength(1);
+    expect(
+      within(priceRows[0]).getByLabelText("Preis (€)"),
+    ).toBeInTheDocument();
+
+    const ortRows = rows.filter((row) => within(row).queryByText("Ort"));
+    expect(ortRows).toHaveLength(1);
+    expect(
+      within(ortRows[0]).getByPlaceholderText("Ort suchen …"),
+    ).toBeInTheDocument();
+  });
+
+  it("does not position unit chips with absolute layout", () => {
+    renderPostListing();
+
+    const chipRow = screen.getByTestId("unit-chip-row");
+    expect(window.getComputedStyle(chipRow).position).not.toBe("absolute");
+    for (const element of chipRow.querySelectorAll("*")) {
+      expect(window.getComputedStyle(element).position).not.toBe("absolute");
+    }
   });
 
   it("unit field has no native <select> element", () => {

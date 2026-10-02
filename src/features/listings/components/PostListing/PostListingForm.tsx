@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { Button, Field, Stack, Text, Textarea } from "@chakra-ui/react";
+import { Button, Field, Input, Stack, Text, Textarea } from "@chakra-ui/react";
 
 import KeyValueRow from "@/components/ui/KeyValueRow";
 import LocationPicker from "@/features/location/components/LocationPicker";
@@ -8,7 +8,6 @@ import type { PostListingFormState } from "@/features/listings/utils/postListing
 import { t } from "@/i18n/t";
 
 import EggAmountControl from "./EggAmountControl";
-import PostFormField from "./PostFormField";
 
 export interface PostListingFormProps {
   form: PostListingFormState;
@@ -44,21 +43,32 @@ export default function PostListingForm({
           />
         </KeyValueRow>
 
-        <PostFormField
-          labelKey="post.price.label"
-          type="number"
-          value={form.priceEuros}
-          errorKey={errors.priceCents}
-          onChange={(value) => onFieldChange("priceEuros", value)}
-        />
+        <KeyValueRow label={t("listing.price.label")}>
+          <Field.Root invalid={Boolean(errors.priceCents)} w="full">
+            <Input
+              type="number"
+              aria-label={t("post.price.label")}
+              value={form.priceEuros}
+              onChange={(event) =>
+                onFieldChange("priceEuros", event.target.value)
+              }
+            />
+            {errors.priceCents ? (
+              <Field.ErrorText>{t(errors.priceCents)}</Field.ErrorText>
+            ) : null}
+          </Field.Root>
+        </KeyValueRow>
 
-        <LocationPicker
-          query={form.locationQuery}
-          onQueryChange={(value) => onFieldChange("locationQuery", value)}
-          confirmed={form.pin}
-          onConfirm={(pin) => onFieldChange("pin", pin)}
-          onRequestGeolocation={onRequestGeolocation}
-        />
+        <KeyValueRow label={t("post.location.shortLabel")}>
+          <LocationPicker
+            query={form.locationQuery}
+            onQueryChange={(value) => onFieldChange("locationQuery", value)}
+            confirmed={form.pin}
+            onConfirm={(pin) => onFieldChange("pin", pin)}
+            onRequestGeolocation={onRequestGeolocation}
+            embedInRow
+          />
+        </KeyValueRow>
 
         {errors.locationLabel ? (
           <Field.Root invalid>
