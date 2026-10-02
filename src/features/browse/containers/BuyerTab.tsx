@@ -4,16 +4,13 @@ import { Stack } from "@chakra-ui/react";
 import { useAppDialog } from "@/features/shell/context/appDialog";
 import { usePublishBackgroundMap } from "@/features/shell/context/backgroundMap";
 import AuthButton from "@/features/auth/components/AuthButton";
-import {
-  BuyerSearchRows,
-  ResultsGrid,
-} from "@/features/browse/components/BuyerTab";
+import { BuyerSearchRows } from "@/features/browse/components/BuyerTab";
 import { useGeolocation } from "@/features/browse/hooks/useGeolocation";
 import { useListingsNear } from "@/features/browse/hooks/useListingsNear";
 import type { ConfirmedPin } from "@/features/location/types/place";
 import { DEFAULT_MAP_CENTER } from "@/lib/geo/constants";
 
-const DEFAULT_RADIUS_M = 15000;
+const DEFAULT_RADIUS_M = 5000;
 
 export default function BuyerTab() {
   const {
@@ -68,11 +65,6 @@ export default function BuyerTab() {
         manualCenter={manualCenter}
         onConfirmLocation={setManualCenter}
         onRequestGeolocation={handleRequestGeolocation}
-      />
-      <ResultsGrid
-        listings={listings}
-        selectedId={selectedId}
-        onSelect={selectListing}
       />
     </Stack>
   );

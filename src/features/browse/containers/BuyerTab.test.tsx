@@ -1,11 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
-import {
-  BackgroundMapProvider,
-  useBackgroundMapState,
-} from "@/features/shell/context/backgroundMap";
+import { BackgroundMapProvider } from "@/features/shell/context/backgroundMap";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 import BuyerTab from "./BuyerTab";
@@ -35,13 +32,6 @@ vi.mock("@/features/shell/context/appDialog", () => ({
   useAppDialog: useAppDialogMock,
 }));
 
-function BackgroundMapProbe() {
-  const { selectedId } = useBackgroundMapState();
-  return (
-    <div data-testid="background-map">selected: {selectedId ?? "none"}</div>
-  );
-}
-
 function listing(overrides: Partial<ListingNear> = {}): ListingNear {
   return {
     id: "listing-1",
@@ -66,7 +56,6 @@ function renderBuyerTab() {
     <ChakraProvider value={defaultSystem}>
       <BackgroundMapProvider>
         <BuyerTab />
-        <BackgroundMapProbe />
       </BackgroundMapProvider>
     </ChakraProvider>,
   );
@@ -93,7 +82,7 @@ describe("BuyerTab", () => {
     });
   });
 
-  it("renders the radius selector, location picker, and auth control", () => {
+  it("renders the Umkreis control with default radius 5 km", () => {
     useListingsNearMock.mockReturnValue({
       listings: [],
       loading: false,
@@ -103,13 +92,32 @@ describe("BuyerTab", () => {
     renderBuyerTab();
 
     expect(screen.getByText("Umkreis")).toBeInTheDocument();
-    expect(screen.getByText("Ort")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Mit Google anmelden" }),
+      document.querySelector('[data-scope="slider"][data-part="root"]'),
     ).toBeInTheDocument();
+    expect(screen.getByText("5 km")).toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Umkreis" })).toBeNull();
   });
 
-  it("renders a slider (not a select) for Umkreis with default 15 km", () => {
+  it("does not render listing cards or ResultsGrid in the panel", () => {
+    useListingsNearMock.mockReturnValue({
+      listings: [listing({ id: "listing-1" }), listing({ id: "listing-2" })],
+      loading: false,
+      error: false,
+    });
+
+    renderBuyerTab();
+
+    expect(screen.queryByTestId("results-grid")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /4,00/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Keine Angebote in diesem Umkreis gefunden."),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders the location picker and auth control", () => {
     useListingsNearMock.mockReturnValue({
       listings: [],
       loading: false,
@@ -118,11 +126,10 @@ describe("BuyerTab", () => {
 
     renderBuyerTab();
 
+    expect(screen.getByText("Ort")).toBeInTheDocument();
     expect(
-      document.querySelector('[data-scope="slider"][data-part="root"]'),
+      screen.getByRole("button", { name: "Mit Google anmelden" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("15 km")).toBeInTheDocument();
-    expect(screen.queryByRole("combobox", { name: "Umkreis" })).toBeNull();
   });
 
   it("does not render the searchInstead copy", () => {
@@ -137,71 +144,5 @@ describe("BuyerTab", () => {
     expect(
       screen.queryByText("Oder einen anderen Ort suchen"),
     ).not.toBeInTheDocument();
-  });
-
-  it("renders listings in a grid, not a single-column stack", () => {
-    useListingsNearMock.mockReturnValue({
-      listings: [listing({ id: "listing-1" }), listing({ id: "listing-2" })],
-      loading: false,
-      error: false,
-    });
-
-    renderBuyerTab();
-
-    expect(screen.getByTestId("results-grid")).toHaveStyle({
-      display: "grid",
-    });
-  });
-
-  it("selecting a listing card calls onSelect with its id", () => {
-    useListingsNearMock.mockReturnValue({
-      listings: [listing({ id: "listing-1" })],
-      loading: false,
-      error: false,
-    });
-
-    renderBuyerTab();
-
-    fireEvent.click(screen.getByRole("button", { name: /4,00/ }));
-
-    expect(screen.getByTestId("background-map")).toHaveTextContent(
-      "selected: listing-1",
-    );
-  });
-
-  it("clicking a grid card opens the detail dialog for that listing", () => {
-    useListingsNearMock.mockReturnValue({
-      listings: [listing({ id: "listing-1" })],
-      loading: false,
-      error: false,
-    });
-    const openDetailDialog = vi.fn();
-    useAppDialogMock.mockReturnValue({
-      open: null,
-      openPostDialog: vi.fn(),
-      openDetailDialog,
-      closeDialog: vi.fn(),
-    });
-
-    renderBuyerTab();
-
-    fireEvent.click(screen.getByRole("button", { name: /4,00/ }));
-
-    expect(openDetailDialog).toHaveBeenCalledWith("listing-1");
-  });
-
-  it("shows the empty state when there are no listings in range", () => {
-    useListingsNearMock.mockReturnValue({
-      listings: [],
-      loading: false,
-      error: false,
-    });
-
-    renderBuyerTab();
-
-    expect(screen.queryByTestId("results-grid")).not.toBeInTheDocument();
-    expect(
-      screen.getByText("Keine Angebote in diesem Umkreis gefunden."),
-    ).toBeInTheDocument();
   });
 });
