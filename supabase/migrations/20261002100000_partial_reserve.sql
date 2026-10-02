@@ -1,5 +1,11 @@
 -- Partial reserve: reservation quantity + inventory on listing row (panel-ux ch.9 / D9).
 
+alter table public.listing
+  drop constraint listing_egg_count_check;
+
+alter table public.listing
+  add constraint listing_egg_count_check check (egg_count >= 0);
+
 alter table public.reservation
   add column egg_count int,
   add column unit text;
