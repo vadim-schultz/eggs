@@ -1,7 +1,7 @@
 import { Button, Flex, Icon, Slider, Stack } from "@chakra-ui/react";
 import { TbEgg } from "react-icons/tb";
 
-import type { Unit } from "@/features/listings/components/UnitSelect";
+import type { Unit } from "@/features/listings/types";
 import { halfDozenIconCount } from "@/features/listings/utils/halfDozenIconCount";
 import { t } from "@/i18n/t";
 

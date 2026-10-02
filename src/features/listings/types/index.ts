@@ -9,3 +9,4 @@ export type {
   ListingInput,
   ListingInputErrors,
 } from "./listingInput";
+export type { Unit } from "./unit";
