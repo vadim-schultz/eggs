@@ -1,9 +1,10 @@
 import { Stack } from "@chakra-ui/react";
 
-import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import EggQuantityRow from "@/components/ui/EggQuantityRow";
 import SliderWithValue from "@/components/ui/SliderWithValue";
 
 import type { ListingUnit } from "@/features/listings/types/listing";
+import { displayEggCount } from "@/features/listings/utils/displayEggCount";
 
 export interface ReserveAmountControlProps {
   unit: ListingUnit;
@@ -12,7 +13,7 @@ export interface ReserveAmountControlProps {
   onEggCountChange: (count: number) => void;
 }
 
-/** Slider and braille preview for partial listing reservation. */
+/** Slider and egg row preview for partial listing reservation. */
 export default function ReserveAmountControl({
   unit,
   maxEggCount,
@@ -21,7 +22,7 @@ export default function ReserveAmountControl({
 }: ReserveAmountControlProps) {
   return (
     <Stack gap="3" w="full">
-      <BrailleQuantityRow eggCount={eggCount} unit={unit} />
+      <EggQuantityRow count={displayEggCount(eggCount, unit)} />
       <SliderWithValue
         min={1}
         max={maxEggCount}

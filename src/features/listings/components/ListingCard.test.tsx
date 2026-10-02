@@ -3,10 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Listing } from "@/features/listings/types/listing";
-import {
-  renderEggQuantityBraille,
-  totalEggsFromListing,
-} from "@/lib/braille/eggQuantity";
 
 import ListingCard from "./ListingCard";
 
@@ -38,16 +34,12 @@ function renderCard(listing: Listing, selected = false) {
 }
 
 describe("ListingCard", () => {
-  it("shows Braille from listing count and KV labels for price and status", () => {
+  it("shows egg quantity row and KV labels for price and status", () => {
     const listing = activeListing();
     renderCard(listing);
 
-    const expectedBraille = renderEggQuantityBraille(
-      totalEggsFromListing(listing.egg_count, listing.unit),
-    );
-    expect(screen.getByTestId("braille-quantity-row")).toHaveTextContent(
-      expectedBraille,
-    );
+    expect(screen.getByTestId("egg-quantity-row")).toBeInTheDocument();
+    expect(screen.getAllByTestId("egg-quantity-outline")).toHaveLength(7);
 
     const rows = screen.getAllByTestId("key-value-row");
     expect(rows).toHaveLength(3);
