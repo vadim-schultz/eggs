@@ -1,4 +1,6 @@
-import { Button, Flex, Icon, Slider, Stack } from "@chakra-ui/react";
+import { Button, Flex, Icon, Stack } from "@chakra-ui/react";
+
+import SliderWithValue from "@/components/ui/SliderWithValue";
 import { TbEgg } from "react-icons/tb";
 
 import type { Unit } from "@/features/listings/types";
@@ -63,21 +65,13 @@ export default function EggAmountControl({
           <Icon key={index} as={TbEgg} boxSize="5" color="orange.500" />
         ))}
       </Flex>
-      <Slider.Root
+      <SliderWithValue
         min={1}
         max={12}
         step={1}
-        value={[eggCount]}
-        onValueChange={(details) => onEggCountChange(details.value[0] ?? 1)}
-        w="full"
-      >
-        <Slider.Control>
-          <Slider.Track>
-            <Slider.Range />
-          </Slider.Track>
-          <Slider.Thumbs />
-        </Slider.Control>
-      </Slider.Root>
+        value={eggCount}
+        onValueChange={onEggCountChange}
+      />
     </Stack>
   );
 }
