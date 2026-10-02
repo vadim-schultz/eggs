@@ -1,5 +1,7 @@
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 
+import BrailleQuantityRow from "@/components/ui/BrailleQuantityRow";
+import KeyValueRow from "@/components/ui/KeyValueRow";
 import StatusBadge from "@/features/listings/components/StatusBadge";
 import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
@@ -20,20 +22,21 @@ export default function ListingDetailView({
   listing,
   onChange,
 }: ListingDetailViewProps) {
+  const amountLabel = `${listing.egg_count} ${t(unitLabelKey(listing.unit))}`;
+  const priceLabel = formatPrice(listing.price_cents, listing.currency);
+
   return (
     <Stack gap="2">
-      <Heading>{listing.location_label}</Heading>
-      <Text>
-        {t("listing.count.label")}: {listing.egg_count}{" "}
-        {t(unitLabelKey(listing.unit))}
-      </Text>
-      <Text>
-        {t("listing.price.label")}:{" "}
-        {formatPrice(listing.price_cents, listing.currency)}
-      </Text>
-      <Text>
-        {t("listing.status.label")}: <StatusBadge status={listing.status} />
-      </Text>
+      <BrailleQuantityRow eggCount={listing.egg_count} unit={listing.unit} />
+      <KeyValueRow label={t("listing.count.label")}>
+        <Text fontSize="sm">{amountLabel}</Text>
+      </KeyValueRow>
+      <KeyValueRow label={t("listing.price.label")}>
+        <Text fontSize="sm">{priceLabel}</Text>
+      </KeyValueRow>
+      <KeyValueRow label={t("listing.status.label")}>
+        <StatusBadge status={listing.status} />
+      </KeyValueRow>
       <ReserveButton listing={listing} onChange={onChange} />
       {/* key={listing.status}: a successful reserve/cancel changes who RLS
           reveals the contact note to, but listing.id never changes — remount
