@@ -168,9 +168,10 @@ async function main() {
   await check(
     "user B can insert a reservation on A's active listing",
     async () => {
-      const { error } = await userB
-        .from("reservation")
-        .insert({ listing_id: listingId, buyer_id: buyerBId });
+      const { error } = await userB.rpc("reserve_listing", {
+        p_listing_id: listingId,
+        p_egg_count: 12,
+      });
       assert(!error, `unexpected error: ${error?.message}`);
     },
   );
@@ -197,7 +198,12 @@ async function main() {
       const { data: userCData } = await userC.auth.getUser();
       const { error } = await userC
         .from("reservation")
-        .insert({ listing_id: listingId, buyer_id: userCData.user!.id });
+        .insert({
+          listing_id: listingId,
+          buyer_id: userCData.user!.id,
+          egg_count: 12,
+          unit: "dozen",
+        });
       assert(!!error, "expected the second active reservation to be rejected");
     },
   );

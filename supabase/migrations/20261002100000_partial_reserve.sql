@@ -41,6 +41,41 @@ begin
 end;
 $$;
 
+-- Buyers may not UPDATE `listing`; definer helper applies inventory in the RPC txn.
+create function public.decrement_listing_egg_count_for_reserve(
+  p_listing_id uuid,
+  p_egg_count int
+)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_unit text;
+  v_remaining int;
+begin
+  select unit, egg_count into v_unit, v_remaining
+  from public.listing
+  where id = p_listing_id and status = 'active'
+  for update;
+
+  if v_unit is null then
+    raise exception 'this listing was just reserved by someone else';
+  end if;
+
+  if p_egg_count > v_remaining then
+    raise exception 'invalid egg count';
+  end if;
+
+  update public.listing
+  set egg_count = egg_count - p_egg_count
+  where id = p_listing_id;
+
+  return v_unit;
+end;
+$$;
+
 drop function if exists public.reserve_listing(uuid);
 
 create function public.reserve_listing(p_listing_id uuid, p_egg_count int)
@@ -50,37 +85,21 @@ security invoker
 set search_path = public
 as $$
 declare
-  v_listing public.listing;
+  v_unit text;
   v_reservation public.reservation;
 begin
   if p_egg_count is null or p_egg_count <= 0 then
     raise exception 'invalid egg count';
   end if;
 
-  select * into v_listing
-  from public.listing
-  where id = p_listing_id
-  for update;
-
-  if v_listing.id is null then
-    raise exception 'listing not found';
-  end if;
-
-  if v_listing.status <> 'active' then
-    raise exception 'this listing was just reserved by someone else';
-  end if;
-
-  if p_egg_count > v_listing.egg_count then
-    raise exception 'invalid egg count';
-  end if;
-
-  update public.listing
-  set egg_count = egg_count - p_egg_count
-  where id = p_listing_id;
+  v_unit := public.decrement_listing_egg_count_for_reserve(
+    p_listing_id,
+    p_egg_count
+  );
 
   begin
     insert into public.reservation (listing_id, buyer_id, egg_count, unit)
-    values (p_listing_id, auth.uid(), p_egg_count, v_listing.unit)
+    values (p_listing_id, auth.uid(), p_egg_count, v_unit)
     returning * into v_reservation;
   exception
     when unique_violation or insufficient_privilege then
@@ -91,4 +110,5 @@ begin
 end;
 $$;
 
+grant execute on function public.decrement_listing_egg_count_for_reserve(uuid, int) to authenticated;
 grant execute on function public.reserve_listing(uuid, int) to authenticated;
