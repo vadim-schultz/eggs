@@ -1,6 +1,6 @@
 # Panel UX — Chapters
 
-Execute in order per [01-rollout.md](../01-rollout.md). Each chapter merges to **`main`** before the next starts.
+Execute in order per [01-rollout.md](../01-rollout.md). Each chapter merges into the suite **loop branch** before the next starts; the chief opens one MR to **`main`** when the suite is complete.
 
 | # | File |
 | --- | --- |

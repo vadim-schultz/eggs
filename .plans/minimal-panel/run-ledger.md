@@ -1,8 +1,8 @@
 # Minimal-panel run ledger
 
-Append one row per chapter after the chief of staff (or a human) merges a PR. The chapter-implementer **does not** edit this file.
+Append one row per chapter after the chief of staff (or a human) merges an MR/PR. The chapter-implementer **does not** edit this file.
 
-| chapter | branch | pr | local ci | github | merged | blocker |
+| chapter | branch | mr/pr | local ci | remote ci | merged | blocker |
 | --- | --- | --- | --- | --- | --- | --- |
 | 01-shell-chrome | feat/eggs-minimal-shell (not pushed) | none | n/a | n/a | already on main (277d992), no PR | none |
 | 02-geo-germany | feat/eggs-minimal-geo | https://github.com/vadim-schultz/eggs/pull/52 | pass | pass | merged | none |

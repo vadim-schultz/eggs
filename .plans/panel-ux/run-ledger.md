@@ -1,6 +1,10 @@
 # Panel UX run ledger
 
-Append one row per chapter after the chief of staff (or a human) merges a PR. The chapter-implementer **does not** edit this file.
+**Loop branch:** _(chief of staff fills)_
+**Release branch:** `main`
+**Release MR/PR:** _(filled when suite is complete)_
 
-| chapter | branch | pr | local ci | github | merged | blocker |
+Chapter MRs merge into the loop branch only. The chapter-implementer **does not** edit this file.
+
+| chapter | branch | mr/pr | local ci | remote ci | merged | blocker |
 | --- | --- | --- | --- | --- | --- | --- |

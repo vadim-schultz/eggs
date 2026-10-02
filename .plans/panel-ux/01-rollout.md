@@ -1,6 +1,6 @@
 ---
 name: Panel UX — Rollout
-overview: "Ten chapters: shell, KV, slider, buyer, map bounds, Braille, cards, seller, partial reserve, map popover. main-only git."
+overview: "Ten chapters: shell, KV, slider, buyer, map bounds, Braille, cards, seller, partial reserve, map popover. Loop branch + release MR."
 isProject: false
 ---
 
@@ -8,19 +8,21 @@ isProject: false
 
 **Architecture:** [00-architecture.md](00-architecture.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-Chief-of-staff runs chapters via [skills/chief-of-staff/SKILL.md](skills/chief-of-staff/SKILL.md).
+Chief-of-staff runs chapters via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/panel-ux`).
 
 ---
 
 ## Git invariants
 
+Orchestration: [`.cursor/skills/chief-of-staff/git-model.md`](../../.cursor/skills/chief-of-staff/git-model.md).
+
 | Invariant | Rule |
 | --- | --- |
-| **Base branch** | Always **`main`**. |
-| **Start of every chapter** | `git checkout main && git pull` then `git checkout -b <branch from chapter doc>`. |
-| **End of every chapter** | `./ci.sh` green → push → PR → merge to **`main`** ([`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md)). |
-| **Next chapter** | Chief of staff waits until prior chapter PR is **merged**; implementer syncs **`main`** again. |
-| **No integration branch** | Do not stack chapters on one long-lived feature branch. |
+| **Release branch** | **`main`** — plan docs live here; **one** MR/PR lands the full suite when all chapters are done. |
+| **Loop branch** | One branch for the whole suite (e.g. `feat/plans-panel-ux`); every chapter merges here first. |
+| **Start of every chapter** | `git checkout <loopBranch> && git pull` then `git checkout -b <branch from chapter doc>`. |
+| **End of every chapter** | `./ci.sh` green → MR/PR **into `<loopBranch>`** → merge ([`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md)). |
+| **End of suite** | Chief opens MR/PR **`<loopBranch>` → `main`** after all chapters are on the loop branch with green CI. |
 
 ---
 

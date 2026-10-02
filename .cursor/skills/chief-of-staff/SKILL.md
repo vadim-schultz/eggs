@@ -1,81 +1,123 @@
 ---
 name: chief-of-staff
 description: >-
-  Orchestrates the eggs frontend-structure chapters one at a time. Use only
-  when the user explicitly launches the chief of staff, /chief-of-staff, or
-  asks to run the frontend-structure chapter loop.
+  Orchestrates plan-suite chapters one at a time from `.plans/<suite>/` in any
+  repo using the standard plan-suite layout. Chapters merge via MR/PR into one
+  loop branch; a single release MR/PR to main lands the full suite. Detects
+  GitHub vs GitLab from origin. Use when the user launches chief of staff,
+  /chief-of-staff, or asks to run a chapter loop for a named plan suite or
+  `.plans/` folder.
 disable-model-invocation: true
 ---
 
 # Chief of staff
 
-You coordinate. You do not edit product code, commit, push, or merge.
+You coordinate. You do not edit product code or implement chapters.
 
-Each chapter is a new foreground `chapter-implementer` subagent. Never resume a previous one. Never run two at once. Do not use multitask or parallel workers.
+You **may** run git and host CLI steps for **loop bootstrap** and the **final release MR/PR** (orchestration only). Chapter work stays in `chapter-implementer` subagents.
+
+Each chapter is one new foreground `chapter-implementer` (`.cursor/agents/chapter-implementer.md`). Never resume a previous one. Never run two at once. Do not use multitask or parallel workers.
+
+Git model: [git-model.md](git-model.md) · Host details: [host-workflow.md](host-workflow.md)
+
+## Plan folder
+
+Layout: [plan-suite-layout.md](plan-suite-layout.md).
+
+The user names a suite or gives a path. Resolve to a repo-root plan folder:
+
+- Short name → `.plans/<name>/`.
+- Path under `.plans/` → use as given (trailing slash optional).
+
+Before the loop, confirm the folder looks like a plan suite: at minimum `01-rollout.md` and `chapters/` with chapter files. For executable loops, expect `00-architecture.md` and `gaps-and-decisions.md` too; if they are missing, warn the user but proceed when rollout and chapters are sufficient.
+
+If ambiguous, ask once; then stick to that folder for the whole run.
+
+## Loop branch
+
+One **loop branch** holds every chapter in the suite. Resolve its name once per run:
+
+1. User-provided name in the launch message.
+2. Else a **Loop branch** (or similar) line in `{planFolder}/01-rollout.md` if present.
+3. Else `feat/plans-<suite-short-name>` (last path segment of `{planFolder}`).
+
+Resolve **release branch** (final MR target) from rollout or default **`main`**.
+
+Record both names in `{planFolder}/run-ledger.md` when you create or update the ledger header.
+
+## Chapter order
+
+Read `{planFolder}/01-rollout.md`.
+
+1. If it has **## Execution order (chief of staff)**, use that numbered list in order. Resolve each link to an absolute chapter path under the repo root (paths are relative to the rollout file).
+2. Otherwise use the **## Chapters** table **Plan** column top to bottom.
+
+If order still unclear, stop and tell the user to add an execution-order section to the rollout doc.
+
+## Host workflow
+
+Detect GitHub vs GitLab from `origin` and follow [host-workflow.md](host-workflow.md). Pass **host**, **loopBranch**, and **releaseBranch** in every implementer prompt. **Do not use `gh` on GitLab repos.**
 
 ## Preflight
 
 Stop before the first chapter unless all of these hold:
 
-1. `gh auth status` succeeds for `github.com`.
-2. `git cat-file -e main:.plans/frontend-structure/chapters/README.md` succeeds. If it fails, the plans branch is not on `main`. Tell the user to merge `docs/eggs-frontend-structure-plans` first. Do not check out `main` yourself.
-3. Read `.plans/frontend-structure/run-ledger.md` if it exists. Skip any chapter whose ledger row says `merged`.
+1. **Reachability** — per [host-workflow.md](host-workflow.md): GitHub → `gh auth status` for `github.com`; GitLab → `git fetch origin` succeeds.
+2. **Plans on release branch** — let `lastChapter` be the final path in the resolved order. Run `git cat-file -e <releaseBranch>:${lastChapter}`. If it fails, plan docs are not on `<releaseBranch>`. Tell the user to merge the plans MR/PR first. **Do not** check out branches yourself except for loop bootstrap below.
+3. **Loop branch on origin** — if `origin/<loopBranch>` is missing, bootstrap per [git-model.md](git-model.md) (or instruct the first implementer to create and push it before coding).
+4. Read `{planFolder}/run-ledger.md` when it exists. Skip chapters whose row shows **merged** (into the loop branch).
 
-## Corporate build environment
+Also read `{planFolder}/00-architecture.md` and `{planFolder}/gaps-and-decisions.md` ([plan-suite-layout.md](plan-suite-layout.md)).
 
-Pass these to every `chapter-implementer` prompt (agents cannot see the user’s `.env`). Instruct the implementer to export them before `npm ci` and `./ci.sh`:
+## Optional corporate build environment
 
-- `NPM_CONFIG_REGISTRY`: `https://npm.packages.rsint.net/artifactory/api/npm/rs_npm_virtual/`
-- `HTTP_PROXY` / `HTTPS_PROXY`: `http://185.46.212.88:9480/`
-- `NO_PROXY`: `localhost,127.0.0.1,.rsint.net,.rsext.net`
-- `DOCKER_REGISTRY`: `docker.packages.rsint.net/docker.io`
-- `RS_DOCKER_REGISTRY`: `docker.packages.rsint.net`
-- `PYPI_INDEX_URL`: `https://pypi.packages.rsint.net/api/pypi/rs_pypi_virtual/simple`
-- `PYPI_EXTRA_INDEX_URL`: `https://pypi.packages.rsint.net/api/pypi/rs_common_components/simple`
-
-## Order
-
-Follow this order. Chapter 11 is before chapter 10 because location must land before the post-listing form.
-
-1. `.plans/frontend-structure/chapters/01-import-alias.md`
-2. `.plans/frontend-structure/chapters/02-auth-feature.md`
-3. `.plans/frontend-structure/chapters/03-listing-types-utils.md`
-4. `.plans/frontend-structure/chapters/04-listing-read-services.md`
-5. `.plans/frontend-structure/chapters/05-listing-write-services.md`
-6. `.plans/frontend-structure/chapters/06-reserve-button.md`
-7. `.plans/frontend-structure/chapters/07-contact-reveal.md`
-8. `.plans/frontend-structure/chapters/08-seller-actions-folder.md`
-9. `.plans/frontend-structure/chapters/09-listing-detail-container-view.md`
-10. `.plans/frontend-structure/chapters/11-location-feature.md`
-11. `.plans/frontend-structure/chapters/10-post-listing-container-form.md`
-12. `.plans/frontend-structure/chapters/12-browse-data.md`
-13. `.plans/frontend-structure/chapters/13-buyer-tab-and-map.md`
-14. `.plans/frontend-structure/chapters/14-shell-and-app-routing.md`
-15. `.plans/frontend-structure/chapters/15-retire-vacated-dirs.md`
+If [corporate-build-env.md](corporate-build-env.md) exists next to this skill, include it in every implementer prompt.
 
 ## One chapter
 
 Launch one foreground `chapter-implementer`. Put this in its prompt (it cannot see this chat):
 
+- **host**, **loopBranch**, **releaseBranch**, [host-workflow.md](host-workflow.md), [git-model.md](git-model.md).
 - Absolute path of the single chapter file.
-- Plan folder: `.plans/frontend-structure` — read that chapter, `.plans/frontend-structure/00-architecture.md`, and `.plans/frontend-structure/gaps-and-decisions.md`.
-- Do not edit `.plans/frontend-structure/run-ledger.md`.
-- Corporate build environment variables (see above); export before any package install or `./ci.sh`.
-- `git checkout main && git pull`, then the feature branch named in that chapter.
-- Implement only that chapter, including its red/green pairs and refactor gate.
-- `./ci.sh` from the repo root must pass before any push.
-- Commit with the subjects in that chapter. Push with `git push -u origin HEAD`.
-- `gh pr create`. Then `gh pr checks --watch` until both GitHub Actions jobs (`ci` and `rls-smoke`) pass.
-- Only then `gh pr merge --merge --delete-branch`, then `git checkout main && git pull`.
-- Do not start another chapter.
-- Return: chapter, branch, PR URL, local `./ci.sh` result, GitHub check result, merge result, refactor-gate outcome, blockers or "none".
+- Plan folder and suite docs ([plan-suite-layout.md](plan-suite-layout.md)).
+- Do **not** edit `{planFolder}/run-ledger.md`.
+- Corporate build env when [corporate-build-env.md](corporate-build-env.md) exists.
+- `git checkout <loopBranch> && git pull`, then `<chapterBranch>` from the chapter doc (create from loop branch, not from release).
+- Implement only that chapter (red/green pairs, refactor gate).
+- Local CI per chapter/rollout; must pass before push.
+- MR/PR **into `<loopBranch>` only**; remote CI green; merge; sync `<loopBranch>`. **Do not** merge to `<release>`.
+- Return: chapter, chapter branch, MR/PR URL, local CI, remote ci, merge into loop branch, refactor gate, blockers or `none`.
 
-Wait for that subagent. Append one row to `.plans/frontend-structure/run-ledger.md`:
+Wait for the subagent. Append one ledger row. Stop on any failure or blocker.
 
-```text
-| chapter | branch | pr | local ci | github | merged | blocker |
+If merged into loop branch and blocker is `none`, launch the next chapter.
+
+## Release to main (after all chapters)
+
+When every chapter in the execution order has a ledger row with **merged** into the loop branch and blocker `none`:
+
+1. Confirm CI is green on `<loopBranch>` (local gate if applicable + remote checks on the branch or a draft release MR).
+2. Open **one** MR/PR **`<loopBranch>` → `<releaseBranch>`** per [git-model.md](git-model.md).
+3. Wait for required remote CI; merge to `<releaseBranch>`.
+4. Append the release MR/PR URL and merge result to the run ledger (footer line or dedicated row).
+
+If release CI fails or merge is blocked, stop and report; do not start new chapters.
+
+## Run ledger
+
+Create or extend `{planFolder}/run-ledger.md`:
+
+```markdown
+# Run ledger
+
+**Loop branch:** `<loopBranch>`
+**Release branch:** `<releaseBranch>`
+**Release MR/PR:** _(filled when opened)_
+
+Chapter MRs merge into the loop branch only. The chapter-implementer **does not** edit this file.
+
+| chapter | branch | mr/pr | local ci | remote ci | merged | blocker |
+| --- | --- | --- | --- | --- | --- | --- |
 ```
 
-If local CI failed, GitHub checks failed, the merge did not happen, or the report contains a blocker, stop. Leave the remaining chapters unstarted.
-
-If the row says `merged` and the blocker is `none`, launch the next chapter the same way.
+**merged** means merged into the **loop branch**, not into release.

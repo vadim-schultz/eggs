@@ -36,7 +36,7 @@ Render: `floor(total/6)` × `⠿` + optional tail char for `total % 6`. **`Brail
 | D8 | Menu = **burger**; panel **open on load**; **no `ResultsGrid`** in panel. |
 | D9 | **Partial reserve:** `reservation.egg_count` (+ `unit`); RPC `reserve_listing(p_listing_id, p_egg_count)`; validate `1 <= p_egg_count <= listing.egg_count`. **Listing:** subtract `p_egg_count` from `listing.egg_count`; remain **`active`** if count &gt; 0; **`reserved`** when count hits 0. Update trigger `handle_reservation_status_change` to match. Cancel restores eggs and listing status per ch.9 spec. |
 | D10 | Remove dead code when unreferenced: `RadiusSelect.tsx`, `ListingSummaryLine` (+ tests if unused), `ManualPinFallback`, `UnitSelect` component (move `Unit` type to `types/`). Chapter 1 owns deletion. |
-| D11 | **Git:** each chapter **`main` → pull → branch → PR → merge `main`**; no stacked multi-chapter branch ([01-rollout.md](01-rollout.md)). |
+| D11 | **Git:** one **loop branch** for the suite; each chapter MR targets the loop branch; **one** release MR **`loopBranch` → `main`** when all chapters are merged ([01-rollout.md](01-rollout.md)). |
 
 ## Open seams
 

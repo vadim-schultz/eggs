@@ -8,7 +8,7 @@ isProject: false
 
 **Architecture:** [00-architecture.md](00-architecture.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-Chief-of-staff runs chapters via [skills/chief-of-staff/SKILL.md](skills/chief-of-staff/SKILL.md).
+Chief-of-staff runs chapters via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/minimal-panel`).
 
 ---
 

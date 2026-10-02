@@ -79,8 +79,7 @@ Status: planned — all eight chapter docs are written; no code has shipped yet.
 
 Tighten the floating panel: Verkäufer/Käufer labels, two-column grids, Chakra Slider and Combobox for
 Umkreis and Ort, Germany map fallback, Tabler icons, compact listing cards, seller form without Notiz.
-Seven chapters; in-suite [chief-of-staff skill](minimal-panel/skills/chief-of-staff/SKILL.md) and
-[chapter-implementer agent](minimal-panel/agents/chapter-implementer.md).
+Seven chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) and [`.cursor/agents/chapter-implementer.md`](../.cursor/agents/chapter-implementer.md).
 
 | Doc | What it is |
 | --- | --- |
@@ -94,7 +93,7 @@ Status: in progress — suite and implementation on branch `feat/eggs-minimal-pa
 
 ### [panel-ux/](panel-ux/) — Panel UX loop (executable)
 
-Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 15 km**, **Braille** quantity rows, map bounds and marker popovers, **partial reserve** (chapter 9). Ten chapters; each merges to **`main`** before the next. In-suite [chief-of-staff skill](panel-ux/skills/chief-of-staff/SKILL.md) and [chapter-implementer agent](panel-ux/agents/chapter-implementer.md); Cursor: `@chief-of-staff-panel-ux`.
+Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 15 km**, **Braille** quantity rows, map bounds and marker popovers, **partial reserve** (chapter 9). Ten chapters; each merges to **`main`** before the next. Orchestration: `@chief-of-staff` with plan folder `.plans/panel-ux` (see [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md)).
 
 | Doc | What it is |
 | --- | --- |

@@ -116,3 +116,25 @@ spirit as `.plans/mvp/01-rollout.md` and `.plans/ui-overhaul/01-rollout.md`.
 **Git:** `git checkout main && git pull`, then `git checkout -b feat/eggs-fs-<chapter-slug>`. Conventional
 commits: `test(web): …` then `refactor(web): …` (or `chore(web):` for chapter 1). One PR per chapter; never
 commit directly to `main`.
+
+---
+
+## Execution order (chief of staff)
+
+Chapter 11 is before chapter 10 because location must land before the post-listing form.
+
+1. [chapters/01-import-alias.md](chapters/01-import-alias.md)
+2. [chapters/02-auth-feature.md](chapters/02-auth-feature.md)
+3. [chapters/03-listing-types-utils.md](chapters/03-listing-types-utils.md)
+4. [chapters/04-listing-read-services.md](chapters/04-listing-read-services.md)
+5. [chapters/05-listing-write-services.md](chapters/05-listing-write-services.md)
+6. [chapters/06-reserve-button.md](chapters/06-reserve-button.md)
+7. [chapters/07-contact-reveal.md](chapters/07-contact-reveal.md)
+8. [chapters/08-seller-actions-folder.md](chapters/08-seller-actions-folder.md)
+9. [chapters/09-listing-detail-container-view.md](chapters/09-listing-detail-container-view.md)
+10. [chapters/11-location-feature.md](chapters/11-location-feature.md)
+11. [chapters/10-post-listing-container-form.md](chapters/10-post-listing-container-form.md)
+12. [chapters/12-browse-data.md](chapters/12-browse-data.md)
+13. [chapters/13-buyer-tab-and-map.md](chapters/13-buyer-tab-and-map.md)
+14. [chapters/14-shell-and-app-routing.md](chapters/14-shell-and-app-routing.md)
+15. [chapters/15-retire-vacated-dirs.md](chapters/15-retire-vacated-dirs.md)

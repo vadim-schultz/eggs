@@ -65,3 +65,16 @@ npm run lint && npm run typecheck && npm run test -- --run && npm run build
 ```
 
 **Git:** `feat/eggs-dry-<slug>` or `feat/eggs-chakra-<slug>` from updated `main`; conventional commits; one PR per chapter.
+
+---
+
+## Execution order (chief of staff)
+
+1. [chapters/01-default-map-center.md](chapters/01-default-map-center.md)
+2. [chapters/02-use-supabase-query.md](chapters/02-use-supabase-query.md)
+3. [chapters/03-read-hooks-migration.md](chapters/03-read-hooks-migration.md)
+4. [chapters/04-use-async-action.md](chapters/04-use-async-action.md)
+5. [chapters/05-mutation-migration.md](chapters/05-mutation-migration.md)
+6. [chapters/06-listing-summary-line.md](chapters/06-listing-summary-line.md)
+7. [chapters/07-post-form-chakra.md](chapters/07-post-form-chakra.md)
+8. [chapters/08-seller-expiry-chakra.md](chapters/08-seller-expiry-chakra.md)
