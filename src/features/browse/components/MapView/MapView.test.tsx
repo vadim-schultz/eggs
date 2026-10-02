@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import MapView from "./MapView";
+import mapViewSource from "./MapView.tsx?raw";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 function listing(overrides: Partial<ListingNear> = {}): ListingNear {
@@ -55,5 +56,10 @@ describe("MapView", () => {
     });
 
     expect(screen.getAllByTitle("Egg listing")).toHaveLength(2);
+  });
+
+  it("uses no non-Tabler egg or basket icons", () => {
+    expect(mapViewSource).not.toMatch(/FaEgg|RiShoppingBasket/);
+    expect(mapViewSource).toContain('from "react-icons/tb"');
   });
 });
