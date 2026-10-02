@@ -9,7 +9,14 @@ interface KeyValueRowProps {
 /** Two-column label + control row for panel forms. */
 export default function KeyValueRow({ label, children }: KeyValueRowProps) {
   return (
-    <SimpleGrid columns={2} gapX="3" gapY="2" alignItems="center" w="full">
+    <SimpleGrid
+      data-testid="key-value-row"
+      templateColumns="1fr 3fr"
+      gapX="3"
+      gapY="2"
+      alignItems="start"
+      w="full"
+    >
       <Text color="fg.muted" fontSize="sm">
         {label}
       </Text>
