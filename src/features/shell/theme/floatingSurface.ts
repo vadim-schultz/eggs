@@ -3,7 +3,7 @@ export const floatingSurface = {
   rounded: "full",
   color: "brand.mark",
   bg: "nav.bg",
-  borderWidth: "1px",
+  borderWidth: "2px",
   borderColor: "nav.border",
-  boxShadow: "sm",
+  boxShadow: "sticker",
 } as const;

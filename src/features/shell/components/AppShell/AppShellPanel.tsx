@@ -1,12 +1,19 @@
 import { Popover, Portal } from "@chakra-ui/react";
 
+import { floatingSurface } from "@/features/shell/theme/floatingSurface";
+
 import RoleTabs from "../RoleTabs";
 
 export default function AppShellPanel() {
   return (
     <Portal>
       <Popover.Positioner>
-        <Popover.Content maxW="sm" maxH="calc(100vh - 3rem)">
+        <Popover.Content
+          {...floatingSurface}
+          rounded="2xl"
+          maxW="sm"
+          maxH="calc(100vh - 3rem)"
+        >
           <Popover.Arrow />
           <Popover.Header>
             <Popover.Title

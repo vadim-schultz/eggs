@@ -5,7 +5,8 @@ const sources = import.meta.glob<string>(
   { query: "?raw", import: "default", eager: true },
 );
 
-const HARDCODED_COLOUR = /["'`](white|black|gray\.[\w.]+|#[0-9a-fA-F]{3,8})["'`]/;
+const HARDCODED_COLOUR =
+  /["'`](white|black|gray\.[\w.]+|#[0-9a-fA-F]{3,8})["'`]/;
 
 it("shell · scans shell source files", () => {
   expect(Object.keys(sources).length).toBeGreaterThan(3);
