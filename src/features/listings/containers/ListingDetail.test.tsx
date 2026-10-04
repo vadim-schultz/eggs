@@ -38,8 +38,8 @@ vi.mock("@/features/listings/components/ContactReveal", () => ({
   ),
 }));
 
-vi.mock("@/features/listings/hooks/useListingReservations", () => ({
-  useListingReservations: () => ({ reservations: [], loading: false }),
+vi.mock("@/features/listings/hooks/useSellerReservations", () => ({
+  useSellerReservations: () => ({ reservations: [], loading: false }),
 }));
 
 function activeListing(overrides: Partial<Listing> = {}): Listing {
