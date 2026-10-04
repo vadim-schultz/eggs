@@ -161,6 +161,20 @@ The listing dialog is split into a buyer container (carton reserve, contact) and
 
 Status: shipped — chapters 1–5 merged into the loop branch `feat/plans-listing-roles`; release PR to `main` pending.
 
+### [lean-ui/](lean-ui/) — Streamlined buyer and seller UI
+
+Strip technical detail (available, price per egg, status), replace the carton radios with two rounded selectable cards, make the signed-out reserve button start the login, show active reservations in the Verkäufer and Käufer panels (separate seller and buyer components), and open a "Du bist hier" dialog from the basket marker. No schema changes. Eight chapters; orchestration via [`.claude/skills/chief-of-staff/SKILL.md`](../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/lean-ui`).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](lean-ui/00-architecture.md) | Component map, reservation data, layers, traceability |
+| [01-rollout.md](lean-ui/01-rollout.md) | Eight chapters, git invariants, dependency graph, execution order |
+| [gaps-and-decisions.md](lean-ui/gaps-and-decisions.md) | D1–D10 cards, lists, sign-in, dialog |
+| [run-ledger.md](lean-ui/run-ledger.md) | Merge ledger |
+| [chapters/](lean-ui/chapters/) | One executable plan per chapter |
+
+Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
