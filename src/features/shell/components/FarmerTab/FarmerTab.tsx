@@ -9,7 +9,7 @@ import { t } from "@/i18n/t";
 
 import AddListingTrigger from "./AddListingTrigger";
 
-function SellerReservations({ sellerId }: { sellerId: string }) {
+function SellerReservationPanel({ sellerId }: { sellerId: string }) {
   const { reservations } = useSellerReservations(sellerId);
   return <SellerReservationList reservations={reservations} />;
 }
@@ -24,7 +24,7 @@ export default function FarmerTab() {
       {session ? (
         <>
           <AddListingTrigger onAddListing={openPostDialog} />
-          <SellerReservations sellerId={session.user.id} />
+          <SellerReservationPanel sellerId={session.user.id} />
         </>
       ) : (
         <Text>{t("auth.signInRequired")}</Text>
