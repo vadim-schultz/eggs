@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 
 import EggBurst from "@/components/ui/EggBurst";
 import { PostListingForm } from "@/features/listings/components/PostListing";
+import { useSellerGeolocate } from "@/features/listings/hooks/useSellerGeolocate";
 import { createListing } from "@/features/listings/services/listingsApi";
 import type { ListingInputErrors } from "@/features/listings/types/listingInput";
 import {
@@ -39,6 +40,8 @@ export default function PostListing({ onCreated }: PostListingProps) {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
+  const requestGeolocation = useSellerGeolocate(updateField);
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const pin = form.pin;
@@ -67,6 +70,7 @@ export default function PostListing({ onCreated }: PostListingProps) {
         submitting={submitting}
         onFieldChange={updateField}
         onSubmit={handleSubmit}
+        onRequestGeolocation={requestGeolocation}
       />
       <EggBurst active={burst} count={6} onDone={() => setBurst(false)} />
     </>

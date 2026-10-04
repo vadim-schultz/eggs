@@ -1,34 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { GeoPoint } from "@/features/browse/types/geo";
+import { readPosition } from "@/features/location/services/readPosition";
 
 export interface UseGeolocationResult {
   center: GeoPoint;
   loading: boolean;
   geoGranted: boolean;
   requestLocation: () => void;
-}
-
-function readPosition(
-  onSuccess: (point: GeoPoint) => void,
-  onFailure: () => void,
-) {
-  if (!navigator.geolocation) {
-    onFailure();
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      onSuccess({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    },
-    () => {
-      onFailure();
-    },
-  );
 }
 
 /** Resolve browser geolocation with optional re-request via ``requestLocation``. */

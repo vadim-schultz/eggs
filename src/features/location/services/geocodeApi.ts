@@ -1,4 +1,7 @@
-import type { PlaceCandidate } from "@/features/location/types/place";
+import type {
+  ConfirmedPin,
+  PlaceCandidate,
+} from "@/features/location/types/place";
 
 interface NominatimResult {
   display_name: string;
@@ -20,4 +23,20 @@ export async function searchPlace(query: string): Promise<PlaceCandidate[]> {
     lat: parseFloat(result.lat),
     lng: parseFloat(result.lon),
   }));
+}
+
+interface NominatimReverseResult {
+  display_name: string;
+}
+
+/** Resolve a human-readable place for ``point``, or null when unavailable. */
+export async function reverseGeocode(
+  point: ConfirmedPin,
+): Promise<PlaceCandidate | null> {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${point.lat}&lon=${point.lng}`;
+  const response = await fetch(url);
+  if (!response.ok) return null;
+
+  const result = (await response.json()) as NominatimReverseResult;
+  return { label: result.display_name, lat: point.lat, lng: point.lng };
 }

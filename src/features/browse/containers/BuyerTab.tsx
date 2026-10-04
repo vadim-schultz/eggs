@@ -4,7 +4,7 @@ import { Stack } from "@chakra-ui/react";
 import { usePublishBackgroundMap } from "@/features/shell/context/backgroundMap";
 import AuthButton from "@/features/auth/components/AuthButton";
 import { BuyerSearchRows } from "@/features/browse/components/BuyerTab";
-import { useGeolocation } from "@/features/browse/hooks/useGeolocation";
+import { useGeolocation } from "@/features/location/hooks/useGeolocation";
 import { useListingsNear } from "@/features/browse/hooks/useListingsNear";
 import type { ConfirmedPin } from "@/features/location/types/place";
 import { DEFAULT_MAP_CENTER } from "@/lib/geo/constants";
