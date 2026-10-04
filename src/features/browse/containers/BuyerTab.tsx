@@ -22,7 +22,7 @@ export default function BuyerTab() {
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { open, openDetailDialog } = useAppDialog();
+  const { open, openDetailDialog, openHereDialog } = useAppDialog();
 
   useEffect(() => {
     if (open === null) {
@@ -59,6 +59,7 @@ export default function BuyerTab() {
     fitGermany,
     showUserMarker,
     radiusM,
+    onUserMarkerClick: openHereDialog,
   });
 
   return (

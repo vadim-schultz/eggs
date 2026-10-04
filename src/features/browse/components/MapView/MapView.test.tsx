@@ -21,6 +21,7 @@ vi.mock("@/lib/supabaseClient", () => ({
 }));
 import { easterColors } from "@/theme/tokens/colors";
 import mapViewSource from "./MapView.tsx?raw";
+import iconsSource from "./icons.tsx?raw";
 import type { ListingNear } from "@/features/listings/types/listing";
 
 function listing(overrides: Partial<ListingNear> = {}): ListingNear {
@@ -67,7 +68,7 @@ describe("MapView", () => {
   it("marks the user's location with a basket icon", () => {
     renderMap();
 
-    expect(screen.getByTitle("Your location")).toBeInTheDocument();
+    expect(screen.getByTitle("Dein Standort")).toBeInTheDocument();
   });
 
   it("marks each egg listing with an egg icon", () => {
@@ -78,12 +79,12 @@ describe("MapView", () => {
       ],
     });
 
-    expect(screen.getAllByTitle("Egg listing")).toHaveLength(2);
+    expect(screen.getAllByTitle("Eierangebot")).toHaveLength(2);
   });
 
   it("uses no non-Tabler egg or basket icons", () => {
-    expect(mapViewSource).not.toMatch(/FaEgg|RiShoppingBasket/);
-    expect(mapViewSource).toContain('from "react-icons/tb"');
+    expect(iconsSource).not.toMatch(/FaEgg|RiShoppingBasket/);
+    expect(iconsSource).toContain('from "react-icons/tb"');
   });
 
   it("calls onSelect when a marker is clicked and renders no popup or card", async () => {
@@ -94,7 +95,7 @@ describe("MapView", () => {
       onSelect,
     });
 
-    const markers = screen.getAllByTitle("Egg listing");
+    const markers = screen.getAllByTitle("Eierangebot");
     fireEvent.click(markers[0]!.closest(".leaflet-marker-icon") ?? markers[0]!);
 
     expect(onSelect).toHaveBeenCalledWith("listing-pop");
@@ -114,5 +115,39 @@ describe("MapView", () => {
     probe.style.background = easterColors.coral[500].value;
     expect(backgrounds).toContain(probe.style.background);
     expect(mapViewSource).not.toMatch(/#2b6cb0|#dd6b20/i);
+  });
+
+  it("calls onUserMarkerClick when the user marker is clicked", () => {
+    const onUserMarkerClick = vi.fn();
+    renderMap({ onUserMarkerClick });
+
+    const icon = screen.getByTitle("Dein Standort");
+    fireEvent.click(icon.closest(".leaflet-marker-icon") ?? icon);
+
+    expect(onUserMarkerClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call onUserMarkerClick for a listing marker click", () => {
+    const onUserMarkerClick = vi.fn();
+    renderMap({ listings: [listing()], onUserMarkerClick });
+
+    const icon = screen.getByTitle("Eierangebot");
+    fireEvent.click(icon.closest(".leaflet-marker-icon") ?? icon);
+
+    expect(onUserMarkerClick).not.toHaveBeenCalled();
+  });
+
+  it("renders no user marker and no handler call when showUserMarker is false", () => {
+    const onUserMarkerClick = vi.fn();
+    renderMap({ showUserMarker: false, onUserMarkerClick });
+
+    expect(screen.queryByTitle("Dein Standort")).toBeNull();
+    expect(onUserMarkerClick).not.toHaveBeenCalled();
+  });
+
+  it("keeps no English marker titles in the source", () => {
+    expect(mapViewSource + iconsSource).not.toMatch(
+      /Your location|Egg listing/,
+    );
   });
 });

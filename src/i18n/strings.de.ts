@@ -44,6 +44,9 @@ export const strings = {
   "home.radius.label": "Umkreis",
   "home.empty":
     "Keine Angebote in diesem Umkreis gefunden. Die Hühner streiken wohl! 🐔",
+  "map.youAreHere": "Du bist hier",
+  "map.userMarker.title": "Dein Standort",
+  "map.listingMarker.title": "Eierangebot",
   "published.title": "Dein Angebot wurde veröffentlicht.",
   "published.expires": "Es läuft in 24 Stunden ab.",
   "listing.available.label": "Verfügbar",
