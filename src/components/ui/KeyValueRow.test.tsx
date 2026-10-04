@@ -39,10 +39,16 @@ describe("KeyValueRow", () => {
     expect(columns).not.toBe("1fr 1fr");
   });
 
-  it("top-aligns label and value", () => {
+  it("vertically centres label and value", () => {
     const { container } = renderRow();
 
-    expect(getComputedStyle(gridRoot(container)).alignItems).toBe("start");
+    expect(getComputedStyle(gridRoot(container)).alignItems).toBe("center");
+  });
+
+  it("does not top-align label and value", () => {
+    const { container } = renderRow();
+
+    expect(getComputedStyle(gridRoot(container)).alignItems).not.toBe("start");
   });
 
   it("renders the label text", () => {

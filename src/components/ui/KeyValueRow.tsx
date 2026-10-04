@@ -14,7 +14,7 @@ export default function KeyValueRow({ label, children }: KeyValueRowProps) {
       templateColumns="1fr 3fr"
       gapX="3"
       gapY="2"
-      alignItems="start"
+      alignItems="center"
       w="full"
     >
       <Text color="fg.muted" fontSize="sm">
