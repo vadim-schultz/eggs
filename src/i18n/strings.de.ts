@@ -65,4 +65,11 @@ export const strings = {
   "reserve.error":
     "Ups, das Ei ist runtergefallen! 🥚 Bitte versuche es erneut.",
   "reserve.contactNote.label": "Kontakthinweis",
+  "sellerView.reserved.label": "Reserviert",
+  "sellerView.remaining.label": "Übrig",
+  "sellerView.expires.label": "Läuft ab",
+  "sellerView.reservations.title": "Reservierungen",
+  "sellerView.reservations.empty": "Noch keine Reservierungen.",
+  "sellerView.reservation.active": "Aktiv",
+  "sellerView.reservation.cancelled": "Storniert",
 } as const;

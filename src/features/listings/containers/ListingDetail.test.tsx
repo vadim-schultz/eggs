@@ -38,6 +38,10 @@ vi.mock("@/features/listings/components/ContactReveal", () => ({
   ),
 }));
 
+vi.mock("@/features/listings/hooks/useListingReservations", () => ({
+  useListingReservations: () => ({ reservations: [], loading: false }),
+}));
+
 function activeListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "listing-1",

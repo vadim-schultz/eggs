@@ -253,6 +253,36 @@ async function main() {
   );
 
   await check(
+    "seller A can read the reservations of their own listing",
+    async () => {
+      const { data, error } = await userA
+        .from("reservation")
+        .select("id, egg_count, status, created_at")
+        .eq("listing_id", listingId);
+      assert(!error, `unexpected error: ${error?.message}`);
+      assert(
+        data!.length >= 1,
+        "expected the seller to see the listing's reservations",
+      );
+    },
+  );
+
+  await check(
+    "user C (not seller or buyer) cannot read the listing's reservations",
+    async () => {
+      const { data, error } = await userC
+        .from("reservation")
+        .select("id")
+        .eq("listing_id", listingId);
+      assert(!error, `unexpected error: ${error?.message}`);
+      assert(
+        data!.length === 0,
+        "expected zero reservation rows for an unrelated user",
+      );
+    },
+  );
+
+  await check(
     "listings_near returns a listing within radius_m and omits one outside it",
     async () => {
       const { data: fresh, error: freshError } = await admin
