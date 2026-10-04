@@ -59,3 +59,29 @@ it("theme · shadows.sticker is registered", () => {
 it("theme · rejects an unregistered shadow token", () => {
   expect(system.token("shadows.not-a-shadow")).toBeUndefined();
 });
+
+type Loose = Record<string, Record<string, unknown> | undefined>;
+const recipes = (system._config.theme?.recipes ?? {}) as Loose;
+const slotRecipes = (system._config.theme?.slotRecipes ?? {}) as Loose;
+
+it("theme · playful control recipes are registered", () => {
+  expect(recipes.button?.base).toMatchObject({
+    borderRadius: "full",
+    fontWeight: "bold",
+  });
+  expect(recipes.badge?.base).toMatchObject({ borderRadius: "full" });
+  const card = slotRecipes.card?.base as Loose | undefined;
+  expect(card?.root).toMatchObject({
+    borderWidth: "2px",
+    boxShadow: "sticker",
+  });
+  const slider = slotRecipes.slider?.base as Loose | undefined;
+  expect(slider?.thumb).toMatchObject({ borderRadius: "full" });
+  const combobox = slotRecipes.combobox?.base as Loose | undefined;
+  expect(combobox?.content).toMatchObject({ borderRadius: "2xl" });
+});
+
+it("theme · rejects an unregistered recipe name", () => {
+  expect(recipes.nonexistent).toBeUndefined();
+  expect(slotRecipes.nonexistent).toBeUndefined();
+});
