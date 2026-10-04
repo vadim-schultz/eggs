@@ -70,14 +70,15 @@ describe("ListingDetail", () => {
 
     renderAt("listing-1");
 
-    expect(await screen.findByTestId("egg-quantity-row")).toBeInTheDocument();
+    await screen.findByText("Preis pro Ei");
+    expect(screen.queryByTestId("egg-quantity-row")).not.toBeInTheDocument();
     expect(
       screen.getAllByTestId("key-value-row").length,
     ).toBeGreaterThanOrEqual(3);
-    expect(screen.getByText("Anzahl")).toBeInTheDocument();
+    expect(screen.getAllByText("Verfügbar").length).toBeGreaterThan(0);
+    expect(screen.getByText("12 Eier")).toBeInTheDocument();
     expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
-    expect(screen.getByText(/12/)).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
     expect(
       screen.queryByText("Downtown, near the market"),
@@ -90,7 +91,7 @@ describe("ListingDetail", () => {
     singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
-    await screen.findByTestId("egg-quantity-row");
+    await screen.findByTestId("reserve-button");
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
@@ -104,7 +105,7 @@ describe("ListingDetail", () => {
     });
 
     renderAt("listing-1");
-    await screen.findByTestId("egg-quantity-row");
+    await screen.findByTestId("reserve-button");
 
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
   });
@@ -116,7 +117,7 @@ describe("ListingDetail", () => {
     });
 
     renderAt("listing-1");
-    await screen.findByTestId("egg-quantity-row");
+    await screen.findByTestId("reserve-button");
 
     expect(screen.getByText("Reserviert")).toBeInTheDocument();
   });

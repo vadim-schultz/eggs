@@ -1,7 +1,8 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 import EggBurst from "@/components/ui/EggBurst";
+import { CartonPicker } from "@/features/listings/components/CartonPicker";
 import { useSession } from "@/features/auth/hooks/useSession";
 import { useActiveReservation } from "@/features/listings/hooks/useActiveReservation";
 import {
@@ -12,8 +13,7 @@ import type { Listing } from "@/features/listings/types/listing";
 import { t } from "@/i18n/t";
 import { useAsyncAction } from "@/lib/async/useAsyncAction";
 import ReserveActionButton from "./ReserveActionButton";
-import ReserveAmountControl from "./ReserveAmountControl";
-import { isReserveCountValid } from "./reserveCount";
+import { useCartonSelection } from "./useCartonSelection";
 
 interface ReserveButtonProps {
   listing: Listing;
@@ -26,7 +26,7 @@ export default function ReserveButton({
 }: ReserveButtonProps) {
   const { session, loading: sessionLoading } = useSession();
   const isActive = listing.status === "active";
-  const [reserveCount, setReserveCount] = useState(1);
+  const [carton, setCarton] = useCartonSelection(listing.egg_count);
   const { reservation, loading: reservationLoading } = useActiveReservation(
     listing.id,
     Boolean(session) && !isActive,
@@ -57,8 +57,8 @@ export default function ReserveButton({
   }
 
   async function reserve() {
-    if (!isReserveCountValid(reserveCount, listing.egg_count)) return;
-    await runMutation(() => reserveListing(listing.id, reserveCount), true);
+    if (carton === null) return;
+    await runMutation(() => reserveListing(listing.id, carton), true);
   }
 
   async function cancel() {
@@ -67,22 +67,26 @@ export default function ReserveButton({
   }
 
   if (isActive) {
-    const canSubmit = isReserveCountValid(reserveCount, listing.egg_count);
-
     return (
       <Stack gap="3" w="full">
         {burstOverlay}
-        <ReserveAmountControl
-          unit={listing.unit}
-          maxEggCount={listing.egg_count}
-          eggCount={reserveCount}
-          onEggCountChange={setReserveCount}
+        <CartonPicker
+          remaining={listing.egg_count}
+          pricePerEggCents={listing.price_per_egg_cents}
+          currency={listing.currency}
+          value={carton}
+          onChange={setCarton}
         />
+        {carton === null && (
+          <Text color="fg.muted" fontSize="sm">
+            {t("reserve.noCarton")}
+          </Text>
+        )}
         <ReserveActionButton
           label={t("reserve.reserve")}
           busy={busy}
           error={error}
-          disabled={!canSubmit}
+          disabled={carton === null}
           onClick={reserve}
         />
       </Stack>
