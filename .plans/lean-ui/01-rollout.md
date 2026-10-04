@@ -63,14 +63,14 @@ Chapter 4 does not depend on 1–3 technically; it is ordered linearly to keep t
 
 | # | Chapter | Gate | Plan | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Lean listing summary | `./ci.sh` | [01-lean-listing-summary.md](chapters/01-lean-listing-summary.md) | planned |
-| 2 | Carton cards | `./ci.sh` | [02-carton-cards.md](chapters/02-carton-cards.md) | planned |
-| 3 | Active sign-in | `./ci.sh` | [03-active-signin.md](chapters/03-active-signin.md) | planned |
-| 4 | You-are-here dialog | `./ci.sh` | [04-you-are-here-dialog.md](chapters/04-you-are-here-dialog.md) | planned |
-| 5 | Reservation queries | `./ci.sh` | [05-reservation-queries.md](chapters/05-reservation-queries.md) | planned |
-| 6 | Seller reservation list | `./ci.sh` | [06-seller-reservation-list.md](chapters/06-seller-reservation-list.md) | planned |
-| 7 | Buyer reservation list | `./ci.sh` | [07-buyer-reservation-list.md](chapters/07-buyer-reservation-list.md) | planned |
-| 8 | Docs sync | `./ci.sh` | [08-docs-sync.md](chapters/08-docs-sync.md) | planned |
+| 1 | Lean listing summary | `./ci.sh` | [01-lean-listing-summary.md](chapters/01-lean-listing-summary.md) | shipped |
+| 2 | Carton cards | `./ci.sh` | [02-carton-cards.md](chapters/02-carton-cards.md) | shipped |
+| 3 | Active sign-in | `./ci.sh` | [03-active-signin.md](chapters/03-active-signin.md) | shipped |
+| 4 | You-are-here dialog | `./ci.sh` | [04-you-are-here-dialog.md](chapters/04-you-are-here-dialog.md) | shipped |
+| 5 | Reservation queries | `./ci.sh` | [05-reservation-queries.md](chapters/05-reservation-queries.md) | shipped |
+| 6 | Seller reservation list | `./ci.sh` | [06-seller-reservation-list.md](chapters/06-seller-reservation-list.md) | shipped |
+| 7 | Buyer reservation list | `./ci.sh` | [07-buyer-reservation-list.md](chapters/07-buyer-reservation-list.md) | shipped |
+| 8 | Docs sync | `./ci.sh` | [08-docs-sync.md](chapters/08-docs-sync.md) | shipped |
 
 ## Per-chapter gate
 

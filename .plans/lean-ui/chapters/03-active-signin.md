@@ -13,7 +13,7 @@ isProject: false
 
 # Chapter 3 — Active sign-in
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-signin` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-signin` · **Status:** shipped
 
 **Depends on:** [2](02-carton-cards.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §5 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

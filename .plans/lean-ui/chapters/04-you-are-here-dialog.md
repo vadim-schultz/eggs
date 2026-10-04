@@ -16,7 +16,7 @@ isProject: false
 
 # Chapter 4 — You-are-here dialog
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-you-are-here` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-you-are-here` · **Status:** shipped
 
 **Depends on:** [3](03-active-signin.md) (order only) · **Architecture:** [../00-architecture.md](../00-architecture.md) §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 
