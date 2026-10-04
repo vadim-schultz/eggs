@@ -116,7 +116,7 @@ describe("BuyerTab", () => {
       screen.queryByRole("button", { name: /4,00/ }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText("Keine Angebote in diesem Umkreis gefunden."),
+      screen.queryByText(/Keine Angebote in diesem Umkreis gefunden/),
     ).not.toBeInTheDocument();
   });
 

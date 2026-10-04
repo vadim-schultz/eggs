@@ -46,6 +46,9 @@ function EggSlot({ slot }: { slot: Slot }) {
       aria-hidden
       color={color}
       data-testid={testId}
+      css={{
+        _motionSafe: { _hover: { animation: "wiggle 0.5s ease-in-out" } },
+      }}
       display="inline-flex"
       justifyContent="center"
     >

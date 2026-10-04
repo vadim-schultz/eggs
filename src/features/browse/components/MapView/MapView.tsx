@@ -5,6 +5,7 @@ import { Box } from "@chakra-ui/react";
 import { TbBasket, TbEgg } from "react-icons/tb";
 import "leaflet/dist/leaflet.css";
 
+import { easterColors } from "@/theme/tokens/colors";
 import type { GeoPoint } from "@/features/browse/types/geo";
 import type { ListingNear } from "@/features/listings/types/listing";
 
@@ -34,11 +35,11 @@ const userLocationIcon = pinIcon(
   renderToStaticMarkup(
     <TbBasket title="Your location" size={18} color="#fff" />,
   ),
-  "#2b6cb0",
+  easterColors.cornflower[500].value,
 );
 const listingIcon = pinIcon(
   renderToStaticMarkup(<TbEgg title="Egg listing" size={16} color="#fff" />),
-  "#dd6b20",
+  easterColors.coral[500].value,
 );
 
 interface MapViewProps {

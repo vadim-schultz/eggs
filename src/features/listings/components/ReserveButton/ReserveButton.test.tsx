@@ -145,4 +145,31 @@ describe("ReserveButton", () => {
       }),
     );
   });
+
+  it("shows an egg burst after a successful reserve", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    rpcMock.mockResolvedValue({ data: {}, error: null });
+    renderButton(activeListing());
+
+    fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
+
+    expect(await screen.findByTestId("egg-burst")).toBeInTheDocument();
+  });
+
+  it("does not show an egg burst when reserving fails", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    rpcMock.mockResolvedValue({ data: null, error: { message: "boom" } });
+    renderButton(activeListing());
+
+    fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
+
+    await screen.findByText(/Ei ist runtergefallen/);
+    expect(screen.queryByTestId("egg-burst")).not.toBeInTheDocument();
+  });
 });

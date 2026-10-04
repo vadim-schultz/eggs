@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
+import EggBurst from "@/components/ui/EggBurst";
 import { PostListingForm } from "@/features/listings/components/PostListing";
 import { createListing } from "@/features/listings/services/listingsApi";
 import type { ListingInputErrors } from "@/features/listings/types/listingInput";
@@ -28,6 +29,7 @@ interface PostListingProps {
 export default function PostListing({ onCreated }: PostListingProps) {
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState<ListingInputErrors>({});
+  const [burst, setBurst] = useState(false);
   const { busy: submitting, error: submitError, run } = useAsyncAction();
 
   function updateField<K extends keyof PostListingFormState>(
@@ -50,19 +52,23 @@ export default function PostListing({ onCreated }: PostListingProps) {
     await run(async () => {
       const result = await createListing(toCreateListingArgs(input, pin));
       if ("error" in result) return { ok: false };
+      setBurst(true);
       onCreated(result.id);
       return { ok: true };
     });
   }
 
   return (
-    <PostListingForm
-      form={form}
-      errors={errors}
-      submitError={submitError}
-      submitting={submitting}
-      onFieldChange={updateField}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <PostListingForm
+        form={form}
+        errors={errors}
+        submitError={submitError}
+        submitting={submitting}
+        onFieldChange={updateField}
+        onSubmit={handleSubmit}
+      />
+      <EggBurst active={burst} count={6} onDone={() => setBurst(false)} />
+    </>
   );
 }

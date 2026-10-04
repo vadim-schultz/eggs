@@ -131,7 +131,7 @@ Promote the 12-colour Easter palette to full theme ramps and **role palettes** (
 | [run-ledger.md](playful-theme/run-ledger.md) | Merge ledger |
 | [chapters/](playful-theme/chapters/) | One executable plan per chapter |
 
-Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+Status: shipped — chapters 1–4 merged into the loop branch `feat/plans-playful-theme`; release PR to `main` pending.
 
 ## Conventions
 
