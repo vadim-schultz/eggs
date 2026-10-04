@@ -4,9 +4,10 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import PostListing from "./PostListing";
 
-const { rpcMock, searchPlaceMock } = vi.hoisted(() => ({
+const { rpcMock, searchPlaceMock, reverseGeocodeMock } = vi.hoisted(() => ({
   rpcMock: vi.fn(),
   searchPlaceMock: vi.fn(),
+  reverseGeocodeMock: vi.fn(),
 }));
 
 vi.mock("@/lib/supabaseClient", () => ({
@@ -15,7 +16,25 @@ vi.mock("@/lib/supabaseClient", () => ({
 
 vi.mock("@/features/location/services/geocodeApi", () => ({
   searchPlace: searchPlaceMock,
+  reverseGeocode: reverseGeocodeMock,
 }));
+
+function stubGeolocation(position: { lat: number; lng: number } | null) {
+  Object.defineProperty(globalThis.navigator, "geolocation", {
+    configurable: true,
+    value: {
+      getCurrentPosition: (
+        success: PositionCallback,
+        failure: PositionErrorCallback,
+      ) =>
+        position
+          ? success({
+              coords: { latitude: position.lat, longitude: position.lng },
+            } as GeolocationPosition)
+          : failure({} as GeolocationPositionError),
+    },
+  });
+}
 
 function renderPostListing(onCreated = vi.fn()) {
   return render(
@@ -44,10 +63,15 @@ describe("PostListing", () => {
     vi.useFakeTimers();
     rpcMock.mockReset();
     searchPlaceMock.mockReset();
+    reverseGeocodeMock.mockReset();
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    Object.defineProperty(globalThis.navigator, "geolocation", {
+      configurable: true,
+      value: undefined,
+    });
   });
 
   it("disables submit until a location is confirmed", async () => {
@@ -182,5 +206,46 @@ describe("PostListing", () => {
     ).toBeInTheDocument();
     expect(onCreated).not.toHaveBeenCalled();
     expect(screen.queryByTestId("egg-burst")).not.toBeInTheDocument();
+  });
+
+  it("fills the Ort field and enables submit via the locate button", async () => {
+    stubGeolocation({ lat: 52.52, lng: 13.405 });
+    reverseGeocodeMock.mockResolvedValue({
+      label: "Berlin, Germany",
+      lat: 52.52,
+      lng: 13.405,
+    });
+    renderPostListing();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Standort vom Browser" }),
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.getByPlaceholderText("Ort suchen …")).toHaveValue(
+      "Berlin, Germany",
+    );
+    expect(
+      screen.getByRole("button", { name: "Angebot veröffentlichen" }),
+    ).toBeEnabled();
+  });
+
+  it("leaves the form untouched when the browser position is denied", async () => {
+    stubGeolocation(null);
+    renderPostListing();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Standort vom Browser" }),
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.getByPlaceholderText("Ort suchen …")).toHaveValue("");
+    expect(
+      screen.getByRole("button", { name: "Angebot veröffentlichen" }),
+    ).toBeDisabled();
   });
 });

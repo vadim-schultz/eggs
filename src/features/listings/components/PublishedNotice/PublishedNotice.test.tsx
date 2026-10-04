@@ -16,9 +16,7 @@ describe("PublishedNotice", () => {
     expect(
       screen.getByText("Dein Angebot wurde veröffentlicht."),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText("Es läuft in 24 Stunden ab."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Es läuft in 24 Stunden ab.")).toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 });
