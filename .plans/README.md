@@ -147,6 +147,20 @@ Sellers set an amount (typed input) and the price of **one** egg; buyers choose 
 
 Status: planned — documentation suite written; implementation loop runs after merge to `main`.
 
+### [listing-roles/](listing-roles/) — Separate buyer and seller listing dialogs
+
+The listing dialog is split into a buyer container (carton reserve, contact) and a seller container (summary and reservation list, read-only), chosen by ownership. Manual listing handling (mark sold, withdraw, expiry edit) is removed: a listing disappears once fully reserved and expires 24h after publishing, enforced in the database. Five chapters; orchestration via [`.claude/skills/chief-of-staff/SKILL.md`](../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/listing-roles`).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](listing-roles/00-architecture.md) | Lifecycle, component split, layers, traceability |
+| [01-rollout.md](listing-roles/01-rollout.md) | Five chapters, git invariants, dependency graph, execution order |
+| [gaps-and-decisions.md](listing-roles/gaps-and-decisions.md) | D1–D9 and deferred items |
+| [run-ledger.md](listing-roles/run-ledger.md) | Merge ledger |
+| [chapters/](listing-roles/chapters/) | One executable plan per chapter |
+
+Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
