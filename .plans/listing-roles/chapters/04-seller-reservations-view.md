@@ -4,22 +4,22 @@ overview: "Seller container shows reserved/remaining counts, expiry time and the
 todos:
   - id: hook
     content: "useListingReservations(listingId) via useSupabaseQuery"
-    status: pending
+    status: done
   - id: list
     content: "SellerReservations component: egg count, time, status"
-    status: pending
+    status: done
   - id: wire
     content: "SellerListingDialog shows counts, expiry and list; strings"
-    status: pending
+    status: done
   - id: manual-pass
     content: "End-to-end manual pass"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 4 — Seller reservations view
 
-**Repo:** `eggs` · **Branch:** `feat/listing-roles-seller-reservations` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/listing-roles-seller-reservations` · **Status:** shipped
 
 **Depends on:** [3](03-listing-dialog-split.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §5 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

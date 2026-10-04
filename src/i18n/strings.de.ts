@@ -65,11 +65,11 @@ export const strings = {
   "reserve.error":
     "Ups, das Ei ist runtergefallen! 🥚 Bitte versuche es erneut.",
   "reserve.contactNote.label": "Kontakthinweis",
-  "seller.markSold": "Als verkauft markieren",
-  "seller.markCancelled": "Angebot zurückziehen",
-  "seller.error": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
-  "seller.expiresAt.label": "Ablaufdatum",
-  "seller.expiresAt.save": "Speichern",
-  "seller.expiresAt.error":
-    "Das Datum darf höchstens 14 Tage in der Zukunft liegen.",
+  "sellerView.reserved.label": "Reserviert",
+  "sellerView.remaining.label": "Übrig",
+  "sellerView.expires.label": "Läuft ab",
+  "sellerView.reservations.title": "Reservierungen",
+  "sellerView.reservations.empty": "Noch keine Reservierungen.",
+  "sellerView.reservation.active": "Aktiv",
+  "sellerView.reservation.cancelled": "Storniert",
 } as const;

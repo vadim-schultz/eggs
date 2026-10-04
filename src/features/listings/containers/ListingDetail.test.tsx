@@ -5,13 +5,24 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import ListingDetail from "./ListingDetail";
 import type { Listing } from "@/features/listings/types/listing";
 
-const { singleMock, eqMock, selectMock, fromMock } = vi.hoisted(() => {
-  const singleMock = vi.fn();
-  const eqMock = vi.fn(() => ({ single: singleMock }));
-  const selectMock = vi.fn(() => ({ eq: eqMock }));
-  const fromMock = vi.fn(() => ({ select: selectMock }));
-  return { singleMock, eqMock, selectMock, fromMock };
-});
+const { singleMock, eqMock, selectMock, fromMock, useSessionMock } = vi.hoisted(
+  () => {
+    const singleMock = vi.fn();
+    const chain: Record<string, unknown> = { single: singleMock };
+    const eqMock = vi.fn(() => chain);
+    const gtMock = vi.fn(() => chain);
+    chain.eq = eqMock;
+    chain.gt = gtMock;
+    const selectMock = vi.fn(() => ({ eq: eqMock }));
+    const fromMock = vi.fn(() => ({ select: selectMock }));
+    const useSessionMock = vi.fn();
+    return { singleMock, eqMock, selectMock, fromMock, useSessionMock };
+  },
+);
+
+vi.mock("@/features/auth/hooks/useSession", () => ({
+  useSession: useSessionMock,
+}));
 
 vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: fromMock },
@@ -27,8 +38,8 @@ vi.mock("@/features/listings/components/ContactReveal", () => ({
   ),
 }));
 
-vi.mock("@/features/listings/components/SellerActions", () => ({
-  default: () => <div data-testid="seller-actions" />,
+vi.mock("@/features/listings/hooks/useListingReservations", () => ({
+  useListingReservations: () => ({ reservations: [], loading: false }),
 }));
 
 function activeListing(overrides: Partial<Listing> = {}): Listing {
@@ -62,6 +73,11 @@ describe("ListingDetail", () => {
     selectMock.mockClear();
     eqMock.mockClear();
     singleMock.mockReset();
+    useSessionMock.mockReset();
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
   });
 
   it("renders egg row, KV rows for count price and status for an active listing", async () => {
@@ -87,7 +103,7 @@ describe("ListingDetail", () => {
     expect(eqMock).toHaveBeenCalledWith("id", "listing-1");
   });
 
-  it("mounts ReserveButton and the contact reveal for the loaded listing", async () => {
+  it("non-owner gets the buyer dialog with ReserveButton and contact reveal", async () => {
     singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
@@ -95,19 +111,62 @@ describe("ListingDetail", () => {
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
-    expect(screen.getByTestId("seller-actions")).toBeInTheDocument();
   });
 
-  it("seller sees the contact reveal for their own listing regardless of reservation", async () => {
+  it("owner gets the seller dialog with summary and own contact note", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "seller-1" } },
+      loading: false,
+    });
     singleMock.mockResolvedValue({
-      data: activeListing({ seller_id: "seller-1", status: "reserved" }),
+      data: activeListing({ seller_id: "seller-1" }),
       error: null,
     });
 
     renderAt("listing-1");
+    await screen.findByTestId("contact-reveal");
+
+    expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
+    expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
+  });
+
+  it("owner never sees the reserve button", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "seller-1" } },
+      loading: false,
+    });
+    singleMock.mockResolvedValue({
+      data: activeListing({ seller_id: "seller-1" }),
+      error: null,
+    });
+
+    renderAt("listing-1");
+    await screen.findByTestId("contact-reveal");
+
+    expect(screen.queryByTestId("reserve-button")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Reservieren/)).not.toBeInTheDocument();
+  });
+
+  it("buyer view renders no seller-only content", async () => {
+    singleMock.mockResolvedValue({ data: activeListing(), error: null });
+
+    renderAt("listing-1");
     await screen.findByTestId("reserve-button");
 
-    expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
+    expect(
+      screen.queryByText(/Als verkauft markieren/),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Angebot zurückziehen/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ablaufdatum/)).not.toBeInTheDocument();
+  });
+
+  it("signed-out viewer gets the buyer dialog", async () => {
+    useSessionMock.mockReturnValue({ session: null, loading: false });
+    singleMock.mockResolvedValue({ data: activeListing(), error: null });
+
+    renderAt("listing-1");
+
+    expect(await screen.findByTestId("reserve-button")).toBeInTheDocument();
   });
 
   it("shows reserved status in KV for a reserved listing", async () => {

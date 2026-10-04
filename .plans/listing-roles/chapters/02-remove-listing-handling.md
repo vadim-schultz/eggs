@@ -4,19 +4,19 @@ overview: "Delete SellerActions (mark sold, withdraw, expiry editor), their API 
 todos:
   - id: delete-ui
     content: "Delete SellerActions, MarkStatusActions, ExpiryEditor and tests"
-    status: pending
+    status: done
   - id: delete-api
     content: "Remove markListingSold, markListingCancelled, updateListingExpiry from listingsApi"
-    status: pending
+    status: done
   - id: strings-badge
     content: "Remove seller.* strings and sold/cancelled StatusBadge cases"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 2 — Remove listing handling
 
-**Repo:** `eggs` · **Branch:** `feat/listing-roles-remove-handling` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/listing-roles-remove-handling` · **Status:** shipped
 
 **Depends on:** [1](01-visibility-and-lifecycle-backend.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §1, §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

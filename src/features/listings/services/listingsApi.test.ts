@@ -1,34 +1,48 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Listing } from "@/features/listings/types/listing";
+import * as listingsApi from "./listingsApi";
 import {
   createListing,
   fetchListing,
   fetchListingContact,
 } from "./listingsApi";
 
-const { singleMock, maybeSingleMock, eqMock, selectMock, fromMock, rpcMock } =
-  vi.hoisted(() => {
-    const singleMock = vi.fn();
-    const maybeSingleMock = vi.fn();
-    const eqMock = vi.fn((...args: unknown[]) => {
-      if (args[0] === "listing_id") {
-        return { maybeSingle: maybeSingleMock };
-      }
-      return { single: singleMock };
-    });
-    const selectMock = vi.fn(() => ({ eq: eqMock }));
-    const fromMock = vi.fn(() => ({ select: selectMock }));
-    const rpcMock = vi.fn();
-    return {
-      singleMock,
-      maybeSingleMock,
-      eqMock,
-      selectMock,
-      fromMock,
-      rpcMock,
-    };
+const {
+  singleMock,
+  maybeSingleMock,
+  eqMock,
+  gtMock,
+  selectMock,
+  fromMock,
+  rpcMock,
+} = vi.hoisted(() => {
+  const singleMock = vi.fn();
+  const maybeSingleMock = vi.fn();
+  const chain: Record<string, unknown> = {};
+  const eqMock = vi.fn((...args: unknown[]) => {
+    if (args[0] === "listing_id") {
+      return { maybeSingle: maybeSingleMock };
+    }
+    return chain;
   });
+  const gtMock = vi.fn(() => chain);
+  chain.eq = eqMock;
+  chain.gt = gtMock;
+  chain.single = singleMock;
+  const selectMock = vi.fn(() => ({ eq: eqMock }));
+  const fromMock = vi.fn(() => ({ select: selectMock }));
+  const rpcMock = vi.fn();
+  return {
+    singleMock,
+    maybeSingleMock,
+    eqMock,
+    gtMock,
+    selectMock,
+    fromMock,
+    rpcMock,
+  };
+});
 
 vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: fromMock, rpc: rpcMock },
@@ -67,6 +81,7 @@ describe("listingsApi", () => {
     fromMock.mockClear();
     selectMock.mockClear();
     eqMock.mockClear();
+    gtMock.mockClear();
     singleMock.mockReset();
     maybeSingleMock.mockReset();
     rpcMock.mockReset();
@@ -81,6 +96,16 @@ describe("listingsApi", () => {
     expect(fromMock).toHaveBeenCalledWith("listing");
     expect(eqMock).toHaveBeenCalledWith("id", "listing-1");
     expect(result).toEqual({ listing: row });
+  });
+
+  it("fetchListing only requests visible listings (active, eggs left, not expired)", async () => {
+    singleMock.mockResolvedValue({ data: activeListing(), error: null });
+
+    await fetchListing("listing-1");
+
+    expect(eqMock).toHaveBeenCalledWith("status", "active");
+    expect(gtMock).toHaveBeenCalledWith("egg_count", 0);
+    expect(gtMock).toHaveBeenCalledWith("expires_at", expect.any(String));
   });
 
   it("fetchListing returns null when supabase returns no row", async () => {
@@ -130,5 +155,15 @@ describe("listingsApi", () => {
     const result = await createListing(createListingPayload);
 
     expect(result).toEqual({ error: true });
+  });
+});
+
+describe("listingsApi surface", () => {
+  it("exports no manual listing handling functions", () => {
+    const names = Object.keys(listingsApi);
+    expect(names).toContain("reserveListing");
+    expect(names).not.toContain("markListingSold");
+    expect(names).not.toContain("markListingCancelled");
+    expect(names).not.toContain("updateListingExpiry");
   });
 });

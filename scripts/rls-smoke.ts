@@ -196,14 +196,12 @@ async function main() {
     "a second reservation insert on the same listing by user C violates the partial unique index",
     async () => {
       const { data: userCData } = await userC.auth.getUser();
-      const { error } = await userC
-        .from("reservation")
-        .insert({
-          listing_id: listingId,
-          buyer_id: userCData.user!.id,
-          egg_count: 12,
-          unit: "dozen",
-        });
+      const { error } = await userC.from("reservation").insert({
+        listing_id: listingId,
+        buyer_id: userCData.user!.id,
+        egg_count: 12,
+        unit: "dozen",
+      });
       assert(!!error, "expected the second active reservation to be rejected");
     },
   );
@@ -255,8 +253,45 @@ async function main() {
   );
 
   await check(
+    "seller A can read the reservations of their own listing",
+    async () => {
+      const { data, error } = await userA
+        .from("reservation")
+        .select("id, egg_count, status, created_at")
+        .eq("listing_id", listingId);
+      assert(!error, `unexpected error: ${error?.message}`);
+      assert(
+        data!.length >= 1,
+        "expected the seller to see the listing's reservations",
+      );
+    },
+  );
+
+  await check(
+    "user C (not seller or buyer) cannot read the listing's reservations",
+    async () => {
+      const { data, error } = await userC
+        .from("reservation")
+        .select("id")
+        .eq("listing_id", listingId);
+      assert(!error, `unexpected error: ${error?.message}`);
+      assert(
+        data!.length === 0,
+        "expected zero reservation rows for an unrelated user",
+      );
+    },
+  );
+
+  await check(
     "listings_near returns a listing within radius_m and omits one outside it",
     async () => {
+      const { data: fresh, error: freshError } = await admin
+        .from("listing")
+        .insert(newListing())
+        .select("id")
+        .single();
+      assert(!freshError, `unexpected error: ${freshError?.message}`);
+      const nearId = fresh!.id as string;
       const near = await anon.rpc("listings_near", {
         p_lat: point.lat,
         p_lng: point.lng,
@@ -264,7 +299,7 @@ async function main() {
       });
       assert(!near.error, `unexpected error: ${near.error?.message}`);
       assert(
-        (near.data as { id: string }[]).some((row) => row.id === listingId),
+        (near.data as { id: string }[]).some((row) => row.id === nearId),
         "expected the listing within radius_m to be returned",
       );
 
@@ -275,7 +310,7 @@ async function main() {
       });
       assert(!far.error, `unexpected error: ${far.error?.message}`);
       assert(
-        !(far.data as { id: string }[]).some((row) => row.id === listingId),
+        !(far.data as { id: string }[]).some((row) => row.id === nearId),
         "expected the listing outside radius_m to be omitted",
       );
     },
@@ -567,56 +602,102 @@ async function main() {
     },
   );
 
-  let sellableListingId = "";
+  const visibleIds = async (): Promise<string[]> => {
+    const { data, error } = await anon.rpc("listings_near", {
+      p_lat: point.lat,
+      p_lng: point.lng,
+      p_radius_m: 1000,
+    });
+    assert(!error, `unexpected error: ${error?.message}`);
+    return (data as { id: string }[]).map((row) => row.id);
+  };
+  const insertListing = async (overrides: Record<string, unknown> = {}) => {
+    const { data, error } = await admin
+      .from("listing")
+      .insert({ ...newListing(), ...overrides })
+      .select("id")
+      .single();
+    assert(!error, `unexpected error: ${error?.message}`);
+    return data!.id as string;
+  };
+
+  let visibleListingId = "";
   await check(
-    "seller A can create a listing for the mark_listing_sold checks",
+    "listings_near returns an active listing with eggs that expires in the future",
     async () => {
-      const { data, error } = await userA
-        .from("listing")
-        .insert(newListing())
-        .select("id")
-        .single();
-      assert(!error, `unexpected error: ${error?.message}`);
-      sellableListingId = data!.id as string;
+      visibleListingId = await insertListing();
+      const ids = await visibleIds();
+      assert(ids.includes(visibleListingId), "expected listing to be visible");
     },
   );
 
-  await check("mark_listing_sold by a non-owner is rejected", async () => {
-    const { error } = await userB.rpc("mark_listing_sold", {
-      p_listing_id: sellableListingId,
-    });
-    assert(!!error, "expected non-owner mark_listing_sold to be rejected");
-  });
+  await check(
+    "listings_near hides a fully reserved listing and shows it again after the buyer cancels",
+    async () => {
+      const { data, error } = await userB.rpc("reserve_listing", {
+        p_listing_id: visibleListingId,
+        p_egg_count: 12,
+      });
+      assert(!error, `unexpected error: ${error?.message}`);
+      const hidden = await visibleIds();
+      assert(
+        !hidden.includes(visibleListingId),
+        "expected fully reserved listing to be hidden",
+      );
 
-  await check("mark_listing_sold by the owner succeeds", async () => {
-    const { error } = await userA.rpc("mark_listing_sold", {
-      p_listing_id: sellableListingId,
-    });
-    assert(!error, `unexpected error: ${error?.message}`);
+      const { error: cancelError } = await userB.rpc("cancel_reservation", {
+        p_reservation_id: (data as { id: string }).id,
+      });
+      assert(!cancelError, `unexpected error: ${cancelError?.message}`);
+      const shown = await visibleIds();
+      assert(shown.includes(visibleListingId), "expected listing to return");
+    },
+  );
 
-    const { data, error: fetchError } = await admin
-      .from("listing")
-      .select("status")
-      .eq("id", sellableListingId)
-      .single();
-    assert(!fetchError, `unexpected error: ${fetchError?.message}`);
-    assert(
-      data!.status === "sold",
-      `expected status 'sold', got '${data!.status}'`,
-    );
+  let pastActiveListingId = "";
+  await check(
+    "listings_near hides an active listing whose expires_at has passed",
+    async () => {
+      pastActiveListingId = await insertListing({
+        expires_at: new Date(Date.now() - 1000).toISOString(),
+      });
+      const ids = await visibleIds();
+      assert(!ids.includes(pastActiveListingId), "expected it to be hidden");
+    },
+  );
+
+  await check("reserve_listing on an expired listing is rejected", async () => {
+    const { error } = await userB.rpc("reserve_listing", {
+      p_listing_id: pastActiveListingId,
+      p_egg_count: 1,
+    });
+    assert(!!error, "expected reserve on an expired listing to be rejected");
   });
 
   await check(
-    "updating expires_at beyond the allowed bound violates the CHECK constraint",
+    "mark_listing_sold and mark_listing_cancelled no longer exist",
     async () => {
-      const tooFar = new Date(
-        Date.now() + 15 * 24 * 60 * 60 * 1000,
-      ).toISOString();
+      for (const fn of ["mark_listing_sold", "mark_listing_cancelled"]) {
+        const { error } = await userA.rpc(fn, {
+          p_listing_id: visibleListingId,
+        });
+        assert(
+          error?.code === "PGRST202",
+          `expected ${fn} to be gone, got ${error?.code ?? "no error"}`,
+        );
+      }
+    },
+  );
+
+  await check(
+    "expires_at more than 14 days out is no longer rejected (bound dropped)",
+    async () => {
+      const farOut = new Date(Date.now() + 15 * 86400000).toISOString();
       const { error } = await userA
         .from("listing")
-        .update({ expires_at: tooFar })
-        .eq("id", sellableListingId);
-      assert(!!error, "expected the bound CHECK to reject an expires_at 15 days out");
+        .update({ expires_at: farOut })
+        .eq("id", visibleListingId);
+      assert(!error, `unexpected error: ${error?.message}`);
     },
   );
 

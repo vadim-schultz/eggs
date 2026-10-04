@@ -22,6 +22,13 @@ export interface ActiveReservationRow {
   buyer_id: string;
 }
 
+export interface ListingReservationRow {
+  id: string;
+  egg_count: number;
+  status: "active" | "cancelled";
+  created_at: string;
+}
+
 export async function fetchListing(
   id: string,
 ): Promise<{ listing: Listing | null }> {
@@ -29,6 +36,9 @@ export async function fetchListing(
     .from("listing")
     .select("*")
     .eq("id", id)
+    .eq("status", "active")
+    .gt("egg_count", 0)
+    .gt("expires_at", new Date().toISOString())
     .single();
 
   return { listing: (data as Listing | null) ?? null };
@@ -69,45 +79,6 @@ export async function fetchActiveReservation(
   return { reservation: (data as ActiveReservationRow | null) ?? null };
 }
 
-export async function markListingSold(
-  listingId: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase.rpc("mark_listing_sold", {
-    p_listing_id: listingId,
-  });
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
-export async function markListingCancelled(
-  listingId: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase.rpc("mark_listing_cancelled", {
-    p_listing_id: listingId,
-  });
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
-export async function updateListingExpiry(
-  listingId: string,
-  isoDate: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase
-    .from("listing")
-    .update({ expires_at: isoDate })
-    .eq("id", listingId);
-
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
 export async function reserveListing(
   listingId: string,
   eggCount: number,
@@ -132,4 +103,16 @@ export async function cancelReservation(
     return { error: true };
   }
   return {};
+}
+
+export async function fetchListingReservations(
+  listingId: string,
+): Promise<{ reservations: ListingReservationRow[] }> {
+  const { data } = await supabase
+    .from("reservation")
+    .select("id, egg_count, status, created_at")
+    .eq("listing_id", listingId)
+    .order("created_at", { ascending: false });
+
+  return { reservations: (data as ListingReservationRow[] | null) ?? [] };
 }
