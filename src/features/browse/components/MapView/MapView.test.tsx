@@ -25,6 +25,7 @@ vi.mock("@/features/auth/hooks/useSession", () => ({
 vi.mock("@/lib/supabaseClient", () => ({
   supabase: { from: vi.fn(), rpc: vi.fn() },
 }));
+import { easterColors } from "@/theme/tokens/colors";
 import mapViewSource from "./MapView.tsx?raw";
 import type { ListingNear } from "@/features/listings/types/listing";
 
@@ -158,5 +159,18 @@ describe("MapView", () => {
     const sliderLabel = popover.getByTestId("slider-with-value-label");
 
     expect(sliderLabel.closest("button")).toBeNull();
+  });
+
+  it("colours marker pins from the egg palette, not hardcoded blue/orange", () => {
+    renderMap({ listings: [listing()] });
+
+    const pins = document.querySelectorAll<HTMLElement>(
+      ".map-pin-marker span",
+    );
+    const backgrounds = Array.from(pins).map((pin) => pin.style.background);
+    const probe = document.createElement("span");
+    probe.style.background = easterColors.coral[500].value;
+    expect(backgrounds).toContain(probe.style.background);
+    expect(mapViewSource).not.toMatch(/#2b6cb0|#dd6b20/i);
   });
 });
