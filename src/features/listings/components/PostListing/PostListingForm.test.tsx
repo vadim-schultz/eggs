@@ -36,7 +36,7 @@ describe("PostListingForm", () => {
     renderForm();
 
     const eggRow = screen.getByTestId("egg-quantity-row");
-    const priceInput = screen.getByLabelText("Preis (€)");
+    const priceInput = screen.getByLabelText("Preis pro Ei (€)");
 
     expect(
       eggRow.compareDocumentPosition(priceInput) &

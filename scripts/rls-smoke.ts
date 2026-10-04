@@ -123,7 +123,7 @@ async function main() {
     seller_id: sellerAId,
     egg_count: 12,
     unit: "dozen",
-    price_cents: 300,
+    price_per_egg_cents: 300,
     location: `SRID=4326;POINT(${point.lng} ${point.lat})`,
     location_label: "Smoke test listing",
   });
@@ -287,7 +287,7 @@ async function main() {
       const { data, error } = await userA.rpc("create_listing", {
         p_egg_count: 6,
         p_unit: "dozen",
-        p_price_cents: 250,
+        p_price_per_egg_cents: 250,
         p_lat: point.lat,
         p_lng: point.lng,
         p_location_label: "create_listing smoke test",
@@ -317,7 +317,7 @@ async function main() {
     const { error } = await userA.rpc("create_listing", {
       p_egg_count: 0,
       p_unit: "dozen",
-      p_price_cents: 250,
+      p_price_per_egg_cents: 250,
       p_lat: point.lat,
       p_lng: point.lng,
       p_location_label: "create_listing smoke test",

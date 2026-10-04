@@ -7,7 +7,7 @@ function wellFormedInput(): ListingInput {
   return {
     eggCount: 12,
     unit: "dozen",
-    priceCents: 400,
+    pricePerEggCents: 400,
     locationLabel: "Downtown, near the market",
     note: "",
     contactNote: "Ring the bell",
@@ -21,10 +21,10 @@ describe("validateListingInput", () => {
     expect(errors.eggCount).toBeDefined();
   });
 
-  it("rejects negative price_cents", () => {
+  it("rejects negative price_per_egg_cents", () => {
     const errors = validateListingInput({
       ...wellFormedInput(),
-      priceCents: -1,
+      pricePerEggCents: -1,
     });
 
     expect(errors.priceCents).toBeDefined();

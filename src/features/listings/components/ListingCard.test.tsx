@@ -12,7 +12,7 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
     seller_id: "seller-1",
     egg_count: 7,
     unit: "each",
-    price_cents: 400,
+    price_per_egg_cents: 400,
     currency: "EUR",
     location_label: "Downtown, near the market",
     note: null,
@@ -45,7 +45,7 @@ describe("ListingCard", () => {
     expect(rows).toHaveLength(2);
     expect(screen.getByText("Anzahl")).toBeInTheDocument();
     expect(screen.getByText("7 Stück")).toBeInTheDocument();
-    expect(screen.getByText("Preis")).toBeInTheDocument();
+    expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
   });
 

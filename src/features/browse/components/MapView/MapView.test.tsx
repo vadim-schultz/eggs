@@ -35,7 +35,7 @@ function listing(overrides: Partial<ListingNear> = {}): ListingNear {
     seller_id: "seller-1",
     egg_count: 12,
     unit: "dozen",
-    price_cents: 400,
+    price_per_egg_cents: 400,
     currency: "EUR",
     lat: 52.52,
     lng: 13.405,
@@ -109,7 +109,7 @@ describe("MapView", () => {
     const item = listing({
       id: "listing-pop",
       egg_count: 12,
-      price_cents: 400,
+      price_per_egg_cents: 400,
     });
     const { unmount } = renderMap({
       listings: [item],
