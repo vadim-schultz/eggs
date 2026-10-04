@@ -119,6 +119,20 @@ Replace Braille with a **decade egg row** (`TbEgg` / `TbEggFilled`, max 100), ad
 
 Status: planned — documentation suite written; implementation loop runs after merge to `main`.
 
+### [playful-theme/](playful-theme/) — Bright playful Easter theme
+
+Promote the 12-colour Easter palette to full theme ramps and **role palettes** (`primary`, `danger`, …), then apply it everywhere: pastel surfaces with sticker shadows, chunky control recipes, and a reduced-motion-safe "silly" layer (egg burst, wiggle, palette-coloured map markers, playful copy). Four chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/playful-theme`).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](playful-theme/00-architecture.md) | Token model, role map, recipes, motion and contrast rules |
+| [01-rollout.md](playful-theme/01-rollout.md) | Four chapters, git invariants, dependency graph, execution order |
+| [gaps-and-decisions.md](playful-theme/gaps-and-decisions.md) | D1–D11 palette, roles, recipes, motion |
+| [run-ledger.md](playful-theme/run-ledger.md) | Merge ledger |
+| [chapters/](playful-theme/chapters/) | One executable plan per chapter |
+
+Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
