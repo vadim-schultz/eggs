@@ -22,6 +22,13 @@ export interface ActiveReservationRow {
   buyer_id: string;
 }
 
+export interface ListingReservationRow {
+  id: string;
+  egg_count: number;
+  status: "active" | "cancelled";
+  created_at: string;
+}
+
 export async function fetchListing(
   id: string,
 ): Promise<{ listing: Listing | null }> {
@@ -96,4 +103,16 @@ export async function cancelReservation(
     return { error: true };
   }
   return {};
+}
+
+export async function fetchListingReservations(
+  listingId: string,
+): Promise<{ reservations: ListingReservationRow[] }> {
+  const { data } = await supabase
+    .from("reservation")
+    .select("id, egg_count, status, created_at")
+    .eq("listing_id", listingId)
+    .order("created_at", { ascending: false });
+
+  return { reservations: (data as ListingReservationRow[] | null) ?? [] };
 }
