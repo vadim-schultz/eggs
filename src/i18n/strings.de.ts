@@ -38,7 +38,8 @@ export const strings = {
   "post.errors.contactNote": "Bitte gib einen Kontakthinweis an.",
   "home.heading": "Eier in deiner Nähe",
   "home.radius.label": "Umkreis",
-  "home.empty": "Keine Angebote in diesem Umkreis gefunden.",
+  "home.empty":
+    "Keine Angebote in diesem Umkreis gefunden. Die Hühner streiken wohl! 🐔",
   "listing.count.label": "Anzahl",
   "listing.price.label": "Preis",
   "listing.location.label": "Ort",
@@ -53,7 +54,8 @@ export const strings = {
   "reserve.reserve": "Reservieren",
   "reserve.reserved": "Reserviert",
   "reserve.cancel": "Reservierung stornieren",
-  "reserve.error": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
+  "reserve.error":
+    "Ups, das Ei ist runtergefallen! 🥚 Bitte versuche es erneut.",
   "reserve.contactNote.label": "Kontakthinweis",
   "seller.markSold": "Als verkauft markieren",
   "seller.markCancelled": "Angebot zurückziehen",

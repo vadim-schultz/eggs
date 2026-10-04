@@ -4,22 +4,22 @@ overview: "Keyframes, EggBurst, egg wiggle, palette-coloured map markers, playfu
 todos:
   - id: keyframes
     content: "theme/keyframes.ts (wiggle, bounce, pop) gated by reduced motion"
-    status: pending
+    status: completed
   - id: egg-burst
     content: "EggBurst on reserve and post success"
-    status: pending
+    status: completed
   - id: markers-copy
     content: "palette-coloured map markers + playful strings.de.ts copy"
-    status: pending
+    status: completed
   - id: verify
     content: "docs sync, README status, light/dark screenshots"
-    status: pending
+    status: completed
 isProject: false
 ---
 
 # Chapter 4 — Silly layer and verify
 
-**Repo:** `eggs` · **Branch:** `feat/eggs-playful-silly` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/eggs-playful-silly` · **Status:** shipped
 
 **Depends on:** [02-surfaces-and-chrome.md](02-surfaces-and-chrome.md), [03-control-recipes.md](03-control-recipes.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §9 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

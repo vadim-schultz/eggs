@@ -1,6 +1,7 @@
 import { Button, Stack } from "@chakra-ui/react";
 import { useState } from "react";
 
+import EggBurst from "@/components/ui/EggBurst";
 import { useSession } from "@/features/auth/hooks/useSession";
 import { useActiveReservation } from "@/features/listings/hooks/useActiveReservation";
 import {
@@ -30,6 +31,7 @@ export default function ReserveButton({
     listing.id,
     Boolean(session) && !isActive,
   );
+  const [burst, setBurst] = useState(false);
   const { busy, error, run } = useAsyncAction();
 
   if (sessionLoading) return null;
@@ -37,10 +39,18 @@ export default function ReserveButton({
     return <Button disabled>{t("reserve.signInRequired")}</Button>;
   }
 
-  async function runMutation(action: () => Promise<{ error?: true }>) {
+  const burstOverlay = (
+    <EggBurst active={burst} count={6} onDone={() => setBurst(false)} />
+  );
+
+  async function runMutation(
+    action: () => Promise<{ error?: true }>,
+    celebrate = false,
+  ) {
     await run(async () => {
       const result = await action();
       if (result.error) return { ok: false };
+      if (celebrate) setBurst(true);
       onChange();
       return { ok: true };
     });
@@ -48,7 +58,7 @@ export default function ReserveButton({
 
   async function reserve() {
     if (!isReserveCountValid(reserveCount, listing.egg_count)) return;
-    await runMutation(() => reserveListing(listing.id, reserveCount));
+    await runMutation(() => reserveListing(listing.id, reserveCount), true);
   }
 
   async function cancel() {
@@ -61,6 +71,7 @@ export default function ReserveButton({
 
     return (
       <Stack gap="3" w="full">
+        {burstOverlay}
         <ReserveAmountControl
           unit={listing.unit}
           maxEggCount={listing.egg_count}
@@ -80,12 +91,15 @@ export default function ReserveButton({
 
   if (!reservationLoading && reservation) {
     return (
-      <ReserveActionButton
-        label={t("reserve.cancel")}
-        busy={busy}
-        error={error}
-        onClick={cancel}
-      />
+      <>
+        {burstOverlay}
+        <ReserveActionButton
+          label={t("reserve.cancel")}
+          busy={busy}
+          error={error}
+          onClick={cancel}
+        />
+      </>
     );
   }
 

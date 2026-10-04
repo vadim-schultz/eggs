@@ -164,9 +164,7 @@ describe("MapView", () => {
   it("colours marker pins from the egg palette, not hardcoded blue/orange", () => {
     renderMap({ listings: [listing()] });
 
-    const pins = document.querySelectorAll<HTMLElement>(
-      ".map-pin-marker span",
-    );
+    const pins = document.querySelectorAll<HTMLElement>(".map-pin-marker span");
     const backgrounds = Array.from(pins).map((pin) => pin.style.background);
     const probe = document.createElement("span");
     probe.style.background = easterColors.coral[500].value;

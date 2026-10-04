@@ -169,7 +169,7 @@ describe("ReserveButton", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
 
-    await screen.findByText(/fehlgeschlagen/);
+    await screen.findByText(/Ei ist runtergefallen/);
     expect(screen.queryByTestId("egg-burst")).not.toBeInTheDocument();
   });
 });
