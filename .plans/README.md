@@ -133,6 +133,20 @@ Promote the 12-colour Easter palette to full theme ramps and **role palettes** (
 
 Status: shipped — chapters 1–4 merged into the loop branch `feat/plans-playful-theme`; release PR to `main` pending.
 
+### [egg-pricing/](egg-pricing/) — Price per egg and carton picker
+
+Sellers set an amount (typed input) and the price of **one** egg; buyers choose a **6 or 10 egg carton** from a 4-column grid of radios and multi-coloured eggs with the carton price shown under each. Listing detail moves into the shared `AppDialog` (map popup removed) and key/value rows are vertically centred. Includes a schema migration (`price_cents` → `price_per_egg_cents`). Six chapters; orchestration via [`.claude/skills/chief-of-staff/SKILL.md`](../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-pricing`).
+
+| Doc | What it is |
+| --- | --- |
+| [00-architecture.md](egg-pricing/00-architecture.md) | Data model, seller form, carton grid, dialog consolidation, traceability |
+| [01-rollout.md](egg-pricing/01-rollout.md) | Six chapters, git invariants, dependency graph, execution order |
+| [gaps-and-decisions.md](egg-pricing/gaps-and-decisions.md) | D1–D12 price model, cartons, low stock, dialog |
+| [run-ledger.md](egg-pricing/run-ledger.md) | Merge ledger |
+| [chapters/](egg-pricing/chapters/) | One executable plan per chapter |
+
+Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+
 ## Conventions
 
 - **Frontmatter.** Each plan opens with YAML: `name`, `overview`, an optional `todos` list, and `isProject`.
