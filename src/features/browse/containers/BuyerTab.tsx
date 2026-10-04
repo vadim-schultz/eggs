@@ -4,7 +4,11 @@ import { Stack } from "@chakra-ui/react";
 import { useAppDialog } from "@/features/shell/context/appDialog";
 import { usePublishBackgroundMap } from "@/features/shell/context/backgroundMap";
 import AuthButton from "@/features/auth/components/AuthButton";
-import { BuyerSearchRows } from "@/features/browse/components/BuyerTab";
+import { useSession } from "@/features/auth/hooks/useSession";
+import {
+  BuyerReservations,
+  BuyerSearchRows,
+} from "@/features/browse/components/BuyerTab";
 import { useGeolocation } from "@/features/location/hooks/useGeolocation";
 import { useListingsNear } from "@/features/browse/hooks/useListingsNear";
 import type { ConfirmedPin } from "@/features/location/types/place";
@@ -22,6 +26,7 @@ export default function BuyerTab() {
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { session } = useSession();
   const { open, openDetailDialog, openHereDialog } = useAppDialog();
 
   useEffect(() => {
@@ -74,6 +79,12 @@ export default function BuyerTab() {
         onConfirmLocation={setManualCenter}
         onRequestGeolocation={handleRequestGeolocation}
       />
+      {session && (
+        <BuyerReservations
+          buyerId={session.user.id}
+          dialogOpen={open !== null}
+        />
+      )}
     </Stack>
   );
 }
