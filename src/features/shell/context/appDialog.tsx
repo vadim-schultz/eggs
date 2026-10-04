@@ -10,12 +10,16 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSession } from "@/features/auth/hooks/useSession";
 
 export type OpenAppDialog =
-  { kind: "post" } | { kind: "detail"; listingId: string } | null;
+  | { kind: "post" }
+  | { kind: "detail"; listingId: string }
+  | { kind: "published" }
+  | null;
 
 interface AppDialogContextValue {
   open: OpenAppDialog;
   openPostDialog: () => void;
   openDetailDialog: (listingId: string) => void;
+  openPublishedDialog: () => void;
   closeDialog: () => void;
 }
 
@@ -25,6 +29,7 @@ const AppDialogContext = createContext<AppDialogContextValue>({
   open: null,
   openPostDialog: noop,
   openDetailDialog: noop,
+  openPublishedDialog: noop,
   closeDialog: noop,
 });
 
@@ -51,6 +56,7 @@ export function AppDialogProvider({ children }: { children: ReactNode }) {
     open,
     openPostDialog: () => setOpen({ kind: "post" }),
     openDetailDialog: (listingId) => setOpen({ kind: "detail", listingId }),
+    openPublishedDialog: () => setOpen({ kind: "published" }),
     closeDialog: () => {
       setOpen(null);
       navigate("/", { replace: true });
