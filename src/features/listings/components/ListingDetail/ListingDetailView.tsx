@@ -4,7 +4,6 @@ import KeyValueRow from "@/components/ui/KeyValueRow";
 import StatusBadge from "@/features/listings/components/StatusBadge";
 import ContactReveal from "@/features/listings/components/ContactReveal";
 import ReserveButton from "@/features/listings/components/ReserveButton";
-import SellerActions from "@/features/listings/components/SellerActions";
 import type { Listing } from "@/features/listings/types/listing";
 import { formatPrice } from "@/features/listings/utils/formatListing";
 import { t } from "@/i18n/t";
@@ -38,7 +37,6 @@ export default function ListingDetailView({
           on status change to re-run the query instead of caching a stale
           "not visible yet" result. */}
       <ContactReveal key={listing.status} listingId={listing.id} />
-      <SellerActions listing={listing} onChange={onChange} />
     </Stack>
   );
 }
