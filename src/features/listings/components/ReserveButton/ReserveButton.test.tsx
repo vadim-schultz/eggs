@@ -13,6 +13,7 @@ const {
   eqListingIdMock,
   selectMock,
   fromMock,
+  signInWithOAuthMock,
 } = vi.hoisted(() => {
   const maybeSingleMock = vi.fn();
   const eqStatusMock = vi.fn(() => ({ maybeSingle: maybeSingleMock }));
@@ -27,6 +28,7 @@ const {
     eqListingIdMock,
     selectMock,
     fromMock,
+    signInWithOAuthMock: vi.fn(),
   };
 });
 
@@ -34,7 +36,11 @@ vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
 vi.mock("@/lib/supabaseClient", () => ({
-  supabase: { from: fromMock, rpc: rpcMock },
+  supabase: {
+    from: fromMock,
+    rpc: rpcMock,
+    auth: { signInWithOAuth: signInWithOAuthMock },
+  },
 }));
 
 function activeListing(overrides: Partial<Listing> = {}): Listing {
@@ -65,6 +71,7 @@ function renderButton(listing: Listing, onChange = vi.fn()) {
 describe("ReserveButton", () => {
   beforeEach(() => {
     useSessionMock.mockReset();
+    signInWithOAuthMock.mockReset();
     rpcMock.mockReset();
     fromMock.mockClear();
     selectMock.mockClear();
@@ -74,14 +81,42 @@ describe("ReserveButton", () => {
     maybeSingleMock.mockResolvedValue({ data: null, error: null });
   });
 
-  it('shows "Sign in to reserve" with no session', () => {
+  it("starts the Google login from an enabled sign-in button", () => {
     useSessionMock.mockReturnValue({ session: null, loading: false });
+
+    renderButton(activeListing());
+    const button = screen.getByRole("button", {
+      name: "Zum Reservieren anmelden",
+    });
+    expect(button).toBeEnabled();
+    fireEvent.click(button);
+
+    expect(signInWithOAuthMock).toHaveBeenCalledWith({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+  });
+
+  it("shows no sign-in button and the carton picker when signed in", () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
 
     renderButton(activeListing());
 
     expect(
-      screen.getByRole("button", { name: "Zum Reservieren anmelden" }),
-    ).toBeDisabled();
+      screen.queryByRole("button", { name: "Zum Reservieren anmelden" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("radiogroup")).toBeInTheDocument();
+  });
+
+  it("renders nothing while the session is loading", () => {
+    useSessionMock.mockReturnValue({ session: null, loading: true });
+
+    renderButton(activeListing());
+
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
   function signIn() {
