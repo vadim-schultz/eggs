@@ -29,6 +29,9 @@ export async function fetchListing(
     .from("listing")
     .select("*")
     .eq("id", id)
+    .eq("status", "active")
+    .gt("egg_count", 0)
+    .gt("expires_at", new Date().toISOString())
     .single();
 
   return { listing: (data as Listing | null) ?? null };
