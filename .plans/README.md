@@ -159,7 +159,7 @@ The listing dialog is split into a buyer container (carton reserve, contact) and
 | [run-ledger.md](listing-roles/run-ledger.md) | Merge ledger |
 | [chapters/](listing-roles/chapters/) | One executable plan per chapter |
 
-Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+Status: shipped — chapters 1–5 merged into the loop branch `feat/plans-listing-roles`; release PR to `main` pending.
 
 ## Conventions
 

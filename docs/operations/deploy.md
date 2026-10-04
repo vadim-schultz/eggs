@@ -23,6 +23,9 @@ is ever pasted into the hosted SQL editor by hand.
 
 Then in the dashboard, confirm the push did what it should:
 
+- **Listing lifecycle:** visibility is query-time (fully reserved or past `expires_at` is hidden); the
+  `expire_listings()` cron is status cleanup only. See
+  [listing-roles architecture](../../.plans/listing-roles/00-architecture.md) §3.
 - **Database → Extensions:** `postgis` and `pg_cron` both show enabled.
 - **Database → Cron Jobs:** `expire-listings-daily` is listed. Check back the next day in
   **Database → Logs** to confirm it ran once.

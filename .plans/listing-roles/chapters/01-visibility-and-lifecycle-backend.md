@@ -4,19 +4,19 @@ overview: "Server enforces visibility (active, eggs left, not expired); reserve 
 todos:
   - id: migration
     content: "Migration: listings_near filter, reserve guards, drop mark_listing_sold/cancelled and listing_expires_at_bound"
-    status: pending
+    status: done
   - id: seed
     content: "seed.sql: fully reserved and expired fixtures"
-    status: pending
+    status: done
   - id: smoke
     content: "rls-smoke: hidden when fully reserved/expired, reappears on cancel, reserve on expired fails"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 1 — Visibility and lifecycle backend
 
-**Repo:** `eggs` · **Branch:** `feat/listing-roles-backend` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/listing-roles-backend` · **Status:** shipped
 
 **Depends on:** none · **Architecture:** [../00-architecture.md](../00-architecture.md) §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

@@ -4,16 +4,16 @@ overview: "Update mvp lifecycle docs, deploy runbook and plans index to match th
 todos:
   - id: mvp-docs
     content: "mvp architecture/gaps: lifecycle is automatic, no seller handling"
-    status: pending
+    status: done
   - id: ops
     content: "docs/operations/deploy.md and plans README reflect the change"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 5 — Docs sync
 
-**Repo:** `eggs` · **Branch:** `feat/listing-roles-docs` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/listing-roles-docs` · **Status:** shipped
 
 **Depends on:** [4](04-seller-reservations-view.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

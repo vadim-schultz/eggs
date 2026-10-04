@@ -124,9 +124,10 @@ outside the app, using whatever the seller chose to share.
 
 ## 9. Expiry and lifecycle
 
-A daily `pg_cron` job runs a `SECURITY DEFINER` SQL function that sets `status = 'expired'` on any
-`listing` where `status = 'active' AND expires_at < now()`. Sellers can also mark a listing `sold` or
-`cancelled` directly; buyers/sellers can cancel an `active` reservation, which reopens the listing.
+The lifecycle is automatic: visibility is evaluated at query time (fully reserved or 24h old listings are
+hidden), and sellers have no manual sold/withdraw/expiry controls. A daily `pg_cron` job
+(`expire_listings()`) only cleans up status. Buyers can cancel an `active` reservation, which reopens the
+listing if not yet expired. See [listing-roles architecture](../listing-roles/00-architecture.md) §3.
 
 ## 10. Out of scope, revisited
 
