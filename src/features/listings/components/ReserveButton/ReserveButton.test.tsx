@@ -84,28 +84,82 @@ describe("ReserveButton", () => {
     ).toBeDisabled();
   });
 
-  it("shows reserve slider and egg row and calls reserve_listing with selected count", async () => {
+  function signIn() {
     useSessionMock.mockReturnValue({
       session: { user: { id: "buyer-1" } },
       loading: false,
     });
     rpcMock.mockResolvedValue({ data: {}, error: null });
+  }
 
+  function reserveCalls() {
+    return rpcMock.mock.calls.filter(([name]) => name === "reserve_listing");
+  }
+
+  it("defaults to the 6-carton and reserves 6", async () => {
+    signIn();
     renderButton(activeListing());
-
-    expect(screen.getByTestId("egg-quantity-row")).toBeInTheDocument();
-    expect(screen.getByTestId("slider-with-value-label")).toHaveTextContent(
-      "1",
-    );
 
     fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
 
     await waitFor(() =>
       expect(rpcMock).toHaveBeenCalledWith("reserve_listing", {
         p_listing_id: "listing-1",
-        p_egg_count: 1,
+        p_egg_count: 6,
       }),
     );
+  });
+
+  it("reserves 10 after picking the 10-carton and shows both carton prices", async () => {
+    signIn();
+    renderButton(activeListing());
+
+    expect(screen.getByText(/24,00\s?€/)).toBeInTheDocument();
+    expect(screen.getByText(/40,00\s?€/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("radio", { name: "10 Eier" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
+
+    await waitFor(() =>
+      expect(rpcMock).toHaveBeenCalledWith("reserve_listing", {
+        p_listing_id: "listing-1",
+        p_egg_count: 10,
+      }),
+    );
+    expect(reserveCalls().map(([, args]) => args.p_egg_count)).toEqual([10]);
+  });
+
+  it("disables the 10-carton with 8 eggs but still reserves 6", async () => {
+    signIn();
+    renderButton(activeListing({ egg_count: 8 }));
+
+    expect(screen.getByRole("radio", { name: "10 Eier" })).toBeDisabled();
+    expect(screen.getByRole("radio", { name: "6 Eier" })).toBeEnabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
+
+    await waitFor(() => expect(reserveCalls()).toHaveLength(1));
+    expect(reserveCalls()[0][1].p_egg_count).toBe(6);
+  });
+
+  it("disables reserve and shows a note when no carton fits", () => {
+    signIn();
+    renderButton(activeListing({ egg_count: 4 }));
+
+    expect(screen.getByRole("radio", { name: "6 Eier" })).toBeDisabled();
+    expect(screen.getByRole("radio", { name: "10 Eier" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Reservieren" })).toBeDisabled();
+    expect(
+      screen.getByText("Nicht genug Eier für einen Karton"),
+    ).toBeInTheDocument();
+    expect(reserveCalls()).toHaveLength(0);
+  });
+
+  it("renders no slider in the reserve area", () => {
+    signIn();
+    renderButton(activeListing());
+
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
   });
 
   it('shows a disabled "Reserved" state when the listing status is reserved', async () => {
