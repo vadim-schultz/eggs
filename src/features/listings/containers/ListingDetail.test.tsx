@@ -75,7 +75,7 @@ describe("ListingDetail", () => {
     expect(
       screen.getAllByTestId("key-value-row").length,
     ).toBeGreaterThanOrEqual(3);
-    expect(screen.getByText("Verfügbar")).toBeInTheDocument();
+    expect(screen.getAllByText("Verfügbar").length).toBeGreaterThan(0);
     expect(screen.getByText("12 Eier")).toBeInTheDocument();
     expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();

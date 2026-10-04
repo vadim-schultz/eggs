@@ -117,7 +117,10 @@ describe("ReserveButton", () => {
     expect(screen.getByText(/24,00\s?€/)).toBeInTheDocument();
     expect(screen.getByText(/40,00\s?€/)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("radio", { name: "10 Eier" }));
+    fireEvent.click(screen.getByTestId("carton-eggs-10"));
+    await waitFor(() =>
+      expect(screen.getByRole("radio", { name: "10 Eier" })).toBeChecked(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Reservieren" }));
 
     await waitFor(() =>

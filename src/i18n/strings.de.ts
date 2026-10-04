@@ -46,7 +46,8 @@ export const strings = {
     "Keine Angebote in diesem Umkreis gefunden. Die Hühner streiken wohl! 🐔",
   "published.title": "Dein Angebot wurde veröffentlicht.",
   "published.expires": "Es läuft in 24 Stunden ab.",
-  "listing.count.label": "Anzahl",
+  "listing.available.label": "Verfügbar",
+  "listing.eggs.unit": "Eier",
   "listing.price.label": "Preis pro Ei",
   "listing.location.label": "Ort",
   "listing.status.label": "Status",
@@ -58,6 +59,7 @@ export const strings = {
   "listing.notFound": "Angebot nicht gefunden.",
   "reserve.signInRequired": "Zum Reservieren anmelden",
   "reserve.reserve": "Reservieren",
+  "reserve.noCarton": "Nicht genug Eier für einen Karton",
   "reserve.reserved": "Reserviert",
   "reserve.cancel": "Reservierung stornieren",
   "reserve.error":
