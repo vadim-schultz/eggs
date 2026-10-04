@@ -16,7 +16,7 @@ isProject: false
 
 # Chapter 5 — Reservation queries
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-reservation-queries` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-reservation-queries` · **Status:** shipped
 
 **Depends on:** [4](04-you-are-here-dialog.md) (order only) · **Architecture:** [../00-architecture.md](../00-architecture.md) §4 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

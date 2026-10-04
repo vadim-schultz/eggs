@@ -8,7 +8,7 @@ isProject: false
 
 **Rollout:** [01-rollout.md](01-rollout.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-**Status:** planned
+**Status:** shipped
 
 ---
 
@@ -94,3 +94,9 @@ Run via [`.claude/skills/chief-of-staff/SKILL.md`](../../.claude/skills/chief-of
 | Buyer: reservations in the Buyer card | 7 |
 | Separate seller and buyer listing/reservation components | 6, 7 |
 | Docs | 8 |
+
+## As shipped — deviations from the plan
+
+- Chapter 5: reservation queries and hooks live in `src/features/listings/services/reservationsApi.ts` with row mapping in `src/features/listings/utils/reservationRows.ts`, not in `listingsApi.ts`.
+- Chapter 6: `FarmerTab` renders `SellerReservationPanel` for the seller reservation list.
+- Chapter 7: a `BuyerReservations.tsx` wrapper was added in `src/features/browse/components/BuyerTab/` to host the buyer reservation list.

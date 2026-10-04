@@ -13,7 +13,7 @@ isProject: false
 
 # Chapter 8 — Docs sync
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-docs` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-docs` · **Status:** shipped
 
 **Depends on:** [7](07-buyer-reservation-list.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

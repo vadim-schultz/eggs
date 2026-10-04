@@ -16,7 +16,7 @@ isProject: false
 
 # Chapter 7 — Buyer reservation list
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-buyer-list` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-buyer-list` · **Status:** shipped
 
 **Depends on:** [6](06-seller-reservation-list.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §3, §4 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

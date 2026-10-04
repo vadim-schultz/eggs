@@ -135,7 +135,7 @@ Status: shipped — chapters 1–4 merged into the loop branch `feat/plans-playf
 
 ### [egg-pricing/](egg-pricing/) — Price per egg and carton picker
 
-Sellers set an amount (typed input) and the price of **one** egg; buyers choose a **6 or 10 egg carton** from a 4-column grid of radios and multi-coloured eggs with the carton price shown under each. Listing detail moves into the shared `AppDialog` (map popup removed) and key/value rows are vertically centred. Includes a schema migration (`price_cents` → `price_per_egg_cents`). Six chapters; orchestration via [`.claude/skills/chief-of-staff/SKILL.md`](../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-pricing`).
+Sellers set an amount (typed input) and the price of **one** egg; buyers choose a **6 or 10 egg carton** from a 4-column grid of radios and multi-coloured eggs with the carton price shown under each. Listing detail moves into the shared `AppDialog` (map popup removed) and key/value rows are vertically centred. Includes a schema migration (`price_cents` → `price_per_egg_cents`). Six chapters; orchestration via [`.claude/skills/chief-of-staff/SKILL.md`](../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-pricing`). *Superseded in part by [lean-ui](lean-ui/): the carton radios are now two rounded selectable cards and the buyer view no longer shows price per egg.*
 
 | Doc | What it is |
 | --- | --- |
@@ -173,7 +173,7 @@ Strip technical detail (available, price per egg, status), replace the carton ra
 | [run-ledger.md](lean-ui/run-ledger.md) | Merge ledger |
 | [chapters/](lean-ui/chapters/) | One executable plan per chapter |
 
-Status: planned — documentation suite written; implementation loop runs after merge to `main`.
+Status: shipped — chapters 1–8 merged into the loop branch `feat/plans-lean-ui`; release PR to `main` pending.
 
 ## Conventions
 
