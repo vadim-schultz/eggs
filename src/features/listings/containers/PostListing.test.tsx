@@ -117,6 +117,7 @@ describe("PostListing", () => {
       p_contact_note: "Ring the bell",
     });
     expect(onCreated).toHaveBeenCalledWith("listing-1");
+    expect(screen.getByTestId("egg-burst")).toBeInTheDocument();
   });
 
   it("renders price in KeyValueRow and Ort row like buyer search", () => {
@@ -180,5 +181,6 @@ describe("PostListing", () => {
       ),
     ).toBeInTheDocument();
     expect(onCreated).not.toHaveBeenCalled();
+    expect(screen.queryByTestId("egg-burst")).not.toBeInTheDocument();
   });
 });
