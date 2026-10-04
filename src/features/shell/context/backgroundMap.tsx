@@ -18,6 +18,7 @@ export interface BackgroundMapState {
   fitGermany: boolean;
   showUserMarker: boolean;
   radiusM: number;
+  onUserMarkerClick: () => void;
 }
 
 const FALLBACK_STATE: BackgroundMapState = {
@@ -28,6 +29,7 @@ const FALLBACK_STATE: BackgroundMapState = {
   fitGermany: true,
   showUserMarker: false,
   radiusM: 5000,
+  onUserMarkerClick: () => {},
 };
 
 const BackgroundMapStateContext =
@@ -62,6 +64,7 @@ export function usePublishBackgroundMap(state: BackgroundMapState): void {
     fitGermany,
     showUserMarker,
     radiusM,
+    onUserMarkerClick,
   } = state;
   const lat = state.center.lat;
   const lng = state.center.lng;
@@ -75,6 +78,7 @@ export function usePublishBackgroundMap(state: BackgroundMapState): void {
       fitGermany,
       showUserMarker,
       radiusM,
+      onUserMarkerClick,
     });
   }, [
     setState,
@@ -86,5 +90,6 @@ export function usePublishBackgroundMap(state: BackgroundMapState): void {
     fitGermany,
     showUserMarker,
     radiusM,
+    onUserMarkerClick,
   ]);
 }

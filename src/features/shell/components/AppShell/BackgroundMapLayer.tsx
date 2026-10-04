@@ -12,6 +12,7 @@ export default function BackgroundMapLayer() {
     fitGermany,
     showUserMarker,
     radiusM,
+    onUserMarkerClick,
   } = useBackgroundMapState();
 
   return (
@@ -24,6 +25,7 @@ export default function BackgroundMapLayer() {
         fitGermany={fitGermany}
         showUserMarker={showUserMarker}
         radiusM={radiusM}
+        onUserMarkerClick={onUserMarkerClick}
       />
     </Box>
   );
