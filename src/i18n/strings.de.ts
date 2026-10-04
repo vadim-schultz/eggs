@@ -14,6 +14,7 @@ export const strings = {
   "post.unit.dozen": "Dutzend",
   "post.unit.each": "Stück",
   "post.price.label": "Preis pro Ei (€)",
+  "post.price.cartonHint": "6er-Karton: {six} · 10er-Karton: {ten}",
   "post.location.label": "Ort (z. B. „Innenstadt, beim Markt“)",
   "post.location.shortLabel": "Ort",
   "location.searchPlaceholder": "Ort suchen …",

@@ -1,5 +1,5 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import EggAmountControl from "./EggAmountControl";
@@ -27,9 +27,7 @@ describe("EggAmountControl", () => {
     const { container } = renderControl({ eggCount: 42 });
 
     expect(screen.getByTestId("egg-quantity-row")).toBeInTheDocument();
-    expect(screen.getByTestId("slider-with-value-label")).toHaveTextContent(
-      "42",
-    );
+    expect(screen.getByRole("textbox")).toHaveValue("42");
     const thumb = container.querySelector('[data-part="thumb"]');
     expect(thumb).toHaveAttribute("aria-valuemax", "100");
     expect(thumb).toHaveAttribute("aria-valuemin", "1");
@@ -45,5 +43,14 @@ describe("EggAmountControl", () => {
     expect(
       screen.queryByRole("button", { name: "Dutzend" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("lets the seller type an amount that moves the slider", () => {
+    const { onEggCountChange } = renderControl({ eggCount: 12 });
+
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "24" } });
+    fireEvent.blur(screen.getByRole("textbox"));
+
+    expect(onEggCountChange).toHaveBeenCalledWith(24);
   });
 });
