@@ -1,5 +1,6 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
+import { recipes, slotRecipes } from "./recipes";
 import { semanticTokens } from "./semantic-tokens";
 import { customColors } from "./tokens/colors";
 import { shadows } from "./tokens/shadows";
@@ -18,6 +19,8 @@ const config = defineConfig({
         body: { value: "'DM Sans', system-ui, -apple-system, sans-serif" },
       },
     },
+    recipes,
+    slotRecipes,
     semanticTokens: { ...semanticTokens, shadows },
   },
 });

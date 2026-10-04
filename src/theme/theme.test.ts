@@ -61,8 +61,9 @@ it("theme · rejects an unregistered shadow token", () => {
 });
 
 type Loose = Record<string, Record<string, unknown> | undefined>;
-const recipes = (system._config.theme?.recipes ?? {}) as Loose;
-const slotRecipes = (system._config.theme?.slotRecipes ?? {}) as Loose;
+const recipes = (system._config.theme?.recipes ?? {}) as unknown as Loose;
+const slotRecipes = (system._config.theme?.slotRecipes ??
+  {}) as unknown as Loose;
 
 it("theme · playful control recipes are registered", () => {
   expect(recipes.button?.base).toMatchObject({
