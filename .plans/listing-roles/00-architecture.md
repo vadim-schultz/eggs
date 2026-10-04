@@ -8,7 +8,7 @@ isProject: false
 
 **Rollout:** [01-rollout.md](01-rollout.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-**Status:** planned
+**Status:** shipped
 
 ---
 

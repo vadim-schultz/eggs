@@ -4,22 +4,22 @@ overview: "ListingDetail dispatches to BuyerListingDialog or SellerListingDialog
 todos:
   - id: summary
     content: "Extract ListingSummary from ListingDetailView"
-    status: pending
+    status: done
   - id: buyer
     content: "BuyerListingDialog: ListingSummary + ReserveButton + ContactReveal"
-    status: pending
+    status: done
   - id: seller
     content: "SellerListingDialog: ListingSummary + ContactReveal (own note), no reserve"
-    status: pending
+    status: done
   - id: dispatcher
     content: "ListingDetail picks container by session.user.id === seller_id; delete ListingDetailView"
-    status: pending
+    status: done
 isProject: false
 ---
 
 # Chapter 3 — Listing dialog split
 
-**Repo:** `eggs` · **Branch:** `feat/listing-roles-dialog-split` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/listing-roles-dialog-split` · **Status:** shipped
 
 **Depends on:** [2](02-remove-listing-handling.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §4 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

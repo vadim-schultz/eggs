@@ -57,11 +57,11 @@ flowchart TD
 
 | # | Chapter | Gate | Plan | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Visibility and lifecycle backend | `./ci.sh` + `supabase db reset` + rls-smoke | [01-visibility-and-lifecycle-backend.md](chapters/01-visibility-and-lifecycle-backend.md) | planned |
-| 2 | Remove listing handling | `./ci.sh` | [02-remove-listing-handling.md](chapters/02-remove-listing-handling.md) | planned |
-| 3 | Listing dialog split | `./ci.sh` | [03-listing-dialog-split.md](chapters/03-listing-dialog-split.md) | planned |
-| 4 | Seller reservations view | `./ci.sh` | [04-seller-reservations-view.md](chapters/04-seller-reservations-view.md) | planned |
-| 5 | Docs sync | `./ci.sh` | [05-docs-sync.md](chapters/05-docs-sync.md) | planned |
+| 1 | Visibility and lifecycle backend | `./ci.sh` + `supabase db reset` + rls-smoke | [01-visibility-and-lifecycle-backend.md](chapters/01-visibility-and-lifecycle-backend.md) | shipped |
+| 2 | Remove listing handling | `./ci.sh` | [02-remove-listing-handling.md](chapters/02-remove-listing-handling.md) | shipped |
+| 3 | Listing dialog split | `./ci.sh` | [03-listing-dialog-split.md](chapters/03-listing-dialog-split.md) | shipped |
+| 4 | Seller reservations view | `./ci.sh` | [04-seller-reservations-view.md](chapters/04-seller-reservations-view.md) | shipped |
+| 5 | Docs sync | `./ci.sh` | [05-docs-sync.md](chapters/05-docs-sync.md) | shipped |
 
 ## Per-chapter gate
 
