@@ -48,3 +48,22 @@ insert into public.listing_contact (listing_id, contact_note)
 select id, 'Klingeln bei "Meyer"'
 from public.listing
 where seller_id = '22222222-2222-2222-2222-222222222222';
+
+-- Hidden by the visibility rule: one fully reserved, one expired (both still
+-- status 'active'/'reserved' rows near the same fake coordinates).
+insert into public.listing (
+  seller_id, egg_count, unit, price_per_egg_cents, status, expires_at,
+  location, location_label, note
+) values
+  (
+    '22222222-2222-2222-2222-222222222222', 0, 'each', 30, 'reserved',
+    now() + interval '12 hours',
+    st_setsrid(st_makepoint(13.41, 52.515), 4326)::extensions.geography,
+    'Fully reserved fixture', null
+  ),
+  (
+    '22222222-2222-2222-2222-222222222222', 10, 'each', 30, 'active',
+    now() - interval '1 hour',
+    st_setsrid(st_makepoint(13.4, 52.51), 4326)::extensions.geography,
+    'Expired fixture', null
+  );
