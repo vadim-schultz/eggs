@@ -12,3 +12,8 @@ it("floatingSurface · does not hardcode light-only surface colours", () => {
   expect(floatingSurface.bg).not.toBe("white");
   expect(floatingSurface.borderColor).not.toMatch(/^gray\./);
 });
+
+it("floatingSurface · uses the sticker shadow token and a thick border", () => {
+  expect(floatingSurface.boxShadow).toBe("sticker");
+  expect(floatingSurface.borderWidth).toBe("2px");
+});
