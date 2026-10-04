@@ -36,4 +36,30 @@ describe("AppDialog", () => {
 
     expect(onClose).toHaveBeenCalled();
   });
+
+  it("puts the close button alone in a row above the content", () => {
+    renderDialog(true);
+
+    const button = screen.getByRole("button", { name: "Schließen" });
+    const row = button.parentElement as HTMLElement;
+    const body = screen.getByText("Dialog content")
+      .parentElement as HTMLElement;
+
+    expect(row.children).toHaveLength(1);
+    expect(row.compareDocumentPosition(body)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  it("gives the close button a big, always-visible outline", () => {
+    renderDialog(true);
+
+    const style = getComputedStyle(
+      screen.getByRole("button", { name: "Schließen" }),
+    );
+
+    expect(parseFloat(style.minWidth)).toBeGreaterThanOrEqual(44);
+    expect(parseFloat(style.minHeight)).toBeGreaterThanOrEqual(44);
+    expect(style.borderWidth).toBe("2px");
+  });
 });
