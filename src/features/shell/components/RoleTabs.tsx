@@ -7,7 +7,7 @@ import FarmerTab from "./FarmerTab";
 
 export default function RoleTabs() {
   return (
-    <Tabs.Root variant="enclosed" defaultValue="buyer">
+    <Tabs.Root variant="enclosed" colorPalette="secondary" defaultValue="buyer">
       <Tabs.List>
         <Tabs.Trigger value="farmer">🧑‍🌾 {t("tabs.farmer")}</Tabs.Trigger>
         <Tabs.Trigger value="buyer">👨🏻‍💼 {t("tabs.buyer")}</Tabs.Trigger>

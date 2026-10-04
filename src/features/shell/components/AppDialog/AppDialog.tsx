@@ -1,7 +1,17 @@
 import type { ReactNode } from "react";
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
 
+import { floatingSurface } from "@/features/shell/theme/floatingSurface";
 import { t } from "@/i18n/t";
+
+const { bg, borderWidth, borderColor, boxShadow } = floatingSurface;
+const dialogSurface = {
+  bg,
+  borderWidth,
+  borderColor,
+  boxShadow,
+  rounded: "2xl",
+} as const;
 
 interface AppDialogProps {
   open: boolean;
@@ -20,7 +30,7 @@ export default function AppDialog({ open, onClose, children }: AppDialogProps) {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content {...dialogSurface}>
             <Dialog.CloseTrigger asChild>
               <CloseButton
                 aria-label={t("dialog.close")}

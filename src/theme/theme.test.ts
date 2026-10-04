@@ -51,3 +51,11 @@ it("theme · default colorPalette is primary via globalCss", () => {
   );
   expect(system.css({ colorPalette: "nope" })).not.toEqual(css);
 });
+
+it("theme · shadows.sticker is registered", () => {
+  expect(system.token("shadows.sticker")).toBeTruthy();
+});
+
+it("theme · rejects an unregistered shadow token", () => {
+  expect(system.token("shadows.not-a-shadow")).toBeUndefined();
+});
