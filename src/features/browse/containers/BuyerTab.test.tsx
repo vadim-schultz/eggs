@@ -25,7 +25,7 @@ const {
 vi.mock("@/features/auth/hooks/useSession", () => ({
   useSession: useSessionMock,
 }));
-vi.mock("@/features/browse/hooks/useGeolocation", () => ({
+vi.mock("@/features/location/hooks/useGeolocation", () => ({
   useGeolocation: useGeolocationMock,
 }));
 vi.mock("@/features/browse/hooks/useListingsNear", () => ({
