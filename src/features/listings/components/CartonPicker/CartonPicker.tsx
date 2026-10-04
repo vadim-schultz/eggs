@@ -1,8 +1,8 @@
-import { Grid, RadioGroup } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 
 import { t } from "@/i18n/t";
 import { CARTON_SIZES, type CartonSize } from "../../utils/carton";
-import CartonOption from "./CartonOption";
+import CartonCard from "./CartonCard";
 
 export interface CartonPickerProps {
   remaining: number;
@@ -12,7 +12,7 @@ export interface CartonPickerProps {
   onChange: (size: CartonSize) => void;
 }
 
-/** 4-column grid: radio, 6-carton, radio, 10-carton. */
+/** 2×1 grid of selectable carton cards (6 and 10). */
 export default function CartonPicker({
   remaining,
   pricePerEggCents,
@@ -21,25 +21,23 @@ export default function CartonPicker({
   onChange,
 }: CartonPickerProps) {
   return (
-    <RadioGroup.Root
+    <Grid
       aria-label={t("carton.legend")}
-      onValueChange={({ value: next }) => {
-        const size = CARTON_SIZES.find((s) => String(s) === next);
-        if (size !== undefined) onChange(size);
-      }}
-      value={value === null ? null : String(value)}
+      gap="3"
+      role="radiogroup"
+      templateColumns="1fr 1fr"
     >
-      <Grid alignItems="center" gap="3" templateColumns="auto 1fr auto 1fr">
-        {CARTON_SIZES.map((size) => (
-          <CartonOption
-            key={size}
-            currency={currency}
-            pricePerEggCents={pricePerEggCents}
-            remaining={remaining}
-            size={size}
-          />
-        ))}
-      </Grid>
-    </RadioGroup.Root>
+      {CARTON_SIZES.map((size) => (
+        <CartonCard
+          key={size}
+          currency={currency}
+          onSelect={onChange}
+          pricePerEggCents={pricePerEggCents}
+          remaining={remaining}
+          selected={value === size}
+          size={size}
+        />
+      ))}
+    </Grid>
   );
 }
