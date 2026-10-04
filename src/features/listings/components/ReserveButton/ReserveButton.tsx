@@ -4,6 +4,7 @@ import { useState } from "react";
 import EggBurst from "@/components/ui/EggBurst";
 import { CartonPicker } from "@/features/listings/components/CartonPicker";
 import { useSession } from "@/features/auth/hooks/useSession";
+import { signInWithGoogle } from "@/features/auth/services/signInWithGoogle";
 import { useActiveReservation } from "@/features/listings/hooks/useActiveReservation";
 import {
   cancelReservation,
@@ -36,7 +37,11 @@ export default function ReserveButton({
 
   if (sessionLoading) return null;
   if (!session) {
-    return <Button disabled>{t("reserve.signInRequired")}</Button>;
+    return (
+      <Button onClick={() => signInWithGoogle()}>
+        {t("reserve.signInRequired")}
+      </Button>
+    );
   }
 
   const burstOverlay = (
