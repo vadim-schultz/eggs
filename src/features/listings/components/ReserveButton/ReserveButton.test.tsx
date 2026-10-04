@@ -43,7 +43,7 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
     seller_id: "seller-1",
     egg_count: 12,
     unit: "dozen",
-    price_cents: 400,
+    price_per_egg_cents: 400,
     currency: "EUR",
     location_label: "Downtown",
     note: null,

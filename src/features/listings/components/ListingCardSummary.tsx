@@ -19,7 +19,7 @@ export default function ListingCardSummary({
   listing,
 }: ListingCardSummaryProps) {
   const amountLabel = `${listing.egg_count} ${t(unitLabelKey(listing.unit))}`;
-  const priceLabel = formatPrice(listing.price_cents, listing.currency);
+  const priceLabel = formatPrice(listing.price_per_egg_cents, listing.currency);
 
   return (
     <>

@@ -40,7 +40,7 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
     seller_id: "seller-1",
     egg_count: 12,
     unit: "dozen",
-    price_cents: 400,
+    price_per_egg_cents: 400,
     currency: "EUR",
     location_label: "Downtown",
     note: null,
@@ -54,7 +54,7 @@ function activeListing(overrides: Partial<Listing> = {}): Listing {
 const createListingPayload = {
   p_egg_count: 12,
   p_unit: "dozen" as const,
-  p_price_cents: 400,
+  p_price_per_egg_cents: 400,
   p_lat: 52.52,
   p_lng: 13.405,
   p_location_label: "Berlin",

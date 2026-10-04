@@ -7,7 +7,7 @@ export interface Listing {
   seller_id: string;
   egg_count: number;
   unit: ListingUnit;
-  price_cents: number;
+  price_per_egg_cents: number;
   currency: string;
   location_label: string;
   note: string | null;
