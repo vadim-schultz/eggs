@@ -1,7 +1,7 @@
 import { Stack } from "@chakra-ui/react";
+import { useState } from "react";
 
 import ContactReveal from "@/features/listings/components/ContactReveal";
-import ListingSummary from "@/features/listings/components/ListingSummary";
 import ReserveButton from "@/features/listings/components/ReserveButton";
 import type { Listing } from "@/features/listings/types/listing";
 
@@ -14,15 +14,22 @@ export default function BuyerListingDialog({
   listing,
   onChange,
 }: BuyerListingDialogProps) {
+  // A reserve/cancel changes who RLS reveals the contact note to, but neither
+  // listing.id nor (after a partial reserve) listing.status changes. Bump a
+  // counter on every change so ContactReveal remounts and refetches.
+  const [changes, setChanges] = useState(0);
+  const handleChange = () => {
+    setChanges((n) => n + 1);
+    onChange();
+  };
+
   return (
     <Stack gap="2">
-      <ListingSummary listing={listing} />
-      <ReserveButton listing={listing} onChange={onChange} />
-      {/* key={listing.status}: a successful reserve/cancel changes who RLS
-          reveals the contact note to, but listing.id never changes — remount
-          on status change to re-run the query instead of caching a stale
-          "not visible yet" result. */}
-      <ContactReveal key={listing.status} listingId={listing.id} />
+      <ReserveButton listing={listing} onChange={handleChange} />
+      <ContactReveal
+        key={`${listing.status}-${changes}`}
+        listingId={listing.id}
+      />
     </Stack>
   );
 }

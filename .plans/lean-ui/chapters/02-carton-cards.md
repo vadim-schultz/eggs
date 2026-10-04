@@ -16,7 +16,7 @@ isProject: false
 
 # Chapter 2 — Carton cards
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-carton-cards` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-carton-cards` · **Status:** shipped
 
 **Depends on:** [1](01-lean-listing-summary.md) · **Architecture:** [../00-architecture.md](../00-architecture.md) §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

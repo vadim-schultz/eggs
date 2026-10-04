@@ -31,19 +31,19 @@ function renderSummary(l: Listing) {
 }
 
 describe("ListingSummary", () => {
-  it("renders amount, price and status rows", () => {
+  it("renders amount and price rows only", () => {
     renderSummary(listing());
 
-    expect(screen.getAllByTestId("key-value-row")).toHaveLength(3);
+    expect(screen.getAllByTestId("key-value-row")).toHaveLength(2);
     expect(screen.getByText("12 Eier")).toBeInTheDocument();
     expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
-    expect(screen.getByText("Status")).toBeInTheDocument();
   });
 
-  it("renders no actions or location label", () => {
+  it("renders no status, actions or location label", () => {
     renderSummary(listing({ status: "reserved" }));
 
-    expect(screen.getByText("Reserviert")).toBeInTheDocument();
+    expect(screen.queryByText("Status")).not.toBeInTheDocument();
+    expect(screen.queryByText("Reserviert")).not.toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Downtown, near the market"),

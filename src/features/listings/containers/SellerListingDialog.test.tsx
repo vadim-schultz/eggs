@@ -9,8 +9,8 @@ const { useReservationsMock } = vi.hoisted(() => ({
   useReservationsMock: vi.fn(),
 }));
 
-vi.mock("@/features/listings/hooks/useListingReservations", () => ({
-  useListingReservations: useReservationsMock,
+vi.mock("@/features/listings/hooks/useSellerReservations", () => ({
+  useSellerReservations: useReservationsMock,
 }));
 
 vi.mock("@/features/listings/components/ContactReveal", () => ({
@@ -31,6 +31,16 @@ const listing: Listing = {
   expires_at: "2026-01-02T10:30:00Z",
 };
 
+function res(id: string, eggs: number, listingId = "listing-1") {
+  return {
+    id,
+    egg_count: eggs,
+    created_at: "2026-01-01T09:00:00Z",
+    listing_id: listingId,
+    location_label: "x",
+  };
+}
+
 function renderDialog() {
   render(
     <ChakraProvider value={defaultSystem}>
@@ -42,23 +52,16 @@ function renderDialog() {
 describe("SellerListingDialog", () => {
   beforeEach(() => useReservationsMock.mockReset());
 
-  it("shows reserved and remaining counts, expiry and reservation rows", () => {
+  it("queries by the listing's seller", () => {
+    useReservationsMock.mockReturnValue({ loading: false, reservations: [] });
+    renderDialog();
+    expect(useReservationsMock).toHaveBeenCalledWith("seller-1");
+  });
+
+  it("shows counts, expiry and only this listing's rows", () => {
     useReservationsMock.mockReturnValue({
       loading: false,
-      reservations: [
-        {
-          id: "a",
-          egg_count: 6,
-          status: "active",
-          created_at: "2026-01-01T09:00:00Z",
-        },
-        {
-          id: "b",
-          egg_count: 10,
-          status: "active",
-          created_at: "2026-01-01T08:00:00Z",
-        },
-      ],
+      reservations: [res("a", 6), res("b", 10), res("c", 6, "other-listing")],
     });
 
     renderDialog();
@@ -69,32 +72,23 @@ describe("SellerListingDialog", () => {
     expect(screen.getAllByTestId("seller-reservation-row")).toHaveLength(2);
   });
 
-  it("does not count cancelled reservations as reserved", () => {
+  it("shows no status labels for reservations", () => {
     useReservationsMock.mockReturnValue({
       loading: false,
-      reservations: [
-        {
-          id: "a",
-          egg_count: 6,
-          status: "active",
-          created_at: "2026-01-01T09:00:00Z",
-        },
-        {
-          id: "b",
-          egg_count: 10,
-          status: "cancelled",
-          created_at: "2026-01-01T08:00:00Z",
-        },
-      ],
+      reservations: [res("a", 6)],
     });
 
     renderDialog();
 
-    expect(screen.getByTestId("reserved-count")).toHaveTextContent("6 Eier");
+    expect(screen.queryByText("Aktiv")).toBeNull();
+    expect(screen.queryByText("Storniert")).toBeNull();
   });
 
   it("shows the empty state and zero reserved with none", () => {
-    useReservationsMock.mockReturnValue({ loading: false, reservations: [] });
+    useReservationsMock.mockReturnValue({
+      loading: false,
+      reservations: [res("c", 6, "other-listing")],
+    });
 
     renderDialog();
 
@@ -105,14 +99,7 @@ describe("SellerListingDialog", () => {
   it("renders no action buttons", () => {
     useReservationsMock.mockReturnValue({
       loading: false,
-      reservations: [
-        {
-          id: "a",
-          egg_count: 6,
-          status: "active",
-          created_at: "2026-01-01T09:00:00Z",
-        },
-      ],
+      reservations: [res("a", 6)],
     });
 
     renderDialog();

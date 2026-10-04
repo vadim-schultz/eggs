@@ -16,7 +16,7 @@ isProject: false
 
 # Chapter 1 — Lean listing summary
 
-**Repo:** `eggs` · **Branch:** `feat/lean-ui-summary` · **Status:** planned
+**Repo:** `eggs` · **Branch:** `feat/lean-ui-summary` · **Status:** shipped
 
 **Depends on:** — · **Architecture:** [../00-architecture.md](../00-architecture.md) §1, §3 · **Rollout:** [../01-rollout.md](../01-rollout.md)
 

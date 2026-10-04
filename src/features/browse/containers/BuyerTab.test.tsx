@@ -15,11 +15,17 @@ const {
   useGeolocationMock,
   useListingsNearMock,
   useAppDialogMock,
+  useBuyerReservationsMock,
 } = vi.hoisted(() => ({
   useSessionMock: vi.fn(),
   useGeolocationMock: vi.fn(),
   useListingsNearMock: vi.fn(),
   useAppDialogMock: vi.fn(),
+  useBuyerReservationsMock: vi.fn(),
+}));
+
+vi.mock("@/features/listings/hooks/useBuyerReservations", () => ({
+  useBuyerReservations: useBuyerReservationsMock,
 }));
 
 vi.mock("@/features/auth/hooks/useSession", () => ({
@@ -70,6 +76,12 @@ describe("BuyerTab", () => {
     useGeolocationMock.mockReset();
     useListingsNearMock.mockReset();
     useAppDialogMock.mockReset();
+    useBuyerReservationsMock.mockReset();
+    useBuyerReservationsMock.mockReturnValue({
+      reservations: [],
+      loading: false,
+      refetch: vi.fn(),
+    });
     useSessionMock.mockReturnValue({ session: null, loading: false });
     useGeolocationMock.mockReturnValue({
       center: { lat: 52.52, lng: 13.405 },
@@ -219,5 +231,73 @@ describe("BuyerTab", () => {
     expect(
       screen.queryByText("Oder einen anderen Ort suchen"),
     ).not.toBeInTheDocument();
+  });
+
+  const reserved = {
+    id: "r1",
+    egg_count: 6,
+    created_at: "2026-01-01T10:30:00Z",
+    listing_id: "l1",
+    location_label: "Marktplatz",
+    contact_note: null,
+  };
+
+  it("lists the buyer's reservations when signed in", () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    useBuyerReservationsMock.mockReturnValue({
+      reservations: [reserved],
+      loading: false,
+      refetch: vi.fn(),
+    });
+    useListingsNearMock.mockReturnValue({ listings: [], loading: false });
+
+    renderBuyerTab();
+
+    expect(useBuyerReservationsMock).toHaveBeenCalledWith("buyer-1");
+    expect(screen.getByTestId("buyer-reservation-row")).toHaveTextContent(
+      "Marktplatz",
+    );
+  });
+
+  it("renders no list and runs no query when signed out", () => {
+    useListingsNearMock.mockReturnValue({ listings: [], loading: false });
+
+    renderBuyerTab();
+
+    expect(useBuyerReservationsMock).not.toHaveBeenCalled();
+    expect(screen.queryByTestId("buyer-reservation-row")).toBeNull();
+  });
+
+  it("refetches reservations when the dialog closes", () => {
+    const refetch = vi.fn();
+    const base = {
+      openPostDialog: vi.fn(),
+      openDetailDialog: vi.fn(),
+      closeDialog: vi.fn(),
+    };
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "buyer-1" } },
+      loading: false,
+    });
+    useBuyerReservationsMock.mockReturnValue({
+      reservations: [],
+      loading: false,
+      refetch,
+    });
+    useListingsNearMock.mockReturnValue({ listings: [], loading: false });
+    useAppDialogMock.mockReturnValue({
+      ...base,
+      open: { kind: "detail", listingId: "x" },
+    });
+
+    const { rerender } = render(renderWithProbe());
+    expect(refetch).not.toHaveBeenCalled();
+
+    useAppDialogMock.mockReturnValue({ ...base, open: null });
+    rerender(renderWithProbe());
+    expect(refetch).toHaveBeenCalledTimes(1);
   });
 });

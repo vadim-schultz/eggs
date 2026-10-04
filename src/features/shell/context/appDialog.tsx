@@ -13,6 +13,7 @@ export type OpenAppDialog =
   | { kind: "post" }
   | { kind: "detail"; listingId: string }
   | { kind: "published" }
+  | { kind: "here" }
   | null;
 
 interface AppDialogContextValue {
@@ -20,6 +21,7 @@ interface AppDialogContextValue {
   openPostDialog: () => void;
   openDetailDialog: (listingId: string) => void;
   openPublishedDialog: () => void;
+  openHereDialog: () => void;
   closeDialog: () => void;
 }
 
@@ -30,6 +32,7 @@ const AppDialogContext = createContext<AppDialogContextValue>({
   openPostDialog: noop,
   openDetailDialog: noop,
   openPublishedDialog: noop,
+  openHereDialog: noop,
   closeDialog: noop,
 });
 
@@ -57,6 +60,7 @@ export function AppDialogProvider({ children }: { children: ReactNode }) {
     openPostDialog: () => setOpen({ kind: "post" }),
     openDetailDialog: (listingId) => setOpen({ kind: "detail", listingId }),
     openPublishedDialog: () => setOpen({ kind: "published" }),
+    openHereDialog: () => setOpen({ kind: "here" }),
     closeDialog: () => {
       setOpen(null);
       navigate("/", { replace: true });
