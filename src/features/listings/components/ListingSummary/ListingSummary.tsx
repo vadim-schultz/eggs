@@ -1,7 +1,6 @@
 import { Stack, Text } from "@chakra-ui/react";
 
 import KeyValueRow from "@/components/ui/KeyValueRow";
-import StatusBadge from "@/features/listings/components/StatusBadge";
 import type { Listing } from "@/features/listings/types/listing";
 import { formatPrice } from "@/features/listings/utils/formatListing";
 import { t } from "@/i18n/t";
@@ -21,9 +20,6 @@ export default function ListingSummary({ listing }: ListingSummaryProps) {
       </KeyValueRow>
       <KeyValueRow label={t("listing.price.label")}>
         <Text fontSize="sm">{priceLabel}</Text>
-      </KeyValueRow>
-      <KeyValueRow label={t("listing.status.label")}>
-        <StatusBadge status={listing.status} />
       </KeyValueRow>
     </Stack>
   );

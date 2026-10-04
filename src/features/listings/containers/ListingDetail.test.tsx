@@ -80,22 +80,16 @@ describe("ListingDetail", () => {
     });
   });
 
-  it("renders egg row, KV rows for count price and status for an active listing", async () => {
-    const listing = activeListing();
-    singleMock.mockResolvedValue({ data: listing, error: null });
+  it("buyer dialog shows no available, price-per-egg or status rows", async () => {
+    singleMock.mockResolvedValue({ data: activeListing(), error: null });
 
     renderAt("listing-1");
+    await screen.findByTestId("reserve-button");
 
-    await screen.findByText("Preis pro Ei");
-    expect(screen.queryByTestId("egg-quantity-row")).not.toBeInTheDocument();
-    expect(
-      screen.getAllByTestId("key-value-row").length,
-    ).toBeGreaterThanOrEqual(3);
-    expect(screen.getAllByText("Verfügbar").length).toBeGreaterThan(0);
-    expect(screen.getByText("12 Eier")).toBeInTheDocument();
-    expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
-    expect(screen.getByText("Status")).toBeInTheDocument();
-    expect(screen.getByText(/4,00\s?€/)).toBeInTheDocument();
+    expect(screen.queryByText("Verfügbar")).not.toBeInTheDocument();
+    expect(screen.queryByText("Preis pro Ei")).not.toBeInTheDocument();
+    expect(screen.queryByText("Status")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("key-value-row")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Downtown, near the market"),
     ).not.toBeInTheDocument();
@@ -167,18 +161,23 @@ describe("ListingDetail", () => {
     renderAt("listing-1");
 
     expect(await screen.findByTestId("reserve-button")).toBeInTheDocument();
+    expect(screen.queryByText("Status")).not.toBeInTheDocument();
   });
 
-  it("shows reserved status in KV for a reserved listing", async () => {
+  it("owner dialog shows amount and price but no status", async () => {
+    useSessionMock.mockReturnValue({
+      session: { user: { id: "seller-1" } },
+      loading: false,
+    });
     singleMock.mockResolvedValue({
-      data: activeListing({ status: "reserved" }),
+      data: activeListing({ seller_id: "seller-1", status: "reserved" }),
       error: null,
     });
 
     renderAt("listing-1");
-    await screen.findByTestId("reserve-button");
+    await screen.findByTestId("contact-reveal");
 
-    expect(screen.getByText("Reserviert")).toBeInTheDocument();
+    expect(screen.queryByText("Status")).not.toBeInTheDocument();
   });
 
   it("shows the not-found message when the listing can't be loaded", async () => {
