@@ -115,7 +115,7 @@ describe("PostListing", () => {
     const onCreated = vi.fn();
     renderPostListing(onCreated);
 
-    fireEvent.change(screen.getByLabelText("Preis (€)"), {
+    fireEvent.change(screen.getByLabelText("Preis pro Ei (€)"), {
       target: { value: "4" },
     });
     fireEvent.change(screen.getByLabelText("Kontakthinweis für Käufer"), {
@@ -133,7 +133,7 @@ describe("PostListing", () => {
     expect(rpcMock).toHaveBeenCalledWith("create_listing", {
       p_egg_count: 1,
       p_unit: "each",
-      p_price_cents: 400,
+      p_price_per_egg_cents: 400,
       p_lat: 52.52,
       p_lng: 13.405,
       p_location_label: "Berlin, Germany",
@@ -148,10 +148,12 @@ describe("PostListing", () => {
     renderPostListing();
 
     const rows = screen.getAllByTestId("key-value-row");
-    const priceRows = rows.filter((row) => within(row).queryByText("Preis"));
+    const priceRows = rows.filter((row) =>
+      within(row).queryByText("Preis pro Ei"),
+    );
     expect(priceRows).toHaveLength(1);
     expect(
-      within(priceRows[0]).getByLabelText("Preis (€)"),
+      within(priceRows[0]).getByLabelText("Preis pro Ei (€)"),
     ).toBeInTheDocument();
 
     const ortRows = rows.filter((row) => within(row).queryByText("Ort"));
@@ -184,7 +186,7 @@ describe("PostListing", () => {
     const onCreated = vi.fn();
     renderPostListing(onCreated);
 
-    fireEvent.change(screen.getByLabelText("Preis (€)"), {
+    fireEvent.change(screen.getByLabelText("Preis pro Ei (€)"), {
       target: { value: "4" },
     });
     fireEvent.change(screen.getByLabelText("Kontakthinweis für Käufer"), {

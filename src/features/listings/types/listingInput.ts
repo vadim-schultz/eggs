@@ -1,7 +1,7 @@
 export interface ListingInput {
   eggCount: number;
   unit: "dozen" | "each";
-  priceCents: number;
+  pricePerEggCents: number;
   locationLabel: string;
   note: string;
   contactNote: string;

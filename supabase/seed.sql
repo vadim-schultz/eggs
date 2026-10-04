@@ -21,20 +21,20 @@ insert into auth.users (
 -- A handful of sample listings around fake coordinates for local browsing/map
 -- development. lng/lat pairs are arbitrary points, not real addresses.
 insert into public.listing (
-  seller_id, egg_count, unit, price_cents, location, location_label, note
+  seller_id, egg_count, unit, price_per_egg_cents, location, location_label, note
 ) values
   (
-    '11111111-1111-1111-1111-111111111111', 24, 'dozen', 400,
+    '11111111-1111-1111-1111-111111111111', 24, 'each', 33,
     st_setsrid(st_makepoint(13.405, 52.52), 4326)::extensions.geography,
     'Downtown, near the market', 'Frisch vom Hühnerstall'
   ),
   (
-    '11111111-1111-1111-1111-111111111111', 6, 'each', 150,
+    '11111111-1111-1111-1111-111111111111', 6, 'each', 25,
     st_setsrid(st_makepoint(13.42, 52.5), 4326)::extensions.geography,
     'Near the park', null
   ),
   (
-    '22222222-2222-2222-2222-222222222222', 12, 'dozen', 500,
+    '22222222-2222-2222-2222-222222222222', 12, 'each', 42,
     st_setsrid(st_makepoint(13.39, 52.53), 4326)::extensions.geography,
     'By the old mill', 'Abholung nach Absprache'
   );

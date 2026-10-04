@@ -4,6 +4,8 @@ import { Button, Field, Input, Stack, Text, Textarea } from "@chakra-ui/react";
 import KeyValueRow from "@/components/ui/KeyValueRow";
 import LocationPicker from "@/features/location/components/LocationPicker";
 import type { ListingInputErrors } from "@/features/listings/types/listingInput";
+import { cartonPriceCents } from "@/features/listings/utils/carton";
+import { formatPrice } from "@/features/listings/utils/formatListing";
 import type { PostListingFormState } from "@/features/listings/utils/postListingMappers";
 import { t } from "@/i18n/t";
 
@@ -22,6 +24,17 @@ export interface PostListingFormProps {
   onRequestGeolocation?: () => void;
 }
 
+function cartonHintFor(priceEuros: string): string | null {
+  const euros = Number(priceEuros);
+  if (priceEuros.trim() === "" || !Number.isFinite(euros) || euros < 0) {
+    return null;
+  }
+  const perEgg = Math.round(euros * 100);
+  return t("post.price.cartonHint")
+    .replace("{six}", formatPrice(cartonPriceCents(perEgg, 6), "EUR"))
+    .replace("{ten}", formatPrice(cartonPriceCents(perEgg, 10), "EUR"));
+}
+
 export default function PostListingForm({
   form,
   errors,
@@ -31,6 +44,8 @@ export default function PostListingForm({
   onSubmit,
   onRequestGeolocation,
 }: PostListingFormProps) {
+  const cartonHint = cartonHintFor(form.priceEuros);
+
   return (
     <form onSubmit={onSubmit}>
       <Stack gap="4">
@@ -43,12 +58,23 @@ export default function PostListingForm({
           <Field.Root invalid={Boolean(errors.priceCents)} w="full">
             <Input
               type="number"
+              step="0.01"
+              min="0"
               aria-label={t("post.price.label")}
               value={form.priceEuros}
               onChange={(event) =>
                 onFieldChange("priceEuros", event.target.value)
               }
             />
+            {cartonHint ? (
+              <Text
+                data-testid="carton-price-hint"
+                color="fg.muted"
+                fontSize="xs"
+              >
+                {cartonHint}
+              </Text>
+            ) : null}
             {errors.priceCents ? (
               <Field.ErrorText>{t(errors.priceCents)}</Field.ErrorText>
             ) : null}

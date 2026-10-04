@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Stack } from "@chakra-ui/react";
 
+import { useAppDialog } from "@/features/shell/context/appDialog";
 import { usePublishBackgroundMap } from "@/features/shell/context/backgroundMap";
 import AuthButton from "@/features/auth/components/AuthButton";
 import { BuyerSearchRows } from "@/features/browse/components/BuyerTab";
@@ -21,6 +22,13 @@ export default function BuyerTab() {
   const [locationQuery, setLocationQuery] = useState("");
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { open, openDetailDialog } = useAppDialog();
+
+  useEffect(() => {
+    if (open === null) {
+      setSelectedId(null);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (geoGranted) {
@@ -35,6 +43,7 @@ export default function BuyerTab() {
 
   function selectListing(id: string) {
     setSelectedId(id);
+    openDetailDialog(id);
   }
 
   function handleRequestGeolocation() {

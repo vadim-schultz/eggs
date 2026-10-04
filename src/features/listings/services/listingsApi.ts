@@ -9,7 +9,7 @@ export interface ListingContactRow {
 export interface CreateListingArgs {
   p_egg_count: number;
   p_unit: "dozen" | "each";
-  p_price_cents: number;
+  p_price_per_egg_cents: number;
   p_lat: number;
   p_lng: number;
   p_location_label: string;
