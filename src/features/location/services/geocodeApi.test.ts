@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { searchPlace } from "./geocodeApi";
+import { reverseGeocode, searchPlace } from "./geocodeApi";
 
 describe("geocodeApi", () => {
   afterEach(() => {
@@ -37,5 +37,30 @@ describe("geocodeApi", () => {
     const results = await searchPlace("a place that does not exist anywhere");
 
     expect(results).toEqual([]);
+  });
+
+  it("reverse geocodes a point to a labelled candidate", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ display_name: "Berlin, Germany" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await reverseGeocode({ lat: 52.52, lng: 13.405 });
+
+    expect(result).toEqual({
+      label: "Berlin, Germany",
+      lat: 52.52,
+      lng: 13.405,
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("nominatim.openstreetmap.org/reverse"),
+    );
+  });
+
+  it("returns null when reverse geocoding fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+
+    expect(await reverseGeocode({ lat: 1, lng: 2 })).toBeNull();
   });
 });
