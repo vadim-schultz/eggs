@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Listing } from "@/features/listings/types/listing";
+import * as listingsApi from "./listingsApi";
 import {
   createListing,
   fetchListing,
@@ -130,5 +131,15 @@ describe("listingsApi", () => {
     const result = await createListing(createListingPayload);
 
     expect(result).toEqual({ error: true });
+  });
+});
+
+describe("listingsApi surface", () => {
+  it("exports no manual listing handling functions", () => {
+    const names = Object.keys(listingsApi);
+    expect(names).toContain("reserveListing");
+    expect(names).not.toContain("markListingSold");
+    expect(names).not.toContain("markListingCancelled");
+    expect(names).not.toContain("updateListingExpiry");
   });
 });

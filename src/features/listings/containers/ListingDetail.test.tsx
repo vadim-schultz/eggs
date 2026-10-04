@@ -27,10 +27,6 @@ vi.mock("@/features/listings/components/ContactReveal", () => ({
   ),
 }));
 
-vi.mock("@/features/listings/components/SellerActions", () => ({
-  default: () => <div data-testid="seller-actions" />,
-}));
-
 function activeListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "listing-1",
@@ -95,7 +91,23 @@ describe("ListingDetail", () => {
 
     expect(screen.getByTestId("reserve-button")).toBeInTheDocument();
     expect(screen.getByTestId("contact-reveal")).toHaveTextContent("listing-1");
-    expect(screen.getByTestId("seller-actions")).toBeInTheDocument();
+  });
+
+  it("renders no listing handling controls for the owner", async () => {
+    singleMock.mockResolvedValue({
+      data: activeListing({ seller_id: "seller-1" }),
+      error: null,
+    });
+
+    renderAt("listing-1");
+    await screen.findByTestId("reserve-button");
+
+    expect(screen.getByText("Preis pro Ei")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Als verkauft markieren/),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Angebot zurückziehen/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ablaufdatum/)).not.toBeInTheDocument();
   });
 
   it("seller sees the contact reveal for their own listing regardless of reservation", async () => {

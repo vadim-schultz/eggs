@@ -69,45 +69,6 @@ export async function fetchActiveReservation(
   return { reservation: (data as ActiveReservationRow | null) ?? null };
 }
 
-export async function markListingSold(
-  listingId: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase.rpc("mark_listing_sold", {
-    p_listing_id: listingId,
-  });
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
-export async function markListingCancelled(
-  listingId: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase.rpc("mark_listing_cancelled", {
-    p_listing_id: listingId,
-  });
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
-export async function updateListingExpiry(
-  listingId: string,
-  isoDate: string,
-): Promise<{ error?: true }> {
-  const { error } = await supabase
-    .from("listing")
-    .update({ expires_at: isoDate })
-    .eq("id", listingId);
-
-  if (error) {
-    return { error: true };
-  }
-  return {};
-}
-
 export async function reserveListing(
   listingId: string,
   eggCount: number,
