@@ -9,8 +9,7 @@ type Mode = "base" | "_dark";
 function resolve(path: string, modeKey: Mode): string {
   const token = system.tokens.getByName(path);
   const conditions = token?.extensions.conditions as
-    | Record<Mode, string>
-    | undefined;
+    Record<Mode, string> | undefined;
   const raw = conditions?.[modeKey] ?? String(token?.value);
   const ref = /^\{(.+)\}$/.exec(raw);
   return ref ? resolve(ref[1], modeKey) : raw;

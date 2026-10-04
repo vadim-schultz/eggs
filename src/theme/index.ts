@@ -5,6 +5,7 @@ import { customColors } from "./tokens/colors";
 import "./fonts";
 
 const config = defineConfig({
+  globalCss: { html: { colorPalette: "primary" } },
   theme: {
     tokens: {
       colors: customColors,

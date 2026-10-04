@@ -1,16 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Badge, ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Badge, ChakraProvider } from "@chakra-ui/react";
+import { system } from "@/theme";
 
 import StatusBadge, { statusColorPalette } from "./StatusBadge";
 import type { ListingStatus } from "@/features/listings/types/listing";
 
 const cases: [ListingStatus, string, string][] = [
-  ["active", "Verfügbar", "green"],
-  ["reserved", "Reserviert", "yellow"],
-  ["sold", "Verkauft", "blue"],
-  ["expired", "Abgelaufen", "gray"],
-  ["cancelled", "Storniert", "red"],
+  ["active", "Verfügbar", "success"],
+  ["reserved", "Reserviert", "warning"],
+  ["sold", "Verkauft", "secondary"],
+  ["expired", "Abgelaufen", "info"],
+  ["cancelled", "Storniert", "danger"],
 ];
 
 describe("StatusBadge", () => {
@@ -18,7 +19,7 @@ describe("StatusBadge", () => {
     "renders the correct label and color for status %s",
     (status, label, color) => {
       render(
-        <ChakraProvider value={defaultSystem}>
+        <ChakraProvider value={system}>
           <StatusBadge status={status} />
         </ChakraProvider>,
       );
@@ -28,20 +29,24 @@ describe("StatusBadge", () => {
     },
   );
 
+  it("rejects an unknown status instead of falling back", () => {
+    expect(() => statusColorPalette("bogus" as ListingStatus)).toThrow();
+  });
+
   it("renders with the compact xs size", () => {
     const { container: badgeContainer } = render(
-      <ChakraProvider value={defaultSystem}>
+      <ChakraProvider value={system}>
         <StatusBadge status="active" />
       </ChakraProvider>,
     );
     const { container: xsReference } = render(
-      <ChakraProvider value={defaultSystem}>
-        <Badge colorPalette="green" size="xs" />
+      <ChakraProvider value={system}>
+        <Badge colorPalette="success" size="xs" />
       </ChakraProvider>,
     );
     const { container: smReference } = render(
-      <ChakraProvider value={defaultSystem}>
-        <Badge colorPalette="green" size="sm" />
+      <ChakraProvider value={system}>
+        <Badge colorPalette="success" size="sm" />
       </ChakraProvider>,
     );
 

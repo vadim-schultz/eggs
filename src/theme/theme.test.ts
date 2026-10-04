@@ -43,3 +43,11 @@ it("theme · role slots are registered", () => {
 it("theme · rejects an unregistered ramp stop", () => {
   expect(system.token("colors.coral.55")).toBeUndefined();
 });
+
+it("theme · default colorPalette is primary via globalCss", () => {
+  const css = system.css({ colorPalette: "primary" });
+  expect(css["--chakra-colors-color-palette-solid"]).toBe(
+    "var(--chakra-colors-primary-solid)",
+  );
+  expect(system.css({ colorPalette: "nope" })).not.toEqual(css);
+});
