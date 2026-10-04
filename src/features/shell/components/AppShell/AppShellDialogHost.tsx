@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import ListingDetail from "@/features/listings/containers/ListingDetail";
+import PublishedNotice from "@/features/listings/components/PublishedNotice/PublishedNotice";
 import PostListing from "@/features/listings/containers/PostListing";
 import AppDialog from "@/features/shell/components/AppDialog";
 import {
@@ -8,7 +9,7 @@ import {
   type OpenAppDialog,
 } from "@/features/shell/context/appDialog";
 
-type CreatedHandler = (listingId: string) => void;
+type CreatedHandler = () => void;
 type OpenDialog = Exclude<OpenAppDialog, null>;
 
 function openDialog(open: OpenDialog, onCreated: CreatedHandler): ReactNode {
@@ -17,6 +18,8 @@ function openDialog(open: OpenDialog, onCreated: CreatedHandler): ReactNode {
       return <PostListing onCreated={onCreated} />;
     case "detail":
       return <ListingDetail id={open.listingId} />;
+    case "published":
+      return <PublishedNotice />;
   }
 }
 
@@ -29,11 +32,11 @@ function dialogContent(
 }
 
 export default function AppShellDialogHost() {
-  const { open, closeDialog, openDetailDialog } = useAppDialog();
+  const { open, closeDialog, openPublishedDialog } = useAppDialog();
 
   return (
     <AppDialog open={open !== null} onClose={closeDialog}>
-      {dialogContent(open, openDetailDialog)}
+      {dialogContent(open, openPublishedDialog)}
     </AppDialog>
   );
 }

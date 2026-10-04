@@ -40,6 +40,8 @@ export const strings = {
   "home.radius.label": "Umkreis",
   "home.empty":
     "Keine Angebote in diesem Umkreis gefunden. Die Hühner streiken wohl! 🐔",
+  "published.title": "Dein Angebot wurde veröffentlicht.",
+  "published.expires": "Es läuft in 24 Stunden ab.",
   "listing.count.label": "Anzahl",
   "listing.price.label": "Preis",
   "listing.location.label": "Ort",
