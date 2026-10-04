@@ -135,7 +135,30 @@ describe("BuyerTab", () => {
     ).toBeInTheDocument();
   });
 
-  it("does not open the detail AppDialog when a map listing is selected", () => {
+  function MapSelectProbe() {
+    const { onSelect, selectedId } = useBackgroundMapState();
+    return (
+      <>
+        <button type="button" onClick={() => onSelect("listing-map-1")}>
+          trigger-map-select
+        </button>
+        <span data-testid="selected-id">{selectedId ?? "none"}</span>
+      </>
+    );
+  }
+
+  function renderWithProbe() {
+    return (
+      <ChakraProvider value={defaultSystem}>
+        <BackgroundMapProvider>
+          <BuyerTab />
+          <MapSelectProbe />
+        </BackgroundMapProvider>
+      </ChakraProvider>
+    );
+  }
+
+  it("opens the detail AppDialog when a map listing is selected", () => {
     const openDetailDialog = vi.fn();
     useAppDialogMock.mockReturnValue({
       open: null,
@@ -149,27 +172,39 @@ describe("BuyerTab", () => {
       error: false,
     });
 
-    function MapSelectTrigger() {
-      const { onSelect } = useBackgroundMapState();
-      return (
-        <button type="button" onClick={() => onSelect("listing-map-1")}>
-          trigger-map-select
-        </button>
-      );
-    }
-
-    render(
-      <ChakraProvider value={defaultSystem}>
-        <BackgroundMapProvider>
-          <BuyerTab />
-          <MapSelectTrigger />
-        </BackgroundMapProvider>
-      </ChakraProvider>,
-    );
-
+    render(renderWithProbe());
     fireEvent.click(screen.getByRole("button", { name: "trigger-map-select" }));
 
-    expect(openDetailDialog).not.toHaveBeenCalled();
+    expect(openDetailDialog).toHaveBeenCalledWith("listing-map-1");
+  });
+
+  it("clears the selection when the dialog closes", () => {
+    const base = {
+      openPostDialog: vi.fn(),
+      openDetailDialog: vi.fn(),
+      closeDialog: vi.fn(),
+    };
+    useAppDialogMock.mockReturnValue({ ...base, open: null });
+    useListingsNearMock.mockReturnValue({
+      listings: [listing({ id: "listing-map-1" })],
+      loading: false,
+      error: false,
+    });
+
+    const { rerender } = render(renderWithProbe());
+    fireEvent.click(screen.getByRole("button", { name: "trigger-map-select" }));
+    useAppDialogMock.mockReturnValue({
+      ...base,
+      open: { kind: "detail", listingId: "listing-map-1" },
+    });
+    rerender(renderWithProbe());
+    expect(screen.getByTestId("selected-id")).toHaveTextContent(
+      "listing-map-1",
+    );
+
+    useAppDialogMock.mockReturnValue({ ...base, open: null });
+    rerender(renderWithProbe());
+    expect(screen.getByTestId("selected-id")).toHaveTextContent("none");
   });
 
   it("does not render the searchInstead copy", () => {
