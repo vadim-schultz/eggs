@@ -1,6 +1,6 @@
 # Egg UX — Chapters
 
-Executable plans for [`.plans/egg-ux/`](../). Run in order via [chief of staff](../../.cursor/skills/chief-of-staff/SKILL.md).
+Executable plans for [`.plans/egg-ux/`](../). Run in order via the user `chief-of-staff` skill.
 
 | # | Chapter | Plan |
 | --- | --- | --- |

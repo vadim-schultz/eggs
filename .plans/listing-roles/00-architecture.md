@@ -86,7 +86,7 @@ Chapter 1 also runs `supabase db reset` and `scripts/rls-smoke.ts`. Chapter 4 en
 
 ## 8. Execution
 
-Run via [`.claude/skills/chief-of-staff/SKILL.md`](../../.claude/skills/chief-of-staff/SKILL.md) and [`.claude/agents/chapter-implementer.md`](../../.claude/agents/chapter-implementer.md) (plan folder `.plans/listing-roles`). Track merges in [run-ledger.md](run-ledger.md).
+Run via the user `chief-of-staff` skill and `chapter-implementer` agent (plan folder `.plans/listing-roles/`). Track merges in [run-ledger.md](run-ledger.md).
 
 **Git:** loop branch `feat/plans-listing-roles`; chapter PRs → loop; one release PR **`feat/plans-listing-roles` → `main`** when done ([01-rollout.md](01-rollout.md)).
 

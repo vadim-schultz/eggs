@@ -12,7 +12,7 @@ isProject: false
 
 | ID | Decision |
 | --- | --- |
-| D1 | Suite folder **`.plans/egg-ux`**; loop branch **`feat/plans-egg-ux`**; release **`main`** ([01-rollout.md](01-rollout.md), [git-model.md](../../.cursor/skills/chief-of-staff/git-model.md)). |
+| D1 | Suite folder **`.plans/egg-ux`**; loop branch **`feat/plans-egg-ux`**; release **`main`** ([01-rollout.md](01-rollout.md)). |
 | D2 | Feature folders per [frontend-structure](../frontend-structure/00-architecture.md). |
 | D3 | **Easter palette** (12 names → theme tokens). Implementer picks accessible hex per swatch; light and `_dark` partner required. Names (inspiration: Oh So Beautiful Paper “Color Blocked Easter Egg”): **Blush**, **Coral**, **Rose**, **Burgundy**, **Rust**, **Goldenrod**, **Seafoam**, **Cornflower**, **Mint**, **Jade**, **Emerald**, **Navy**. Egg icons cycle `palette[slotIndex % 12]`. |
 | D4 | **Egg row:** one row, 10 slots, counts **1…100**; `TbEgg` = 1, `TbEggFilled` = 10; algorithm in [00-architecture §5](00-architecture.md). Module: **`src/lib/eggQuantity/`**; UI: **`EggQuantityRow`** (`w="full"`). |

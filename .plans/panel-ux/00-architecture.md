@@ -118,9 +118,9 @@ Chapter 9 also requires GitHub **rls-smoke** after migration.
 
 ## 14. Execution
 
-Run via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) and [`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md) (plan folder `.plans/panel-ux`). Track merges in [run-ledger.md](run-ledger.md).
+Run via the user `chief-of-staff` skill and `chapter-implementer` agent (plan folder `.plans/panel-ux/`). Track merges in [run-ledger.md](run-ledger.md).
 
-**Git:** loop branch for all chapters; each chapter MR merges into the loop branch; one release MR to **`main`** when the suite is done ([01-rollout.md](01-rollout.md), [git-model.md](../../.cursor/skills/chief-of-staff/git-model.md)).
+**Git:** loop branch for all chapters; each chapter MR merges into the loop branch; one release MR to **`main`** when the suite is done ([01-rollout.md](01-rollout.md)).
 
 ## 15. Traceability (original brief → chapter)
 

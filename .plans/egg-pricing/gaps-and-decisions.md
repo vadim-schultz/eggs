@@ -12,7 +12,7 @@ isProject: false
 
 | ID | Decision |
 | --- | --- |
-| D1 | Suite folder **`.plans/egg-pricing`**; loop branch **`feat/plans-egg-pricing`**; release **`main`** ([01-rollout.md](01-rollout.md), [git-model.md](../../.claude/skills/chief-of-staff/git-model.md)). |
+| D1 | Suite folder **`.plans/egg-pricing`**; loop branch **`feat/plans-egg-pricing`**; release **`main`** ([01-rollout.md](01-rollout.md)). |
 | D2 | **Schema:** new migration renames `listing.price_cents` → `price_per_egg_cents` and backfills `round(price_cents / (egg_count × (12 if dozen else 1)))`, `0` when no eggs remain. `create_listing` and `listings_near` updated. `unit` column kept; new listings are always `each`. |
 | D3 | Buyers choose between exactly two cartons: **6** and **10** (`CARTON_SIZES`). |
 | D4 | **Layout:** 4-column grid `auto 1fr auto 1fr` — radio, 6-carton, radio, 10-carton. Cartons show eggs in **2 rows** (6 → 2×3, 10 → 2×5). |
