@@ -1,6 +1,6 @@
 # Egg Pricing — Chapters
 
-Executable plans for [`.plans/egg-pricing/`](../). Run in order via [chief of staff](../../../.claude/skills/chief-of-staff/SKILL.md).
+Executable plans for [`.plans/egg-pricing/`](../). Run in order via the user `chief-of-staff` skill.
 
 | # | Chapter | Plan |
 | --- | --- | --- |

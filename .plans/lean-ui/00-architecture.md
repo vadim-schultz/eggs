@@ -75,7 +75,7 @@ Chapter 7 ends with a manual pass: post as seller, reserve a carton from a secon
 
 ## 7. Execution
 
-Run via [`.claude/skills/chief-of-staff/SKILL.md`](../../.claude/skills/chief-of-staff/SKILL.md) and [`.claude/agents/chapter-implementer.md`](../../.claude/agents/chapter-implementer.md) (plan folder `.plans/lean-ui`). Track merges in [run-ledger.md](run-ledger.md).
+Run via the user `chief-of-staff` skill and `chapter-implementer` agent (plan folder `.plans/lean-ui/`). Track merges in [run-ledger.md](run-ledger.md).
 
 **Git:** loop branch `feat/plans-lean-ui`; chapter PRs → loop; one release PR **`feat/plans-lean-ui` → `main`** when done ([01-rollout.md](01-rollout.md)).
 

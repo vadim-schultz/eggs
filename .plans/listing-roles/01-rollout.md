@@ -8,7 +8,7 @@ isProject: false
 
 **Architecture:** [00-architecture.md](00-architecture.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-Chief-of-staff runs chapters via [`.claude/skills/chief-of-staff/SKILL.md`](../../.claude/skills/chief-of-staff/SKILL.md) (plan folder `.plans/listing-roles`).
+Chief of staff: invoke the **user** Cursor skill `chief-of-staff` with plan folder `.plans/listing-roles/` (see `~/.cursor/skills/chief-of-staff/SKILL.md`). Each chapter runs via the **user** `chapter-implementer` agent.
 
 **Loop branch:** `feat/plans-listing-roles`
 
@@ -16,14 +16,13 @@ Chief-of-staff runs chapters via [`.claude/skills/chief-of-staff/SKILL.md`](../.
 
 ## Git invariants
 
-Orchestration: [`.claude/skills/chief-of-staff/git-model.md`](../../.claude/skills/chief-of-staff/git-model.md).
 
 | Invariant | Rule |
 | --- | --- |
 | **Release branch** | **`main`** — plan docs live here before the loop starts; **one** PR lands the full suite when all chapters are done. |
 | **Loop branch** | **`feat/plans-listing-roles`** — cut from pulled `main`; every chapter merges here first. |
 | **Start of every chapter** | `git checkout feat/plans-listing-roles && git pull` then `git checkout -b <branch from chapter doc>`. |
-| **End of every chapter** | `./ci.sh` green → PR **into `feat/plans-listing-roles`** → merge ([`.claude/agents/chapter-implementer.md`](../../.claude/agents/chapter-implementer.md)). |
+| **End of every chapter** | `./ci.sh` green → PR **into `feat/plans-listing-roles`** → merge (user `chapter-implementer` agent). |
 | **End of suite** | Chief opens PR **`feat/plans-listing-roles` → `main`** after all chapters are on the loop branch with green CI. |
 
 ---

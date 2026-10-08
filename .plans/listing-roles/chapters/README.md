@@ -1,6 +1,6 @@
 # Listing Roles — Chapters
 
-Executable plans for [`.plans/listing-roles/`](../). Run in order via [chief of staff](../../../.claude/skills/chief-of-staff/SKILL.md).
+Executable plans for [`.plans/listing-roles/`](../). Run in order via the user `chief-of-staff` skill.
 
 | # | Chapter | Plan |
 | --- | --- | --- |
