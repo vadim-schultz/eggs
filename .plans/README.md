@@ -79,7 +79,7 @@ Status: planned — all eight chapter docs are written; no code has shipped yet.
 
 Tighten the floating panel: Verkäufer/Käufer labels, two-column grids, Chakra Slider and Combobox for
 Umkreis and Ort, Germany map fallback, Tabler icons, compact listing cards, seller form without Notiz.
-Seven chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) and [`.cursor/agents/chapter-implementer.md`](../.cursor/agents/chapter-implementer.md).
+Seven chapters; orchestration via user `chief-of-staff` and `chapter-implementer` (`~/.cursor/skills/chief-of-staff/SKILL.md`).
 
 | Doc | What it is |
 | --- | --- |
@@ -93,7 +93,7 @@ Status: in progress — suite and implementation on branch `feat/eggs-minimal-pa
 
 ### [panel-ux/](panel-ux/) — Panel UX loop (executable)
 
-Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 15 km**, **Braille** quantity rows, map bounds and marker popovers, **partial reserve** (chapter 9). Ten chapters; each merges to **`main`** before the next. Orchestration: `@chief-of-staff` with plan folder `.plans/panel-ux` (see [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md)).
+Floating panel UX: burger menu, open-on-load, KV **1 : 3**, Umkreis **5 / 10 / 15 km**, **Braille** quantity rows, map bounds and marker popovers, **partial reserve** (chapter 9). Ten chapters; each merges to **`main`** before the next. Orchestration: user `chief-of-staff` with plan folder `.plans/panel-ux/`.
 
 | Doc | What it is |
 | --- | --- |
@@ -107,7 +107,7 @@ Status: planned — docs suite landing via PR; implementation loop runs after me
 
 ### [egg-ux/](egg-ux/) — Easter palette and egg quantity UX
 
-Replace Braille with a **decade egg row** (`TbEgg` / `TbEggFilled`, max 100), add **light/dark** Easter theme tokens, fix **burger** and **Ort combobox**, default listings to **24h** expiry, simplify **post listing** (slider 1–100, no Stück/Dutzend), refresh **listing cards**, and restore **reserve + slider** on **map popovers**. Nine chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-ux`).
+Replace Braille with a **decade egg row** (`TbEgg` / `TbEggFilled`, max 100), add **light/dark** Easter theme tokens, fix **burger** and **Ort combobox**, default listings to **24h** expiry, simplify **post listing** (slider 1–100, no Stück/Dutzend), refresh **listing cards**, and restore **reserve + slider** on **map popovers**. Nine chapters; orchestration via user `chief-of-staff` (plan folder `.plans/egg-ux/`).
 
 | Doc | What it is |
 | --- | --- |
@@ -121,7 +121,7 @@ Status: planned — documentation suite written; implementation loop runs after 
 
 ### [playful-theme/](playful-theme/) — Bright playful Easter theme
 
-Promote the 12-colour Easter palette to full theme ramps and **role palettes** (`primary`, `danger`, …), then apply it everywhere: pastel surfaces with sticker shadows, chunky control recipes, and a reduced-motion-safe "silly" layer (egg burst, wiggle, palette-coloured map markers, playful copy). Four chapters; orchestration via [`.cursor/skills/chief-of-staff/SKILL.md`](../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/playful-theme`).
+Promote the 12-colour Easter palette to full theme ramps and **role palettes** (`primary`, `danger`, …), then apply it everywhere: pastel surfaces with sticker shadows, chunky control recipes, and a reduced-motion-safe "silly" layer (egg burst, wiggle, palette-coloured map markers, playful copy). Four chapters; orchestration via user `chief-of-staff` (plan folder `.plans/playful-theme/`).
 
 | Doc | What it is |
 | --- | --- |

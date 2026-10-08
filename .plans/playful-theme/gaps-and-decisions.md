@@ -12,7 +12,7 @@ isProject: false
 
 | ID | Decision |
 | --- | --- |
-| D1 | Suite folder **`.plans/playful-theme`**; loop branch **`feat/plans-playful-theme`**; release **`main`** ([01-rollout.md](01-rollout.md), [git-model.md](../../.cursor/skills/chief-of-staff/git-model.md)). |
+| D1 | Suite folder **`.plans/playful-theme`**; loop branch **`feat/plans-playful-theme`**; release **`main`** ([01-rollout.md](01-rollout.md)). |
 | D2 | **Palette:** the 12 names ([egg-ux D3](../egg-ux/gaps-and-decisions.md)) become full 50–950 ramps via a pure `ramp(anchor)` helper plus `solid / contrast / fg / muted / subtle / emphasized / focusRing` slots with `mode()` light/`_dark` pairs. Anchors retuned to bright pastels; **names unchanged** so `EGG_PALETTE_COLOR_NAMES` and `egg.*` keep working. |
 | D3 | **Neutrals** warm-tinted: cream in light, plum-navy in dark. |
 | D4 | **Role map:** primary=coral, secondary=cornflower, success=mint, warning=goldenrod, danger=rose, info=seafoam, accent=blush. Features use roles, never raw swatches. |

@@ -8,7 +8,7 @@ isProject: false
 
 **Architecture:** [00-architecture.md](00-architecture.md) · **Decisions:** [gaps-and-decisions.md](gaps-and-decisions.md) · **Chapters:** [chapters/](chapters/) · **Ledger:** [run-ledger.md](run-ledger.md)
 
-Chief-of-staff runs chapters via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) (plan folder `.plans/egg-ux`).
+Chief of staff: invoke the **user** Cursor skill `chief-of-staff` with plan folder `.plans/egg-ux/` (see `~/.cursor/skills/chief-of-staff/SKILL.md`). Each chapter runs via the **user** `chapter-implementer` agent.
 
 **Loop branch:** `feat/plans-egg-ux`
 
@@ -16,14 +16,13 @@ Chief-of-staff runs chapters via [`.cursor/skills/chief-of-staff/SKILL.md`](../.
 
 ## Git invariants
 
-Orchestration: [`.cursor/skills/chief-of-staff/git-model.md`](../../.cursor/skills/chief-of-staff/git-model.md).
 
 | Invariant | Rule |
 | --- | --- |
 | **Release branch** | **`main`** — plan docs live here; **one** MR/PR lands the full suite when all chapters are done. |
 | **Loop branch** | **`feat/plans-egg-ux`** — every chapter merges here first. |
 | **Start of every chapter** | `git checkout feat/plans-egg-ux && git pull` then `git checkout -b <branch from chapter doc>`. |
-| **End of every chapter** | `./ci.sh` green → MR/PR **into `feat/plans-egg-ux`** → merge ([`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md)). |
+| **End of every chapter** | `./ci.sh` green → MR/PR **into `feat/plans-egg-ux`** → merge (user `chapter-implementer` agent). |
 | **End of suite** | Chief opens MR/PR **`feat/plans-egg-ux` → `main`** after all chapters are on the loop branch with green CI. |
 
 ---

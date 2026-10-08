@@ -74,4 +74,4 @@ BackgroundMap → MapView (Tb pins, Germany fitBounds when no geo)
 
 ## 9. Execution
 
-After this suite is on `main`, run chapters via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) and [`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md) (plan folder `.plans/minimal-panel`). Track merges in [run-ledger.md](run-ledger.md).
+After this suite is on `main`, run chapters via the user `chief-of-staff` skill and `chapter-implementer` agent (plan folder `.plans/minimal-panel/`). Track merges in [run-ledger.md](run-ledger.md).

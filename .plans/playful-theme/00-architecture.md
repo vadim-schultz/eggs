@@ -89,9 +89,9 @@ Chapter 4 adds light + dark screenshots of the shell, panel, dialog and map popo
 
 ## 12. Execution
 
-Run via [`.cursor/skills/chief-of-staff/SKILL.md`](../../.cursor/skills/chief-of-staff/SKILL.md) and [`.cursor/agents/chapter-implementer.md`](../../.cursor/agents/chapter-implementer.md) (plan folder `.plans/playful-theme`). Track merges in [run-ledger.md](run-ledger.md).
+Run via the user `chief-of-staff` skill and `chapter-implementer` agent (plan folder `.plans/playful-theme/`). Track merges in [run-ledger.md](run-ledger.md).
 
-**Git:** loop branch `feat/plans-playful-theme`; chapter PRs → loop; one release PR **`feat/plans-playful-theme` → `main`** when done ([01-rollout.md](01-rollout.md), [git-model.md](../../.cursor/skills/chief-of-staff/git-model.md)).
+**Git:** loop branch `feat/plans-playful-theme`; chapter PRs → loop; one release PR **`feat/plans-playful-theme` → `main`** when done ([01-rollout.md](01-rollout.md)).
 
 ## 13. Traceability (brief → chapter)
 
